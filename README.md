@@ -4,7 +4,15 @@ home of personal websites
 
 ## Sites
 llaurens.com
+```
+sudo deploy ./llaurens.com llaurens.com/htdocs
+```
+
 tommmi.com
+Deploy command 
+```
+sudo deploy ./tommmi.com tommmi.com/htdocs
+```
 
 ## Tools
 deploy
