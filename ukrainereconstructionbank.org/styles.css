@@ -1,0 +1,188 @@
+/* Reset and base styles */
+*, *::before, *::after {
+    box-sizing: border-box;
+}
+body, h1, h2, h3, p {
+    margin: 0;
+    padding: 0;
+}
+body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+    line-height: 1.5;
+    color: #333;
+}
+
+/* Utility classes */
+.container {
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 1rem;
+}
+
+/* Header styles */
+header {
+    background-color: #1d4ed8;
+    color: white;
+    padding: 1rem 0;
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+.header-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.logo {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 1.5rem;
+    font-weight: bold;
+}
+nav ul {
+    display: flex;
+    list-style: none;
+    gap: 2rem;
+}
+nav a {
+    color: white;
+    text-decoration: none;
+    transition: color 0.2s;
+}
+nav a:hover {
+    color: #fbbf24;
+}
+.menu-button {
+    display: none;
+    background: none;
+    border: none;
+    color: white;
+    font-size: 1.5rem;
+    cursor: pointer;
+}
+
+/* Hero section */
+.hero {
+    background: linear-gradient(to right, #1d4ed8, #1e40af);
+    color: white;
+    padding: 4rem 0;
+    text-align: center;
+}
+.hero h1 {
+    font-size: 3rem;
+    margin-bottom: 1rem;
+}
+.hero p {
+    font-size: 1.25rem;
+    max-width: 800px;
+    margin: 0 auto 2rem;
+}
+.cta-button {
+    display: inline-block;
+    background-color: #fbbf24;
+    color: #1e40af;
+    padding: 0.75rem 1.5rem;
+    border-radius: 9999px;
+    text-decoration: none;
+    font-weight: bold;
+    transition: background-color 0.2s, transform 0.2s;
+}
+.cta-button:hover {
+    background-color: #f59e0b;
+    transform: scale(1.05);
+}
+
+/* About section */
+.about {
+    padding: 4rem 0;
+}
+.about h2 {
+    font-size: 2.5rem;
+    color: #1e40af;
+    text-align: center;
+    margin-bottom: 2rem;
+}
+.about-content {
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+/* Services section */
+.services {
+    background-color: #f3f4f6;
+    padding: 4rem 0;
+}
+.services h2 {
+    font-size: 2.5rem;
+    color: #1e40af;
+    text-align: center;
+    margin-bottom: 2rem;
+}
+.services-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 2rem;
+}
+.service-card {
+    background-color: white;
+    border-radius: 0.5rem;
+    padding: 2rem;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    transition: box-shadow 0.3s;
+}
+.service-card:hover {
+    box-shadow: 0 10px 15px rgba(0,0,0,0.1);
+}
+.service-icon {
+    width: 48px;
+    height: 48px;
+    margin-bottom: 1rem;
+}
+.service-card h3 {
+    color: #1e40af;
+    margin-bottom: 0.5rem;
+}
+
+/* Footer */
+footer {
+    background-color: #1e40af;
+    color: white;
+    padding: 3rem 0;
+    text-align: center;
+}
+footer h2 {
+    font-size: 2rem;
+    margin-bottom: 1rem;
+}
+.social-links {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+    margin-top: 2rem;
+}
+.social-links a {
+    color: white;
+    transition: color 0.2s;
+}
+.social-links a:hover {
+    color: #fbbf24;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+    nav ul {
+        display: none;
+    }
+    .menu-button {
+        display: block;
+    }
+    .hero h1 {
+        font-size: 2.5rem;
+    }
+    .hero p {
+        font-size: 1rem;
+    }
+}
