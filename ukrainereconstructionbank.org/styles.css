@@ -186,3 +186,29 @@ footer h2 {
         font-size: 1rem;
     }
 }
+
+.logo-container {
+    position: relative;
+    display: inline-block;
+}
+
+.logo-container .logo {
+    display: block;
+    position: relative;
+    z-index: 1;
+}
+
+.logo-container::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: yellow; /* Yellow color */
+    mix-blend-mode: multiply; /* Blend mode to apply color only to non-transparent parts */
+    opacity: 0.5; /* Adjust opacity as needed */
+    z-index: 2;
+    pointer-events: none; /* Allows clicks to pass through the overlay */
+    filter: brightness(0) saturate(100%) invert(100%) sepia(100%) saturate(0%) hue-rotate(90deg) brightness(100%) contrast(100%);
+}

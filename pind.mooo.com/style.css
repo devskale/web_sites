@@ -1,0 +1,101 @@
+body {
+    font-family: sans-serif;
+    background-color: #f4f4f4;
+    margin: 0;
+    padding: 20px;
+    display: flex;
+    flex-direction: column; /* Changed to column layout to place header above container */
+    align-items: center;
+    min-height: 100vh;
+}
+
+header {
+    text-align: center;
+    margin-bottom: 0px; /* Space between the header and content */
+    padding: 40px 0;
+    background-color: #3dd5b9;
+    color: rgb(0, 0, 0);
+    width: 100%; /* Header takes full width of the screen */
+}
+
+header h1 {
+    margin: 0px 0; /* Remove default margins on h1 */
+    color: rgb(0, 0, 0);
+    font-size: 2.5em; /* Slightly larger header */
+    font-weight: 700; /* Bold the main header */
+}
+
+header h2 {
+    margin: 5px 0 0; /* Space above the second header */
+    font-size: 1.2em;
+    font-weight: 300; /* Lighter font weight */
+    font-style: italic; /* Italicizes the sub-header */
+    opacity: 0.8; /* Slightly transparent */
+}
+
+
+.container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 20px;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.container h1 {
+    margin: 80px 0 20px;
+
+  }
+  
+.card {
+    background-color: #ffffff;
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    width: 300px;
+    transition: transform 0.3s ease;
+    text-align: center;
+}
+
+
+.card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+}
+
+.card h2 {
+    margin-top: 0;
+    color: #333;
+}
+
+.card p {
+    color: #666;
+    margin-bottom: 15px;
+}
+
+.card p a { /* Styling for normal links */
+    color: #007bff; /* Standard link color */
+    text-decoration: underline; /* Underline to distinguish from regular text */
+    transition: color 0.3s ease; /* Smooth color transition */
+}
+
+.card p a:hover {
+    color: #0056b3; /* Darken on hover */
+}
+
+
+.card .button-link { /* Styling for action buttons */
+    display: inline-block;
+    background-color: #3dd5b9;
+    color: rgb(0, 0, 0);
+    padding: 10px 20px;
+    text-decoration: none;
+    border-radius: 5px;
+    transition: background-color 0.3s ease;
+    margin-top: 10px; /*Spacing between p and link */
+}
+
+.card .button-link:hover {
+    background-color: #00ffd9;
+}
