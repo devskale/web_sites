@@ -103,3 +103,12 @@ header h2 {
 .card .button-link:hover {
     background-color: #00ffd9;
 }
+
+footer {
+    text-align: center;
+    margin-top: 80px;
+    padding: 10px 0;
+    background-color: #3dd5b9;
+    color: rgb(0, 0, 0);
+    width: 100%;
+}
