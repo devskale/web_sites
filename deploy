@@ -181,5 +181,3 @@ if [ $? -ne 0 ]; then
     handle_error "Nginx is not running" 11
 fi
 
-echo "Nginx reloaded successfully"
-
