@@ -3,7 +3,8 @@
 # Function to display help
 show_help() {
   echo "Usage: $0 <source_path> <relative_dest_path> [backup_directory]"
-  echo ""
+  echo "       $0 -b"
+    echo ""
   echo "This script deploys web files (HTML, CSS, JS etc.) from a local development"
   echo "directory to a production Nginx web server directory. It handles file permissions,"
   echo "ownership and performs an Nginx reload after deployment."
@@ -12,9 +13,12 @@ show_help() {
   echo "  <source_path>         The path to the file or directory to be deployed"
   echo "                        Can be either a single file or complete directory"
   echo "  <relative_dest_path>  The relative path under /home/ubuntu/code/www/"
-  echo "                        Usually matches your domain name" 
+  echo "                        Usually matches your domain name, or absolute path"
   echo "  [backup_directory]    Optional. Directory for backup of existing files"
   echo "                        If provided, creates timestamped backup before deploying"
+    echo ""
+    echo "Options:"
+    echo "  -b                    Show the current base path"
   echo ""
   echo "Features:"
   echo "  - Preserves directory structure during deployment"
@@ -22,10 +26,16 @@ show_help() {
   echo "  - Creates timestamped backups if backup directory specified"
   echo "  - Reloads Nginx configuration after deployment"
   echo ""
+  echo "Installation:"
+    echo "  To install this script, copy it to /usr/local/bin and make it executable:"
+    echo "  sudo cp $0 /usr/local/bin/deploy"
+    echo "  sudo chmod +x /usr/local/bin/deploy"
+    echo ""
   echo "Examples:"
   echo "  sudo $0 ./wwwdev amd1.mooo.com              # Deploy full directory"
   echo "  sudo $0 ./wwwdev/index.html amd1.mooo.com   # Deploy single file"
   echo "  sudo $0 ./wwwdev amd1.mooo.com /home/ubuntu/backup  # With backup"
+  echo "  sudo $0 -b                                  # Show the current base path"
 }
 
 # Centralized error handling function
@@ -36,6 +46,23 @@ handle_error() {
     exit "$exit_code"
 }
 
+# Define base destination directory
+BASE_DEST_DIR="/home/ubuntu/code/www/"
+
+# Handle command-line arguments
+while getopts "b" opt; do
+  case $opt in
+    b)
+      echo "Current base path: $BASE_DEST_DIR"
+      exit 0
+      ;;
+    \?)
+      show_help
+      exit 1
+      ;;
+  esac
+done
+shift $((OPTIND -1))
 
 # Check if the source path and relative destination path are provided
 if [ -z "$1" ] || [ -z "$2" ]; then
@@ -43,9 +70,10 @@ if [ -z "$1" ] || [ -z "$2" ]; then
   exit 1
 fi
 
-# Define source path and base destination directory
+
+# Define source path
 SRC_PATH=$(realpath "$1")
-BASE_DEST_DIR="/home/ubuntu/code/www/"
+
 REL_DEST_PATH="$2"
 
 
