@@ -48,9 +48,11 @@ handle_error() {
 
 # Define base destination directory
 BASE_DEST_DIR="/home/ubuntu/code/www/"
+# Initialize Nginx reload flag
+RELOAD_NGINX=false
 
 # Handle command-line arguments
-while getopts "b" opt; do
+while getopts "br" opt; do
   case $opt in
     b)
       echo "Current base path: $BASE_DEST_DIR"
@@ -61,6 +63,9 @@ while getopts "b" opt; do
         echo "Warning: Base directory does not exist: $BASE_DEST_DIR"
       fi
       exit 0
+      ;;
+    r)
+      RELOAD_NGINX=true
       ;;
     \?)
       show_help
@@ -155,9 +160,20 @@ fi
 echo "Files moved from $SRC_PATH to $DEST_DIR and permissions set"
 
 # Reload Nginx to apply any changes
-systemctl reload nginx
-if [ $? -ne 0 ]; then
-    handle_error "Failed to reload Nginx" 10
+if [ "$RELOAD_NGINX" = true ]; then
+    systemctl reload nginx
+    if [ $? -ne 0 ]; then
+        handle_error "Failed to reload Nginx" 10
+    fi
+
+    systemctl status nginx  | grep "active (running)" > /dev/null
+    if [ $? -ne 0 ]; then
+        handle_error "Nginx is not running" 11
+    fi
+
+    echo "Nginx reloaded successfully"
+else
+  echo "Nginx reload skipped, use -r to reload Nginx"
 fi
 
 systemctl status nginx  | grep "active (running)" > /dev/null
@@ -166,3 +182,4 @@ if [ $? -ne 0 ]; then
 fi
 
 echo "Nginx reloaded successfully"
+
