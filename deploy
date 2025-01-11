@@ -18,7 +18,7 @@ show_help() {
   echo "                        If provided, creates timestamped backup before deploying"
     echo ""
     echo "Options:"
-    echo "  -b                    Show the current base path"
+    echo "  -b                    Show the current base path and directories inside"
   echo ""
   echo "Features:"
   echo "  - Preserves directory structure during deployment"
@@ -54,6 +54,12 @@ while getopts "b" opt; do
   case $opt in
     b)
       echo "Current base path: $BASE_DEST_DIR"
+      if [ -d "$BASE_DEST_DIR" ]; then
+        echo "Directories in base path:"
+        find "$BASE_DEST_DIR" -maxdepth 1 -type d -print | sed 's|'$BASE_DEST_DIR'/*||'
+      else
+        echo "Warning: Base directory does not exist: $BASE_DEST_DIR"
+      fi
       exit 0
       ;;
     \?)
