@@ -1,0 +1,134 @@
+#!/bin/bash
+
+# Function to display help
+show_help() {
+  echo "Usage: $0 <source_path> <relative_dest_path> [backup_directory]"
+  echo ""
+  echo "This script deploys web files (HTML, CSS, JS etc.) from a local development"
+  echo "directory to a production Nginx web server directory. It handles file permissions,"
+  echo "ownership and performs an Nginx reload after deployment."
+  echo ""
+  echo "Arguments:"
+  echo "  <source_path>         The path to the file or directory to be deployed"
+  echo "                        Can be either a single file or complete directory"
+  echo "  <relative_dest_path>  The relative path under /home/ubuntu/code/www/"
+  echo "                        Usually matches your domain name" 
+  echo "  [backup_directory]    Optional. Directory for backup of existing files"
+  echo "                        If provided, creates timestamped backup before deploying"
+  echo ""
+  echo "Features:"
+  echo "  - Preserves directory structure during deployment"
+  echo "  - Sets proper ownership (www-data) and permissions (755/644)"
+  echo "  - Creates timestamped backups if backup directory specified"
+  echo "  - Reloads Nginx configuration after deployment"
+  echo ""
+  echo "Examples:"
+  echo "  sudo $0 ./wwwdev amd1.mooo.com              # Deploy full directory"
+  echo "  sudo $0 ./wwwdev/index.html amd1.mooo.com   # Deploy single file"
+  echo "  sudo $0 ./wwwdev amd1.mooo.com /home/ubuntu/backup  # With backup"
+}
+
+# Centralized error handling function
+handle_error() {
+    local error_msg="$1"
+    local exit_code="${2:-1}"  # Default exit code is 1
+    echo "Error: $error_msg"
+    exit "$exit_code"
+}
+
+
+# Check if the source path and relative destination path are provided
+if [ -z "$1" ] || [ -z "$2" ]; then
+  show_help
+  exit 1
+fi
+
+# Define source path and base destination directory
+SRC_PATH=$(realpath "$1")
+BASE_DEST_DIR="/home/ubuntu/code/www/"
+REL_DEST_PATH="$2"
+
+
+# Define the user and group for Nginx
+USER="www-data"
+GROUP="www-data"
+
+# Validate Source Path
+if [ ! -e "$SRC_PATH" ]; then
+   handle_error "Source path does not exist: $SRC_PATH"
+fi
+if [ ! -r "$SRC_PATH" ]; then
+   handle_error "Source path is not readable: $SRC_PATH"
+fi
+
+# Determine if REL_DEST_PATH is absolute
+if [[ "$REL_DEST_PATH" == /* ]]; then
+  DEST_DIR=$(realpath "$REL_DEST_PATH")
+else
+  DEST_DIR=$(realpath "$BASE_DEST_DIR/$REL_DEST_PATH")
+fi
+
+
+# Validate Destination Path
+if [ ! -d "$DEST_DIR" ]; then
+  echo "Destination directory $DEST_DIR does not exist. Creating it."
+  mkdir -p "$DEST_DIR" || handle_error "Failed to create destination directory: $DEST_DIR"
+fi
+
+if [ ! -w "$DEST_DIR" ]; then
+   handle_error "Destination path is not writeable: $DEST_DIR"
+fi
+
+
+# Check if backup directory is provided
+if [ -n "$3" ]; then
+  BACKUP_DIR=$(realpath "$3")
+  BACKUP_DEST="${BACKUP_DIR}/$(basename ${DEST_DIR})_backup_$(date +'%Y%m%d%H%M%S')"
+  mkdir -p "$BACKUP_DIR" || handle_error "Error creating backup directory: $BACKUP_DIR"
+
+   # check if target directory is empty
+   if ! find "$DEST_DIR" -maxdepth 1 -print -quit | read -r -d ''; then
+        echo "Destination directory is empty, skipping backup"
+    else
+        cp -r "$DEST_DIR" "$BACKUP_DEST" || handle_error "Error backing up $DEST_DIR"
+        echo "Backup created successfully: $BACKUP_DEST"
+   fi
+else
+  echo "No backup directory specified, skipping backup."
+fi
+
+# Check if source is a file or directory and sync accordingly
+if [ -d "$SRC_PATH" ]; then
+  # Sync directory
+  rsync -rltvz "$SRC_PATH/" "$DEST_DIR/" || handle_error "Error syncing directory from $SRC_PATH to $DEST_DIR"
+elif [ -f "$SRC_PATH" ]; then
+  # Sync single file, remove trailing slash from the destination
+  rsync -rltvz "$SRC_PATH" "$DEST_DIR" || handle_error "Error syncing file from $SRC_PATH to $DEST_DIR"
+else
+  handle_error "Error: Source path is neither a file nor a directory"
+fi
+
+# Change ownership and permissions
+chown -R "$USER:$GROUP" "$DEST_DIR" || handle_error "Error changing ownership for $DEST_DIR"
+if [ -d "$DEST_DIR" ]; then
+  find "$DEST_DIR" -type d -exec chmod 755 {} \; || handle_error "Error setting directory permissions for $DEST_DIR"
+  find "$DEST_DIR" -type f -exec chmod 644 {} \; || handle_error "Error setting file permissions for $DEST_DIR"
+elif [ -f "$DEST_DIR" ]
+ then
+  chmod 644 "$DEST_DIR" || handle_error "Error setting permissions for $DEST_DIR"
+fi
+
+echo "Files moved from $SRC_PATH to $DEST_DIR and permissions set"
+
+# Reload Nginx to apply any changes
+systemctl reload nginx
+if [ $? -ne 0 ]; then
+    handle_error "Failed to reload Nginx" 10
+fi
+
+systemctl status nginx  | grep "active (running)" > /dev/null
+if [ $? -ne 0 ]; then
+    handle_error "Nginx is not running" 11
+fi
+
+echo "Nginx reloaded successfully"
