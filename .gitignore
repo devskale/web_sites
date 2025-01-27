@@ -2,4 +2,4 @@
 .aider*
 .env
 .nginx*
-config.js
+**/config.js
