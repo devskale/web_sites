@@ -172,27 +172,25 @@ document.getElementById("stopButton").addEventListener("click", function () {
 
 // Function to toggle the sidebar
 function toggleSidebar() {
-  document.getElementById("sidebar").classList.toggle("show");
+  const sidebar = document.getElementById("sidebar");
+  sidebar.classList.toggle("show");
 }
 
-// Event listener for the button
+// Event listener for the burger menu button
 document
-  .getElementById("settingsToggle")
+  .getElementById("sidebarToggle")
   .addEventListener("click", toggleSidebar);
 
-// Event listener for the icon inside the button
-document
-  .querySelector("#settingsToggle i")
-  .addEventListener("click", function (event) {
-    event.stopPropagation(); // Prevent the event from bubbling
-    toggleSidebar();
-  });
-
-// Close sidebar when clicking outside on mobile
+// Close sidebar when clicking outside
 document.addEventListener("click", function (event) {
   const sidebar = document.getElementById("sidebar");
-  const settingsToggle = document.getElementById("settingsToggle");
-  if (!sidebar.contains(event.target) && event.target !== settingsToggle) {
+  const sidebarToggle = document.getElementById("sidebarToggle");
+
+  if (
+    !sidebar.contains(event.target) &&
+    !sidebarToggle.contains(event.target) &&
+    sidebar.classList.contains("show")
+  ) {
     sidebar.classList.remove("show");
   }
 });
