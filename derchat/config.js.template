@@ -11,5 +11,5 @@ export const servers = [
 
 export const OPENAI_TOKEN = "%%OPENAI_TOKEN%%"; //
 //export const GEMINI_TOKEN = '%%GEMINI_TOKEN%%'; //
-export const GEMINI_TOKEN = "AIzaSyDPhVmSh_djnUOMP-AYFJ2VsDsV4JiDLGU";
-export const ARLIAI_TOKEN = "5ea1bbdd-7d93-4dbe-b120-2e2a8ee2c2ae";
+export const GEMINI_TOKEN = "AIzaS....";
+export const ARLIAI_TOKEN = "5ea1bb.....";
