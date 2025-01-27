@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap");
 
 :root {
   --primary-color: #4dabf7;
@@ -15,12 +15,11 @@
 }
 
 body {
-  font-family: 'Inter', sans-serif;
+  font-family: "Inter", sans-serif;
   background-color: var(--background-color);
   color: var(--text-color);
   line-height: 1.6;
 }
-
 
 .container {
   display: flex;
@@ -29,9 +28,6 @@ body {
 #card {
   flex: 1 0 auto;
 }
-
-
-
 
 h1 {
   font-size: 2.5rem;
@@ -94,7 +90,6 @@ main {
   min-height: 100vh;
   padding: 2rem;
 }
-
 
 #response {
   margin-top: 1.5rem;
@@ -211,7 +206,8 @@ main {
     top: 8px;
     height: 64px;
   }
-  50%, 100% {
+  50%,
+  100% {
     top: 24px;
     height: 32px;
   }
@@ -248,11 +244,19 @@ main {
   display: flex;
   flex-direction: column;
   height: 100vh;
-  transition: transform 0.3s ease-in-out;
 }
 
 #sidebar {
   flex: 0 0 auto;
+}
+
+.sidebar > * {
+  /* This applies flexbox to the direct children of .sidebar */
+  flex: 1 0 auto; /* Distribute space */
+}
+
+.sidebar > footer {
+  margin-top: auto; /* Push to bottom */
 }
 
 .sidebar .card {
@@ -271,16 +275,16 @@ main {
 
 @media (max-width: 767.98px) {
   .sidebar {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 80%;
-      z-index: 1000;
-      transform: translateX(-100%);
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 80%;
+    z-index: 1000;
+    transform: translateX(-100%);
   }
 
   .sidebar.show {
-      transform: translateX(0);
+    transform: translateX(0);
   }
 }
 

@@ -84,6 +84,10 @@ serverField.addEventListener("change", async function () {
   }
 });
 
+document.addEventListener("DOMContentLoaded", function () {
+  document.getElementById("inputField").focus();
+});
+
 document
   .getElementById("chatForm")
   .addEventListener("submit", async function (event) {
