@@ -26,7 +26,8 @@ servers.forEach((server) => {
 });
 
 // Set default server and fetch models
-const defaultServer = serverField.getAttribute("data-default");
+const defaultServer = "https://api.arliai.com";
+serverField.setAttribute("data-default", defaultServer);
 if (defaultServer) {
   serverField.value = defaultServer;
   const selectedOption = serverField.options[serverField.selectedIndex];
@@ -34,13 +35,13 @@ if (defaultServer) {
   fetchAvailableModels(defaultServer, serverType).then(() => {
     // Set default model after models are fetched
     const modelField = document.getElementById("modelField");
-    const defaultModel = modelField.getAttribute("data-default");
+    const defaultModel = "Mistral-Nemo-12B-Instruct-2407";
+    modelField.setAttribute("data-default", defaultModel);
     if (defaultModel) {
       modelField.value = defaultModel;
     }
   });
 }
-
 // Event listener for server field change
 serverField.addEventListener("change", async function () {
   const selectedOption = this.options[this.selectedIndex];
