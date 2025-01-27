@@ -1,11 +1,11 @@
 // config.js
 
 export const servers = [
+  { url: "https://api.arliai.com", description: "arliopenai" },
   { url: "https://amp1.mooo.com:11444", description: "ollama" },
   { url: "https://my-openai-gemini-demo.vercel.app", description: "gemopenai" },
   { url: "http://pind.mooo.com:11434", description: "ollama" },
   { url: "http://localhost:11434", description: "ollama" },
-  { url: "https://api.arliai.com", description: "arliopenai" },
   { url: "http://localhost:8080", description: "llama.cpp" },
 ];
 
