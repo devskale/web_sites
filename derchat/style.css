@@ -279,3 +279,7 @@ main {
   font-weight: 100;
   font-size: 0.8em; /* Add this line to make the font a bit smaller */
 }
+
+.small {
+  font-size: 0.875rem; /* Make label smaller */
+}

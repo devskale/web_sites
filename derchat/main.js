@@ -97,13 +97,67 @@ document
     const stopButton = document.getElementById("stopButton");
     const serverField = document.getElementById("serverField");
     const modelField = document.getElementById("modelField");
-
+    const contextCheckbox = document.getElementById("contextCheck");
+    const contextField = document.getElementById("contextField");
     const selectedServer = serverField.value;
     const selectedModel = modelField.value;
+    let context = "";
+    let assembledQuery = inputField; //Start with user input
 
     if (!selectedServer || !selectedModel) {
       alert("Please select both a server and a model.");
       return;
+    }
+
+    if (contextCheckbox.checked) {
+      if (contextField) {
+        const contextValue = contextField.value;
+        //Regex to check for a valid URL
+        const urlRegex = /^(https?|ftp):\/\/[^\s/$.?#].[^\s]*$/i;
+
+        if (urlRegex.test(contextValue)) {
+          try {
+            const proxyUrl =
+              "https://amd1.mooo.com/api/w3m?url=" +
+              encodeURIComponent(contextValue);
+            const headers = {
+              accept: "application/json",
+              Authorization: "Bearer test23",
+            };
+            const response = await fetch(proxyUrl, {
+              method: "GET",
+              headers: headers,
+            });
+
+            if (!response.ok) {
+              throw new Error(
+                `Failed to fetch URL content: ${response.status} ${response.statusText}`
+              );
+            }
+
+            const data = await response.json();
+
+            if (data && data.content) {
+              context = data.content;
+            } else {
+              throw new Error("Invalid response format from URL");
+            }
+
+            //Assemble the query
+            assembledQuery = `User Input:\n${inputField}\n\nContext:\n${context}`;
+          } catch (error) {
+            handleError(responseDiv, error);
+            return; // Stop execution if fetching fails
+          }
+        } else {
+          // Context is not a URL, use it directly
+          context = contextValue;
+          assembledQuery = `User Input:\n${inputField}\n\nContext:\n${context}`;
+        }
+      } else {
+        handleError(responseDiv, new Error("Context field not found."));
+        return; // Stop execution if context field is missing
+      }
     }
 
     displayUserMessage(responseDiv, inputField);
@@ -121,7 +175,7 @@ document
         await sendOllamaRequest(
           `${selectedServer}/api/chat`,
           selectedModel,
-          inputField,
+          assembledQuery, // Pass the assembled query
           responseDiv,
           signal,
           startTime
@@ -129,7 +183,7 @@ document
       } else if (description.includes("llama.cpp")) {
         await sendLlamaRequest(
           `${selectedServer}/chat/completions`,
-          inputField,
+          assembledQuery, // Pass the assembled query
           responseDiv,
           signal,
           startTime
@@ -138,7 +192,7 @@ document
         await sendArliOpenAIRequest(
           `${selectedServer}/v1/chat/completions`,
           selectedModel,
-          inputField,
+          assembledQuery, // Pass the assembled query
           responseDiv,
           signal,
           startTime
@@ -147,7 +201,7 @@ document
         await sendGemOpenAIRequest(
           `${selectedServer}/v1/chat/completions`,
           selectedModel,
-          inputField,
+          assembledQuery, // Pass the assembled query
           responseDiv,
           signal,
           startTime
