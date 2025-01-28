@@ -111,7 +111,10 @@ document
 
     if (contextCheckbox.checked) {
       if (contextField) {
-        const contextValue = contextField.value;
+        let contextValue = contextField.value;
+        if (contextValue.startsWith("www.")) {
+          contextValue = `https://${contextValue}`; //Prepend https://
+        }
         //Regex to check for a valid URL
         const urlRegex = /^(https?|ftp):\/\/[^\s/$.?#].[^\s]*$/i;
 
@@ -124,6 +127,8 @@ document
               accept: "application/json",
               Authorization: "Bearer test23",
             };
+            console.log("Proxy URL:", proxyUrl);
+
             const response = await fetch(proxyUrl, {
               method: "GET",
               headers: headers,
