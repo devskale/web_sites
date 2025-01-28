@@ -216,6 +216,24 @@ main {
   .sidebar.show {
     transform: translateX(0);
   }
+
+  #sidebarToggle {
+    position: fixed; /* Now only defined in media query */
+    top: 1rem;
+    right: 1rem;
+    left: auto;
+    z-index: 1001; /* Important for layering */
+    color: var(--text-color);
+    font-size: 1.5rem;
+    padding: 0.5rem;
+    border: none;
+    background: none;
+    cursor: pointer;
+  }
+
+  #sidebarToggle:hover {
+    color: var(--secondary-color); /* or a specific hover color */
+  }
 }
 
 .sidebar {
@@ -253,19 +271,6 @@ main {
 .sidebar .card p {
   margin: 0;
   color: var(--text-color);
-}
-
-#sidebarToggle {
-  color: var(--text-color);
-  font-size: 1.5rem;
-  padding: 0.5rem;
-  border: none;
-  background: none;
-  cursor: pointer;
-}
-
-#sidebarToggle:hover {
-  color: var(--secondary-color); /* or a specific hover color */
 }
 
 /* Add this to your CSS file */
