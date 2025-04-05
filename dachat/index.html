@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>DaChat</title>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body class="bg-gray-100 h-screen flex flex-col">
+    <header class="bg-white shadow-sm p-4">
+      <div class="flex justify-between items-center">
+        <h1 class="text-xl font-bold text-gray-800">DaChat</h1>
+        <button class="burger-button md:hidden text-gray-600">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            class="h-6 w-6"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor">
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M4 6h16M4 12h16M4 18h16" />
+          </svg>
+        </button>
+      </div>
+    </header>
+
+    <div class="flex flex-1 overflow-hidden">
+      <!-- Sidebar -->
+      <aside class="hidden md:block w-64 bg-white border-r p-4 overflow-y-auto">
+        <div class="flex justify-between items-center mb-4 md:hidden">
+          <h2 class="font-bold text-gray-800">Menu</h2>
+          <button class="close-button text-gray-600">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              class="h-6 w-6"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor">
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M6 18L18 6M6 6l12 12" />
+            </svg>
+          </button>
+        </div>
+        <div class="space-y-4">
+          <div>
+            <h2 class="font-semibold text-gray-700 mb-2">Servers</h2>
+            <select class="w-full p-2 border rounded">
+              <option>Select Server</option>
+            </select>
+          </div>
+          <div>
+            <h2 class="font-semibold text-gray-700 mb-2">Models</h2>
+            <select class="w-full p-2 border rounded">
+              <option>Select Model</option>
+            </select>
+          </div>
+          <div>
+            <h2 class="font-semibold text-gray-700 mb-2">Context</h2>
+            <textarea
+              class="w-full p-2 border rounded h-32"
+              placeholder="Enter context..."></textarea>
+          </div>
+        </div>
+      </aside>
+
+      <!-- Main Chat Area -->
+      <main class="flex-1 flex flex-col overflow-hidden">
+        <div class="flex-1 overflow-y-auto p-4 space-y-4" id="chat-messages">
+          <!-- Messages will appear here -->
+        </div>
+
+        <div class="p-4 border-t bg-white">
+          <div class="flex space-x-2 mb-2">
+            <label class="flex items-center space-x-2">
+              <input type="checkbox" class="rounded" />
+              <span class="text-sm">JSON Format</span>
+            </label>
+            <label class="flex items-center space-x-2">
+              <input type="checkbox" class="rounded" checked />
+              <span class="text-sm">Include Context</span>
+            </label>
+          </div>
+          <div class="flex space-x-2">
+            <input
+              type="text"
+              class="flex-1 p-2 border rounded"
+              placeholder="Type your message..." />
+            <button
+              class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">
+              Send
+            </button>
+          </div>
+        </div>
+      </main>
+    </div>
+
+    <!-- JavaScript is loaded from external file -->
+    <script src="script.js"></script>
+  </body>
+</html>

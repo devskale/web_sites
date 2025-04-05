@@ -6,12 +6,34 @@ A lightweight web interface for interacting with multiple AI inference endpoints
 
 ## Features
 
+### UI Design
+
+- **Main Interface**: Clean, responsive layout with sidebar navigation and main chat area
+- **Forms**:
+  - Server/Model selection dropdowns
+  - Context textarea with URL input capability
+  - Main query input with submit button
+  - Toggles for JSON formatting and context inclusion
+- **Menus**:
+  - Server configuration panel
+  - Model selection dropdown
+  - Context management controls
+  - Settings for response formatting
+
 ### Supported Endpoints
 
 - Ollama
 - Llama.cpp
 - OpenAI-compatible (including ArliAI and Gemini)
 - Custom API endpoints
+
+### Available Servers and Models
+
+- **Ollama**: Supports all locally hosted Ollama models (e.g., llama2, mistral)
+- **Llama.cpp**: Compatible with gguf model formats
+- **OpenAI**: Works with GPT-3.5, GPT-4, and compatible models
+- **ArliAI**: Custom fine-tuned models
+- **Gemini**: Google's latest AI models
 
 ### UI Features
 
@@ -51,6 +73,14 @@ A lightweight web interface for interacting with multiple AI inference endpoints
    - Navigate to `http://localhost:8000` (or the appropriate port)
 
 ## User Guide
+
+### Detailed Functionality
+
+- **Real-time Streaming**: Text appears character-by-character as generated
+- **Context Integration**: Combine URL content or direct text with queries
+- **JSON Support**: Format responses as structured JSON when enabled
+- **Performance Metrics**: Track response speed and efficiency
+- **Mobile Optimization**: Full functionality on all device sizes
 
 ### Basic Usage
 
