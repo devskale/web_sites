@@ -1,5 +1,8 @@
 // Burger menu functionality for DaChat application
 
+// Import providers from config.js
+import { providers } from "./config.js";
+
 // Custom instruction selection functionality
 function setupCustomInstructionSelection() {
   const instructionSelect = document.querySelector(
@@ -22,6 +25,66 @@ function setupCustomInstructionSelection() {
       if (instructionSelect.value === "") {
         instructionSelect.value = "custom";
       }
+    });
+  }
+}
+
+// Function to populate provider dropdown
+function populateProviderDropdown() {
+  const providerSelect = document.getElementById("provider-select");
+  const modelSelect = document.getElementById("model-select");
+
+  if (!providerSelect) {
+    console.error("Provider select element not found!");
+    return;
+  }
+
+  // Clear existing options except the first one
+  while (providerSelect.options.length > 1) {
+    providerSelect.remove(1);
+  }
+
+  // Add provider options
+  providers.forEach((provider, index) => {
+    const option = document.createElement("option");
+    option.value = index;
+    option.textContent = `${provider.description} (${provider.url})`;
+    providerSelect.appendChild(option);
+  });
+
+  // Add event listener to update models when provider changes
+  providerSelect.addEventListener("change", () => {
+    populateModelDropdown(providerSelect.value);
+  });
+}
+
+// Function to populate model dropdown based on selected provider
+function populateModelDropdown(providerIndex) {
+  const modelSelect = document.getElementById("model-select");
+
+  if (!modelSelect) {
+    console.error("Model select element not found!");
+    return;
+  }
+
+  // Clear existing options except the first one
+  while (modelSelect.options.length > 1) {
+    modelSelect.remove(1);
+  }
+
+  // If no provider selected, return
+  if (providerIndex === "") {
+    return;
+  }
+
+  // Add model options for selected provider
+  const provider = providers[providerIndex];
+  if (provider && provider.models) {
+    provider.models.forEach((model) => {
+      const option = document.createElement("option");
+      option.value = model;
+      option.textContent = model;
+      modelSelect.appendChild(option);
     });
   }
 }
@@ -104,4 +167,7 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
   setupCustomInstructionSelection();
+
+  // Populate provider dropdown with options from config.js
+  populateProviderDropdown();
 });

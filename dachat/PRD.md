@@ -29,9 +29,14 @@ A lightweight web interface for interacting with multiple AI inference endpoints
 - **Forms**:
   - Server/Model selection dropdowns
   - Instruction textarea for query guidance
+    - Allows users to enter custom instructions that guide the AI's responses
+    - Content syncs with the instruction select dropdown in chat interface
   - Context textarea with URL input capability
   - Main query input with submit button
   - Toggles for JSON formatting and context inclusion
+  - Instruction select dropdown:
+    - Provides preset instruction templates (Explain, Summarize, Translate, Code)
+    - 'Custom' option loads content from sidebar instruction textarea
 - **Menus**:
   - Server configuration panel
   - Model selection dropdown
