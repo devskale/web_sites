@@ -28,6 +28,7 @@ A lightweight web interface for interacting with multiple AI inference endpoints
 - **Main Interface**: Clean layout with sidebar navigation and main chat area
 - **Forms**:
   - Server/Model selection dropdowns
+  - Instruction textarea for query guidance
   - Context textarea with URL input capability
   - Main query input with submit button
   - Toggles for JSON formatting and context inclusion

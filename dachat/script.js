@@ -1,5 +1,31 @@
 // Burger menu functionality for DaChat application
 
+// Custom instruction selection functionality
+function setupCustomInstructionSelection() {
+  const instructionSelect = document.querySelector(
+    'select[name="instruction"]'
+  );
+  const sidebarInstructionField = document.querySelector(
+    'aside textarea[name="instruction"]'
+  );
+
+  if (instructionSelect && sidebarInstructionField) {
+    instructionSelect.addEventListener("change", (e) => {
+      if (e.target.value === "custom") {
+        e.target.value = "";
+        e.target.blur();
+        sidebarInstructionField.focus();
+      }
+    });
+
+    sidebarInstructionField.addEventListener("input", () => {
+      if (instructionSelect.value === "") {
+        instructionSelect.value = "custom";
+      }
+    });
+  }
+}
+
 document.addEventListener("DOMContentLoaded", () => {
   const burgerButton = document.querySelector(".burger-button");
   const closeButton = document.querySelector(".close-button");
@@ -76,4 +102,6 @@ document.addEventListener("DOMContentLoaded", () => {
       sidebar.classList.remove("fixed", "inset-0", "z-10", "sidebar-mobile");
     }
   });
+
+  setupCustomInstructionSelection();
 });
