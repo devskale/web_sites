@@ -1,0 +1,725 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Energiespeicher-Optimierer</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    <link rel="stylesheet" href="styles.css" />
+    <script type="module" src="scripts.js"></script>
+    <script type="module" src="params.js"></script>
+    <style>
+      .gradient-bg {
+        background: linear-gradient(135deg, #3b82f6 0%, #10b981 100%);
+      }
+      .result-card {
+        transition: all 0.3s ease;
+        box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1),
+          0 4px 6px -2px rgba(0, 0, 0, 0.05);
+      }
+      .result-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1),
+          0 10px 10px -5px rgba(0, 0, 0, 0.04);
+      }
+      .input-slider {
+        -webkit-appearance: none;
+        width: 100%;
+        height: 8px;
+        border-radius: 5px;
+        background: #e5e7eb;
+        outline: none;
+      }
+      .input-slider::-webkit-slider-thumb {
+        -webkit-appearance: none;
+        appearance: none;
+        width: 20px;
+        height: 20px;
+        border-radius: 50%;
+        background: #3b82f6;
+        cursor: pointer;
+        transition: all 0.2s ease;
+      }
+      .input-slider::-webkit-slider-thumb:hover {
+        background: #2563eb;
+        transform: scale(1.1);
+      }
+      .animate-pulse-slow {
+        animation: pulse 3s infinite;
+      }
+      @keyframes pulse {
+        0%,
+        100% {
+          opacity: 1;
+        }
+        50% {
+          opacity: 0.7;
+        }
+      }
+      .tooltip {
+        position: relative;
+        display: inline-block;
+      }
+      .tooltip .tooltiptext {
+        visibility: hidden;
+        width: 200px;
+        background-color: #333;
+        color: #fff;
+        text-align: center;
+        border-radius: 6px;
+        padding: 5px;
+        position: absolute;
+        z-index: 1;
+        bottom: 125%;
+        left: 50%;
+        margin-left: -100px;
+        opacity: 0;
+        transition: opacity 0.3s;
+        font-size: 14px;
+      }
+      .tooltip:hover .tooltiptext {
+        visibility: visible;
+        opacity: 1;
+      }
+      .scale-input {
+        transition: transform 0.2s;
+      }
+      .scale-input:focus {
+        transform: scale(1.02);
+      }
+    </style>
+  </head>
+  <body class="min-h-screen bg-gray-50">
+    <!-- Header -->
+    <header class="gradient-bg text-white shadow-lg">
+      <div class="container mx-auto px-4 py-8">
+        <div class="flex flex-col md:flex-row justify-between items-center">
+          <div class="flex items-center mb-4 md:mb-0">
+            <i class="fas fa-bolt text-3xl mr-3 animate-pulse-slow"></i>
+            <h1 class="text-2xl md:text-3xl font-bold">
+              Energiespeicher-Optimierer
+            </h1>
+          </div>
+          <nav class="flex space-x-6">
+            <a href="#" class="hover:text-blue-200 transition">Home</a>
+            <a href="#" class="hover:text-blue-200 transition">About</a>
+            <a href="#" class="hover:text-blue-200 transition">Contact</a>
+          </nav>
+        </div>
+      </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="container mx-auto px-4 py-12">
+      <div class="max-w-4xl mx-auto">
+        <div class="text-center mb-12">
+          <h2 class="text-3xl md:text-4xl font-bold text-gray-800 mb-4">
+            Optimieren Sie Ihr Energiespeichersystem
+          </h2>
+          <p class="text-lg text-gray-600 max-w-2xl mx-auto">
+            Berechnen Sie die ideale Batteriekapazität und Leistung für Ihre
+            Wohn- oder Gewerbeimmobilie basierend auf Ihrem Energiebedarf.
+          </p>
+        </div>
+
+        <!-- Calculator Form -->
+        <div class="bg-white rounded-xl shadow-lg p-6 md:p-8 mb-12">
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+            <!-- Energy Input -->
+            <div>
+              <h3
+                class="text-xl font-semibold text-gray-800 mb-4 flex items-center">
+                <i class="fas fa-home mr-2 text-blue-500"></i> Energieverbrauch
+                <div class="tooltip ml-2">
+                  <i class="fas fa-info-circle text-gray-400"></i>
+                  <span class="tooltiptext"
+                    >Jährlicher Gesamtenergieverbrauch inklusive aller
+                    elektrischen Verbraucher</span
+                  >
+                </div>
+              </h3>
+              <div class="mb-6">
+                <label
+                  for="energy"
+                  class="block text-sm font-medium text-gray-700 mb-2">
+                  Jährlicher Energieverbrauch (kWh)
+                </label>
+                <input
+                  type="range"
+                  id="energy"
+                  min="1000"
+                  max="100000"
+                  step="100"
+                  value="15000"
+                  class="input-slider mb-2" />
+                <div class="flex justify-between text-xs text-gray-500">
+                  <span>1,000 kWh</span>
+                  <span>100,000 kWh</span>
+                </div>
+                <div class="mt-4 relative">
+                  <input
+                    type="number"
+                    id="energy-value"
+                    value="15000"
+                    class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 scale-input" />
+                  <span class="absolute right-3 top-2.5 text-gray-500"
+                    >kWh</span
+                  >
+                </div>
+              </div>
+            </div>
+
+            <!-- PV Input -->
+            <div>
+              <h3
+                class="text-xl font-semibold text-gray-800 mb-4 flex items-center">
+                <i class="fas fa-solar-panel mr-2 text-green-500"></i>
+                Solaranlage
+                <div class="tooltip ml-2">
+                  <i class="fas fa-info-circle text-gray-400"></i>
+                  <span class="tooltiptext"
+                    >Installierte Gesamtleistung Ihrer Photovoltaikanlage</span
+                  >
+                </div>
+              </h3>
+              <div class="mb-6">
+                <label
+                  for="pv"
+                  class="block text-sm font-medium text-gray-700 mb-2">
+                  PV-Anlagenleistung (kWp)
+                </label>
+                <input
+                  type="range"
+                  id="pv"
+                  min="1"
+                  max="100"
+                  step="0.5"
+                  value="15"
+                  class="input-slider mb-2" />
+                <div class="flex justify-between text-xs text-gray-500">
+                  <span>1 kWp</span>
+                  <span>100 kWp</span>
+                </div>
+                <div class="mt-4 relative">
+                  <input
+                    type="number"
+                    id="pv-value"
+                    value="15"
+                    class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 scale-input" />
+                  <span class="absolute right-3 top-2.5 text-gray-500"
+                    >kWp</span
+                  >
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Additional Options -->
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+            <div>
+              <label
+                for="usage-pattern"
+                class="block text-sm font-medium text-gray-700 mb-2">
+                <i class="fas fa-chart-pie mr-1 text-purple-500"></i>
+                Nutzungsprofil
+              </label>
+              <select
+                id="usage-pattern"
+                class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                <option value="residential">
+                  Privathaushalt (Abendspitze)
+                </option>
+                <option value="commercial">Gewerbe (Tagesnutzung)</option>
+                <option value="industrial">Industrie (24/7 Betrieb)</option>
+              </select>
+            </div>
+            <div>
+              <label
+                for="battery-type"
+                class="block text-sm font-medium text-gray-700 mb-2">
+                <i
+                  class="fas fa-battery-three-quarters mr-1 text-orange-500"></i>
+                Bevorzugter Batterietyp
+              </label>
+              <select
+                id="battery-type"
+                class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                <option value="lithium">Lithium-Ionen (Hohe Leistung)</option>
+                <option value="lead-acid">Blei-Säure (Budget-Option)</option>
+                <option value="flow">
+                  Redox-Flow-Batterie (Lange Laufzeit)
+                </option>
+              </select>
+            </div>
+          </div>
+
+          <div class="mt-6 flex justify-center">
+            <button
+              id="calculate-btn"
+              class="px-8 py-3 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg transition duration-300 transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 shadow-lg">
+              <i class="fas fa-calculator mr-2"></i> Optimalen Speicher
+              berechnen
+            </button>
+          </div>
+        </div>
+
+        <!-- Results Section -->
+        <div id="results" class="hidden">
+          <h2 class="text-2xl font-bold text-gray-800 mb-6 flex items-center">
+            <i class="fas fa-chart-bar text-blue-500 mr-3"></i> Empfohlener
+            Energiespeicher
+          </h2>
+
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <!-- Battery Capacity -->
+            <div class="result-card bg-white p-6 rounded-xl">
+              <div class="flex items-center mb-4">
+                <div class="bg-blue-100 p-3 rounded-full mr-4">
+                  <i
+                    class="fas fa-battery-three-quarters text-blue-600 text-xl"></i>
+                </div>
+                <h3 class="text-lg font-semibold text-gray-800">
+                  Batteriekapazität
+                </h3>
+              </div>
+              <div class="flex items-end">
+                <span
+                  id="capacity-value"
+                  class="text-4xl font-bold text-gray-800 mr-2"
+                  >0</span
+                >
+                <span class="text-lg text-gray-600 mb-1">kWh</span>
+              </div>
+              <div class="mt-3 bg-blue-50 p-3 rounded-lg">
+                <p class="text-sm text-gray-700">
+                  <i class="fas fa-info-circle text-blue-500 mr-1"></i>
+                  Diese Kapazität speichert genug Energie für
+                  <span id="autonomy-days" class="font-medium">2-3</span> Tage
+                  durchschnittlichen Verbrauch.
+                </p>
+              </div>
+            </div>
+
+            <!-- Power Output -->
+            <div class="result-card bg-white p-6 rounded-xl">
+              <div class="flex items-center mb-4">
+                <div class="bg-green-100 p-3 rounded-full mr-4">
+                  <i class="fas fa-tachometer-alt text-green-600 text-xl"></i>
+                </div>
+                <h3 class="text-lg font-semibold text-gray-800">
+                  Leistungsabgabe
+                </h3>
+              </div>
+              <div class="flex items-end">
+                <span
+                  id="power-value"
+                  class="text-4xl font-bold text-gray-800 mr-2"
+                  >0</span
+                >
+                <span class="text-lg text-gray-600 mb-1">kW</span>
+              </div>
+              <div class="mt-3 bg-green-50 p-3 rounded-lg">
+                <p class="text-sm text-gray-700">
+                  <i class="fas fa-info-circle text-green-500 mr-1"></i>
+                  Diese Leistung gewährleistet ausreichende Entladekapazität für
+                  Spitzenlastzeiten.
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Cost Estimation -->
+          <div class="mt-8 bg-white p-6 rounded-xl shadow">
+            <h3
+              class="text-xl font-semibold text-gray-800 mb-4 flex items-center">
+              <i class="fas fa-dollar-sign text-yellow-500 mr-3"></i> Kosten
+              Schätzung
+            </h3>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+              <div class="bg-yellow-50 p-4 rounded-lg">
+                <p class="text-sm text-gray-600 mb-1">Batteriesystem Kosten</p>
+                <p class="text-xl font-bold text-gray-800">
+                  $<span id="battery-cost">0</span>
+                </p>
+                <p class="text-xs text-gray-500 mt-1">($500-$800 per kWh)</p>
+              </div>
+              <div class="bg-purple-50 p-4 rounded-lg">
+                <p class="text-sm text-gray-600 mb-1">Wechselrichter Kosten</p>
+                <p class="text-xl font-bold text-gray-800">
+                  $<span id="inverter-cost">0</span>
+                </p>
+                <p class="text-xs text-gray-500 mt-1">($200-$400 per kW)</p>
+              </div>
+              <div class="bg-blue-50 p-4 rounded-lg">
+                <p class="text-sm text-gray-600 mb-1">Gesamtkosten</p>
+                <p class="text-xl font-bold text-gray-800">
+                  $<span id="total-cost">0</span>
+                </p>
+                <p class="text-xs text-gray-500 mt-1">
+                  (Installation nicht inbegriffen)
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Additional Recommendations -->
+          <div class="mt-8 bg-white p-6 rounded-xl shadow">
+            <h3
+              class="text-xl font-semibold text-gray-800 mb-4 flex items-center">
+              <i class="fas fa-lightbulb text-yellow-500 mr-3"></i>
+              Empfehlungen
+            </h3>
+            <div id="recommendations" class="space-y-4">
+              <!-- Dynamic content will be inserted here -->
+            </div>
+          </div>
+        </div>
+
+        <!-- Info Section -->
+        <div
+          class="mt-16 bg-blue-50 rounded-xl p-6 md:p-8 border border-blue-100">
+          <h2 class="text-2xl font-bold text-gray-800 mb-4 flex items-center">
+            <i class="fas fa-info-circle text-blue-500 mr-3"></i> So
+            funktioniert es
+          </h2>
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div class="bg-white p-4 rounded-lg shadow-sm">
+              <div
+                class="bg-blue-100 w-12 h-12 rounded-full flex items-center justify-center mb-3">
+                <i class="fas fa-chart-line text-blue-600"></i>
+              </div>
+              <h3 class="font-semibold text-gray-800 mb-2">Energieanalyse</h3>
+              <p class="text-gray-600 text-sm">
+                Wir analysieren Ihren Jahresverbrauch, um Ihre täglichen und
+                saisonalen Energieverbrauchsmuster zu bestimmen, von kleinen
+                Häusern bis zu großen Gewerbebetrieben.
+              </p>
+            </div>
+            <div class="bg-white p-4 rounded-lg shadow-sm">
+              <div
+                class="bg-green-100 w-12 h-12 rounded-full flex items-center justify-center mb-3">
+                <i class="fas fa-sun text-green-600"></i>
+              </div>
+              <h3 class="font-semibold text-gray-800 mb-2">Solarpotenzial</h3>
+              <p class="text-gray-600 text-sm">
+                Ihre PV-Anlagenleistung hilft uns, die erwartete Solarerzeugung
+                über das Jahr zu berechnen, von kleinen Dachanlagen bis zu
+                großen Solarparks.
+              </p>
+            </div>
+            <div class="bg-white p-4 rounded-lg shadow-sm">
+              <div
+                class="bg-purple-100 w-12 h-12 rounded-full flex items-center justify-center mb-3">
+                <i class="fas fa-cogs text-purple-600"></i>
+              </div>
+              <h3 class="font-semibold text-gray-800 mb-2">Optimierung</h3>
+              <p class="text-gray-600 text-sm">
+                Unser Algorithmus berechnet das optimale Verhältnis zwischen
+                Speicherkapazität und Leistung für Ihre spezifischen Bedürfnisse
+                und Budget.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-gray-800 text-white py-8">
+      <div class="container mx-auto px-4">
+        <div class="flex flex-col md:flex-row justify-between items-center">
+          <div class="mb-4 md:mb-0">
+            <div class="flex items-center">
+              <i class="fas fa-bolt text-xl mr-2"></i>
+              <span class="font-bold">Energiespeicher-Optimierer</span>
+            </div>
+            <p class="text-gray-400 text-sm mt-1">
+              Wir helfen Ihnen, Ihre Energieunabhängigkeit von 1kW bis 1MW zu
+              optimieren
+            </p>
+          </div>
+          <div class="flex space-x-6">
+            <a href="#" class="text-gray-400 hover:text-white transition"
+              ><i class="fab fa-twitter"></i
+            ></a>
+            <a href="#" class="text-gray-400 hover:text-white transition"
+              ><i class="fab fa-facebook"></i
+            ></a>
+            <a href="#" class="text-gray-400 hover:text-white transition"
+              ><i class="fab fa-linkedin"></i
+            ></a>
+            <a href="#" class="text-gray-400 hover:text-white transition"
+              ><i class="fab fa-github"></i
+            ></a>
+          </div>
+        </div>
+        <div
+          class="border-t border-gray-700 mt-6 pt-6 text-center text-gray-400 text-sm">
+          <p>© 2023 Energiespeicher-Optimierer. Alle Rechte vorbehalten.</p>
+        </div>
+      </div>
+    </footer>
+
+    <script>
+      // Get DOM elements
+      const energySlider = document.getElementById("energy");
+      const energyValue = document.getElementById("energy-value");
+      const pvSlider = document.getElementById("pv");
+      const pvValue = document.getElementById("pv-value");
+      const usagePattern = document.getElementById("usage-pattern");
+      const batteryType = document.getElementById("battery-type");
+      const calculateBtn = document.getElementById("calculate-btn");
+      const resultsSection = document.getElementById("results");
+      const capacityValue = document.getElementById("capacity-value");
+      const powerValue = document.getElementById("power-value");
+      const autonomyDays = document.getElementById("autonomy-days");
+      const batteryCost = document.getElementById("battery-cost");
+      const inverterCost = document.getElementById("inverter-cost");
+      const totalCost = document.getElementById("total-cost");
+      const recommendations = document.getElementById("recommendations");
+
+      // Format number with commas
+      function formatNumber(num) {
+        return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+      }
+
+      // Sync slider and input field for energy
+      energySlider.addEventListener("input", function () {
+        energyValue.value = this.value;
+      });
+
+      energyValue.addEventListener("input", function () {
+        if (this.value > 100000) this.value = 100000;
+        if (this.value < 1000) this.value = 1000;
+        energySlider.value = this.value;
+      });
+
+      // Sync slider and input field for PV
+      pvSlider.addEventListener("input", function () {
+        pvValue.value = this.value;
+      });
+
+      pvValue.addEventListener("input", function () {
+        if (this.value > 100) this.value = 100;
+        if (this.value < 1) this.value = 1;
+        pvSlider.value = this.value;
+      });
+
+      // Calculate button click handler
+      calculateBtn.addEventListener("click", function () {
+        const energy = parseFloat(energyValue.value);
+        const pv = parseFloat(pvValue.value);
+        const usage = usagePattern.value;
+        const battery = batteryType.value;
+
+        // Calculate optimal storage (more sophisticated algorithm)
+        const dailyConsumption = energy / 365;
+        const solarCoverage = pv * 4 * 365; // 4 kWh/day per kWp (average)
+
+        // Adjust autonomy factor based on usage pattern
+        let autonomyFactor;
+        switch (usage) {
+          case "residential":
+            autonomyFactor = solarCoverage >= energy ? 1.5 : 2.5;
+            break;
+          case "commercial":
+            autonomyFactor = solarCoverage >= energy ? 1 : 2;
+            break;
+          case "industrial":
+            autonomyFactor = solarCoverage >= energy ? 0.5 : 1.5;
+            break;
+          default:
+            autonomyFactor = 2;
+        }
+
+        // Calculate optimal capacity with buffer
+        const optimalCapacity = dailyConsumption * autonomyFactor * 1.2; // 20% buffer
+
+        // Calculate power output based on usage pattern and consumption
+        let peakPower;
+        switch (usage) {
+          case "residential":
+            peakPower = Math.max(3, dailyConsumption / 4); // Residential typically has higher peaks
+            break;
+          case "commercial":
+            peakPower = Math.max(5, dailyConsumption / 8); // More spread out during business hours
+            break;
+          case "industrial":
+            peakPower = Math.max(10, dailyConsumption / 12); // More consistent load
+            break;
+          default:
+            peakPower = dailyConsumption / 6;
+        }
+
+        // Adjust for battery type
+        let batteryCostPerKwh, inverterCostPerKw;
+        switch (battery) {
+          case "lithium":
+            batteryCostPerKwh = 600;
+            inverterCostPerKw = 300;
+            break;
+          case "lead-acid":
+            batteryCostPerKwh = 300;
+            inverterCostPerKw = 250;
+            peakPower *= 1.2; // Need more power capacity for same energy due to lower DoD
+            break;
+          case "flow":
+            batteryCostPerKwh = 800;
+            inverterCostPerKw = 400;
+            break;
+          default:
+            batteryCostPerKwh = 500;
+            inverterCostPerKw = 300;
+        }
+
+        // Calculate costs
+        const batterySystemCost = optimalCapacity * batteryCostPerKwh;
+        const inverterSystemCost = peakPower * inverterCostPerKw;
+        const totalSystemCost = batterySystemCost + inverterSystemCost;
+
+        // Display results with formatted numbers
+        capacityValue.textContent = formatNumber(optimalCapacity.toFixed(0));
+        powerValue.textContent = formatNumber(peakPower.toFixed(0));
+        batteryCost.textContent = formatNumber(Math.round(batterySystemCost));
+        inverterCost.textContent = formatNumber(Math.round(inverterSystemCost));
+        totalCost.textContent = formatNumber(Math.round(totalSystemCost));
+
+        // Set autonomy days text based on usage pattern
+        let autonomyText;
+        if (usage === "residential") {
+          autonomyText = solarCoverage >= energy ? "1-2" : "2-3";
+        } else if (usage === "commercial") {
+          autonomyText = solarCoverage >= energy ? "1" : "1-2";
+        } else {
+          autonomyText = solarCoverage >= energy ? "0.5-1" : "1-1.5";
+        }
+        autonomyDays.textContent = autonomyText;
+
+        // Generate recommendations
+        let recHTML = "";
+
+        // Solar coverage analysis
+        const coveragePercentage = Math.round((solarCoverage / energy) * 100);
+        if (coveragePercentage >= 80) {
+          recHTML += `
+                        <div class="flex items-start">
+                            <i class="fas fa-check-circle text-green-500 mt-1 mr-3"></i>
+                            <div>
+                                <p class="font-medium text-gray-800">Excellent solar coverage</p>
+                                <p class="text-gray-600 text-sm">Your solar panels can cover ${coveragePercentage}% of your annual consumption. Consider adding more storage to maximize self-consumption.</p>
+                            </div>
+                        </div>
+                    `;
+        } else if (coveragePercentage >= 30) {
+          recHTML += `
+                        <div class="flex items-start">
+                            <i class="fas fa-info-circle text-blue-500 mt-1 mr-3"></i>
+                            <div>
+                                <p class="font-medium text-gray-800">Partial solar coverage</p>
+                                <p class="text-gray-600 text-sm">Your solar panels cover ${coveragePercentage}% of your annual consumption. You might want to consider expanding your PV system for better ROI.</p>
+                            </div>
+                        </div>
+                    `;
+        } else {
+          recHTML += `
+                        <div class="flex items-start">
+                            <i class="fas fa-exclamation-triangle text-yellow-500 mt-1 mr-3"></i>
+                            <div>
+                                <p class="font-medium text-gray-800">Limited solar coverage</p>
+                                <p class="text-gray-600 text-sm">Your solar panels cover only ${coveragePercentage}% of your annual consumption. Significant PV expansion would be needed for energy independence.</p>
+                            </div>
+                        </div>
+                    `;
+        }
+
+        // Battery size recommendation
+        if (optimalCapacity > 500) {
+          recHTML += `
+                        <div class="flex items-start">
+                            <i class="fas fa-battery-full text-purple-500 mt-1 mr-3"></i>
+                            <div>
+                                <p class="font-medium text-gray-800">Large storage system</p>
+                                <p class="text-gray-600 text-sm">For your consumption level, we recommend considering a ${
+                                  battery === "flow"
+                                    ? "flow battery"
+                                    : "modular lithium-ion"
+                                } system that can be expanded over time.</p>
+                            </div>
+                        </div>
+                    `;
+        }
+
+        // Power requirements
+        if (peakPower > 20) {
+          recHTML += `
+                        <div class="flex items-start">
+                            <i class="fas fa-bolt text-yellow-500 mt-1 mr-3"></i>
+                            <div>
+                                <p class="font-medium text-gray-800">High power demand</p>
+                                <p class="text-gray-600 text-sm">Your power requirements suggest you might benefit from multiple inverters in parallel or a commercial-grade hybrid system.</p>
+                            </div>
+                        </div>
+                    `;
+        }
+
+        // Battery type specific advice
+        if (battery === "lead-acid") {
+          recHTML += `
+                        <div class="flex items-start">
+                            <i class="fas fa-battery-quarter text-orange-500 mt-1 mr-3"></i>
+                            <div>
+                                <p class="font-medium text-gray-800">Lead-acid considerations</p>
+                                <p class="text-gray-600 text-sm">Note that lead-acid batteries require more maintenance and have shorter lifespans than lithium-ion, but may be cost-effective for some applications.</p>
+                            </div>
+                        </div>
+                    `;
+        } else if (battery === "flow") {
+          recHTML += `
+                        <div class="flex items-start">
+                            <i class="fas fa-fill-drip text-indigo-500 mt-1 mr-3"></i>
+                            <div>
+                                <p class="font-medium text-gray-800">Flow battery benefits</p>
+                                <p class="text-gray-600 text-sm">Flow batteries excel in long-duration storage applications and have virtually unlimited cycle life, making them ideal for large-scale storage.</p>
+                            </div>
+                        </div>
+                    `;
+        }
+
+        // Monitoring recommendation
+        recHTML += `
+                    <div class="flex items-start">
+                        <i class="fas fa-chart-pie text-indigo-500 mt-1 mr-3"></i>
+                        <div>
+                            <p class="font-medium text-gray-800">Monitor and optimize</p>
+                            <p class="text-gray-600 text-sm">Consider adding an energy monitoring system to track your consumption patterns and further optimize your setup for maximum efficiency.</p>
+                        </div>
+                    </div>
+                `;
+
+        // Financial considerations
+        recHTML += `
+                    <div class="flex items-start">
+                        <i class="fas fa-piggy-bank text-green-500 mt-1 mr-3"></i>
+                        <div>
+                            <p class="font-medium text-gray-800">Financial incentives</p>
+                            <p class="text-gray-600 text-sm">Check for available rebates, tax credits, or net metering programs that could significantly reduce your system payback period.</p>
+                        </div>
+                    </div>
+                `;
+
+        recommendations.innerHTML = recHTML;
+
+        // Show results section
+        resultsSection.classList.remove("hidden");
+
+        // Scroll to results
+        resultsSection.scrollIntoView({ behavior: "smooth" });
+      });
+      // Initial calculation on page load
+      calculateBtn.click();
+    </script>
+  </body>
+</html>

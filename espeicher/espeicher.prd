@@ -1,0 +1,21 @@
+# Produktanforderungsdokumentation (PRD) für eSpeicher
+
+## Übersicht
+eSpeicher ist ein Energie-Speicher-Optimierer, der Haushalten und Unternehmen hilft, die ideale Batteriekapazität und Leistung basierend auf ihrem Energieverbrauch und Solaranlagenkapazität zu berechnen.
+
+## Hauptfunktionen
+1. **Energieverbrauchsanalyse**: Berechnung des täglichen und saisonalen Energiebedarfs
+2. **Solarpotenzialberechnung**: Analyse der PV-Systemkapazität und erwarteten Solarerzeugung
+3. **Speicheroptimierung**: Algorithmus zur Berechnung der optimalen Batteriekapazität
+4. **Kosteneffizienzanalyse**: Vergleich verschiedener Speicherlösungen
+
+## Zielgruppe
+- Privathaushalte mit Solaranlagen
+- Gewerbebetriebe mit hohem Energiebedarf
+- Energieberater und Installateure
+
+## Technische Spezifikationen
+- Web-basierte Plattform mit responsivem Design
+- Integrierter Rechner für Energiebedarf und Speicherkapazität
+- Datenvisualisierung für bessere Entscheidungsfindung
+- Sicherer Datenschutz nach DSGVO

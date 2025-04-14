@@ -3,3 +3,4 @@
 .env
 .nginx*
 **/config.js
+**/ver/
