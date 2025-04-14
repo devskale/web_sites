@@ -1,3 +1,5 @@
+import config from "./params.js";
+
 document.addEventListener("DOMContentLoaded", function () {
   // Get DOM elements
   const energySlider = document.getElementById("energy");
@@ -10,7 +12,7 @@ document.addEventListener("DOMContentLoaded", function () {
   const resultsSection = document.getElementById("results");
   const capacityValue = document.getElementById("capacity-value");
   const powerValue = document.getElementById("power-value");
-  const autonomyDays = document.getElementById("autonomy-days");
+  const autonomyHours = document.getElementById("autonomy-hours");
   const batteryCost = document.getElementById("battery-cost");
   const inverterCost = document.getElementById("inverter-cost");
   const totalCost = document.getElementById("total-cost");
@@ -52,7 +54,15 @@ document.addEventListener("DOMContentLoaded", function () {
 
     // Calculate optimal storage (more sophisticated algorithm)
     const dailyConsumption = energy / 365;
-    const solarCoverage = pv * 4 * 365; // 4 kWh/day per kWp (average)
+    const solarCoverage =
+      pv *
+      config.factors.specificEnergyYield *
+      config.factors.degradationFactor;
+
+    // Update solar yield display
+    document.getElementById("solar-yield-value").textContent = formatNumber(
+      Math.round(solarCoverage)
+    );
 
     // Adjust autonomy factor based on usage pattern
     let autonomyFactor;
@@ -103,8 +113,8 @@ document.addEventListener("DOMContentLoaded", function () {
     // Update UI with results
     capacityValue.textContent = formatNumber(recommendedCapacity);
     powerValue.textContent = formatNumber(recommendedPower);
-    autonomyDays.textContent =
-      autonomyFactor === 2 ? "2-3" : autonomyFactor === 1.5 ? "1-2" : "1";
+    autonomyHours.textContent =
+      autonomyFactor === 2 ? "4-8" : autonomyFactor === 1.5 ? "3-6" : "2-4";
     batteryCost.textContent = formatNumber(totalBatteryCost);
     inverterCost.textContent = formatNumber(totalInverterCost);
     totalCost.textContent = formatNumber(totalBatteryCost + totalInverterCost);

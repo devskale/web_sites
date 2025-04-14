@@ -32,6 +32,8 @@ const config = {
   // Calculation factors
   factors: {
     solarCoveragePerKw: 4, // kWh/day per kWp
+    specificEnergyYield: 1275, // kWh/kWp
+    degradationFactor: 0.85, // Annual degradation factor
     residentialAutonomy: 2,
     commercialAutonomy: 1.5,
     industrialAutonomy: 1,

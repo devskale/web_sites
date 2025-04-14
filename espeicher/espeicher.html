@@ -268,6 +268,21 @@
 
         <!-- Results Section -->
         <div id="results" class="hidden">
+          <div class="bg-white p-6 rounded-xl shadow mb-6">
+            <h3 class="text-xl font-semibold text-gray-800 mb-4 flex items-center">
+              <i class="fas fa-sun text-yellow-500 mr-3"></i> Jährlicher Solarertrag
+            </h3>
+            <div class="flex items-end">
+              <span id="solar-yield-value" class="text-4xl font-bold text-gray-800 mr-2">0</span>
+              <span class="text-lg text-gray-600 mb-1">kWh</span>
+            </div>
+            <div class="mt-3 bg-yellow-50 p-3 rounded-lg">
+              <p class="text-sm text-gray-700">
+                <i class="fas fa-info-circle text-yellow-500 mr-1"></i>
+                Berechnet mit SEE-Wert für Österreich (1.275 kWh/kWp) und Degradation.
+              </p>
+            </div>
+          </div
           <h2 class="text-2xl font-bold text-gray-800 mb-6 flex items-center">
             <i class="fas fa-chart-bar text-blue-500 mr-3"></i> Empfohlener
             Energiespeicher
@@ -297,8 +312,8 @@
                 <p class="text-sm text-gray-700">
                   <i class="fas fa-info-circle text-blue-500 mr-1"></i>
                   Diese Kapazität speichert genug Energie für
-                  <span id="autonomy-days" class="font-medium">2-3</span> Tage
-                  durchschnittlichen Verbrauch.
+                  <span id="autonomy-hours" class="font-medium">4-8</span>
+                  Stunden durchschnittlichen Verbrauch.
                 </p>
               </div>
             </div>
@@ -463,23 +478,7 @@
       </div>
     </footer>
 
-    <script>
-      // Get DOM elements
-      const energySlider = document.getElementById("energy");
-      const energyValue = document.getElementById("energy-value");
-      const pvSlider = document.getElementById("pv");
-      const pvValue = document.getElementById("pv-value");
-      const usagePattern = document.getElementById("usage-pattern");
-      const batteryType = document.getElementById("battery-type");
-      const calculateBtn = document.getElementById("calculate-btn");
-      const resultsSection = document.getElementById("results");
-      const capacityValue = document.getElementById("capacity-value");
-      const powerValue = document.getElementById("power-value");
-      const autonomyDays = document.getElementById("autonomy-days");
-      const batteryCost = document.getElementById("battery-cost");
-      const inverterCost = document.getElementById("inverter-cost");
-      const totalCost = document.getElementById("total-cost");
-      const recommendations = document.getElementById("recommendations");
+    <script type="module" src="scripts.js"></script>
 
       // Format number with commas
       function formatNumber(num) {
@@ -517,7 +516,7 @@
 
         // Calculate optimal storage (more sophisticated algorithm)
         const dailyConsumption = energy / 365;
-        const solarCoverage = pv * 4 * 365; // 4 kWh/day per kWp (average)
+        const solarCoverage = pv * 1275 * 0.9;// * 4 * 365; // 4 kWh/day per kWp (average)
 
         // Adjust autonomy factor based on usage pattern
         let autonomyFactor;
@@ -586,6 +585,7 @@
         batteryCost.textContent = formatNumber(Math.round(batterySystemCost));
         inverterCost.textContent = formatNumber(Math.round(inverterSystemCost));
         totalCost.textContent = formatNumber(Math.round(totalSystemCost));
+        document.getElementById("solar-yield-value").textContent = formatNumber(Math.round(solarCoverage));
 
         // Set autonomy days text based on usage pattern
         let autonomyText;
@@ -596,7 +596,7 @@
         } else {
           autonomyText = solarCoverage >= energy ? "0.5-1" : "1-1.5";
         }
-        autonomyDays.textContent = autonomyText;
+        autonomyHours.textContent = autonomyText;
 
         // Generate recommendations
         let recHTML = "";
@@ -718,8 +718,6 @@
         // Scroll to results
         resultsSection.scrollIntoView({ behavior: "smooth" });
       });
-      // Initial calculation on page load
-      calculateBtn.click();
     </script>
   </body>
 </html>
