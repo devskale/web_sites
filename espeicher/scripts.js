@@ -54,6 +54,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
     // Calculate optimal storage (more sophisticated algorithm)
     const dailyConsumption = energy / 365;
+    const hourlyConsumption = dailyConsumption / 24;
     const solarCoverage =
       pv *
       config.factors.specificEnergyYield *
@@ -98,15 +99,19 @@ document.addEventListener("DOMContentLoaded", function () {
 
     // Calculate recommended capacity and power
     const recommendedCapacity = Math.round(
-      dailyConsumption * autonomyFactor * batteryFactor
+      //      dailyConsumption * autonomyFactor * batteryFactor
+      hourlyConsumption * autonomyFactor
     );
     const recommendedPower = Math.round(
       recommendedCapacity / (autonomyFactor * 2)
     );
 
     // Calculate costs
-    const batteryCostPerKwh = battery === "lead-acid" ? 500 : 800;
-    const inverterCostPerKw = 300;
+    const batteryCostPerKwh =
+      battery === "lead-acid"
+        ? config.costs.leadAcidPerKwh
+        : config.costs.lithiumPerKwh;
+    const inverterCostPerKw = config.costs.inverterPerKw;
     const totalBatteryCost = recommendedCapacity * batteryCostPerKwh;
     const totalInverterCost = recommendedPower * inverterCostPerKw;
 
