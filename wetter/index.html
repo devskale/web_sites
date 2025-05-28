@@ -2,45 +2,29 @@
 <html lang="de">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Neusiedl am See Wetter Vorschau</title>
     <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
-    <link rel="stylesheet" href="styles.css" />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap"
-      rel="stylesheet" />
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
   </head>
   <body>
     <div class="container">
       <h1>Neusiedl am See Wetter Vorschau</h1>
-
+      
       <div class="chart-section">
         <h2>Temperaturverlauf</h2>
         <div id="tempChart"></div>
       </div>
-
+      
       <div class="chart-section">
         <h2>Sonnenstunden</h2>
         <div id="solarChart"></div>
-        <div id="solarTableContainer">
-          <table id="solarTable">
-            <thead>
-              <tr>
-                <th>Tag</th>
-                <th>kWh/m²</th>
-                <th>% des erwarteten Maximums</th>
-              </tr>
-            </thead>
-            <tbody>
-              <!-- Table rows will be inserted here by JS -->
-            </tbody>
-          </table>
-        </div>
       </div>
-
+      
       <div id="dailyDataContainer"></div>
     </div>
-
+    
     <script src="temperature_chart.js"></script>
     <script src="solar_chart.js"></script>
   </body>
