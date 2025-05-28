@@ -1,0 +1,104 @@
+body {
+    font-family: 'Segoe UI', Arial, sans-serif;
+    background: linear-gradient(120deg, #e0eafc 0%, #cfdef3 100%);
+    margin: 0;
+    padding: 0;
+    min-height: 100vh;
+    color: #222;
+}
+
+.container {
+    max-width: 900px;
+    margin: 40px auto;
+    padding: 24px;
+    background: #fff;
+    border-radius: 18px;
+    box-shadow: 0 4px 24px rgba(0,0,0,0.08);
+}
+
+h1, h2, h3 {
+    text-align: center;
+    font-weight: 600;
+    margin-top: 0;
+}
+
+.chart-section {
+    margin: 32px 0;
+    padding: 24px 16px;
+    background: #f8fafc;
+    border-radius: 14px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+}
+
+#tempChart, #solarChart {
+    margin: 0 auto;
+    max-width: 100%;
+    min-height: 350px;
+}
+
+#dailyDataContainer {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    justify-content: center;
+    margin-top: 18px;
+}
+
+#dailyDataContainer div {
+    background: #e3f6fc;
+    color: #222;
+    border-radius: 8px;
+    padding: 8px 16px;
+    font-size: 1rem;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.04);
+}
+
+#solarTableContainer {
+    margin: 18px auto 0 auto;
+    max-width: 400px;
+}
+
+#solarTable {
+    width: 100%;
+    border-collapse: collapse;
+    background: #f8fafc;
+    border-radius: 8px;
+    overflow: hidden;
+    font-size: 1rem;
+    margin: 0 auto;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.04);
+}
+
+#solarTable th, #solarTable td {
+    padding: 8px 12px;
+    text-align: center;
+}
+
+#solarTable th {
+    background: #e3f6fc;
+    font-weight: 600;
+}
+
+#solarTable tr:nth-child(even) {
+    background: #f1faff;
+}
+
+#solarTable tr:hover {
+    background: #d2f0fa;
+}
+
+@media (max-width: 600px) {
+    .container {
+        padding: 8px;
+    }
+    .chart-section {
+        padding: 10px 2px;
+    }
+    h1, h2, h3 {
+        font-size: 1.2rem;
+    }
+    #dailyDataContainer div {
+        font-size: 0.95rem;
+        padding: 6px 8px;
+    }
+}
