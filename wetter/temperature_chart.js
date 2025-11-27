@@ -1,4 +1,4 @@
-document.addEventListener("DOMContentLoaded", function() {
+document.addEventListener("DOMContentLoaded", function () {
     const apiUrl = "https://api.open-meteo.com/v1/forecast?latitude=47.949&longitude=16.8417&hourly=temperature_2m,rain&past_days=2&forecast_days=4";
 
     fetch(apiUrl)
@@ -14,7 +14,7 @@ document.addEventListener("DOMContentLoaded", function() {
         var todayEnd = new Date(today.getFullYear(), today.getMonth(), today.getDate() + 1).getTime() - 1; // End of today
 
         var futureTimes = timeData.map(time => new Date(time).getTime() > today.getTime());
-        
+
         var options = {
             series: [
                 {
