@@ -1,4 +1,4 @@
-window.loadSolarData = function (lat, lon) {
+window.loadSolarData = function (lat, lon, cityName) {
     const apiUrl = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&hourly=global_tilted_irradiance&past_days=10&forecast_days=5`;
 
     fetch(apiUrl)
@@ -15,7 +15,7 @@ window.loadSolarData = function (lat, lon) {
             displayDailyData(dailyData);
 
             // Create the chart with calculated daily data
-            createDailySolarPowerChart(dailyData);
+            createDailySolarPowerChart(dailyData, cityName);
         })
         .catch(error => console.error('Error fetching data:', error));
 };
@@ -64,7 +64,7 @@ function displayDailyData(dailyData) {
     });
 }
 
-function createDailySolarPowerChart(dailyData) {
+function createDailySolarPowerChart(dailyData, cityName) {
     if (window.solarChartInstance) {
         window.solarChartInstance.destroy();
     }
@@ -98,8 +98,13 @@ function createDailySolarPowerChart(dailyData) {
             }
         },
         title: {
-            text: '',
-            align: 'center'
+            text: cityName ? `Sonnenenergie in ${cityName}` : '',
+            align: 'center',
+            style: {
+                fontSize: '14px',
+                fontWeight: 600,
+                color: '#64748b'
+            }
         },
         xaxis: {
             categories: days,

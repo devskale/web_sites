@@ -58,10 +58,10 @@ document.addEventListener("DOMContentLoaded", function () {
 
         // Call functions from other scripts
         if (window.loadTemperatureData) {
-            window.loadTemperatureData(lat, lon);
+            window.loadTemperatureData(lat, lon, name);
         }
         if (window.loadSolarData) {
-            window.loadSolarData(lat, lon);
+            window.loadSolarData(lat, lon, name);
         }
     }
 });

@@ -1,16 +1,16 @@
 // Export the function so it can be used by other scripts
-window.loadTemperatureData = function (lat, lon) {
+window.loadTemperatureData = function (lat, lon, cityName) {
     const apiUrl = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&hourly=temperature_2m,rain&past_days=2&forecast_days=4`;
 
     fetch(apiUrl)
         .then(response => response.json())
         .then(data => {
-            createTemperatureChart(data.hourly.time, data.hourly.temperature_2m, data.hourly.rain);
+            createTemperatureChart(data.hourly.time, data.hourly.temperature_2m, data.hourly.rain, cityName);
         })
         .catch(error => console.error('Error fetching data:', error));
 };
 
-function createTemperatureChart(timeData, tempData, rainData) {
+function createTemperatureChart(timeData, tempData, rainData, cityName) {
     // Destroy existing chart if it exists to avoid duplicates/overlaps
     if (window.tempChartInstance) {
         window.tempChartInstance.destroy();
@@ -83,8 +83,13 @@ function createTemperatureChart(timeData, tempData, rainData) {
             },
         },
         title: {
-            text: '', // Removed title from chart itself for cleaner look
-            align: 'left'
+            text: cityName ? `Wetter in ${cityName}` : '',
+            align: 'left',
+            style: {
+                fontSize: '14px',
+                fontWeight: 600,
+                color: '#64748b'
+            }
         },
         xaxis: {
             type: 'datetime',
