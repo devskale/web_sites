@@ -1,104 +1,194 @@
+:root {
+    --bg-color: #f8fafc;
+    --card-bg: #ffffff;
+    --primary-color: #0f172a;
+    --text-color: #334155;
+    --text-light: #64748b;
+    --accent-color: #3b82f6;
+    --border-radius: 16px;
+    --shadow-sm: 0 1px 3px rgba(0,0,0,0.05);
+    --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+    --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.05), 0 4px 6px -2px rgba(0, 0, 0, 0.025);
+}
+
 body {
-    font-family: 'Segoe UI', Arial, sans-serif;
-    background: linear-gradient(120deg, #e0eafc 0%, #cfdef3 100%);
+    font-family: 'Inter', sans-serif;
+    background-color: var(--bg-color);
+    color: var(--text-color);
     margin: 0;
     padding: 0;
     min-height: 100vh;
-    color: #222;
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
 }
 
 .container {
-    max-width: 900px;
-    margin: 40px auto;
-    padding: 24px;
-    background: #fff;
-    border-radius: 18px;
-    box-shadow: 0 4px 24px rgba(0,0,0,0.08);
-}
-
-h1, h2, h3 {
-    text-align: center;
-    font-weight: 600;
-    margin-top: 0;
-}
-
-.chart-section {
-    margin: 32px 0;
-    padding: 24px 16px;
-    background: #f8fafc;
-    border-radius: 14px;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.04);
-}
-
-#tempChart, #solarChart {
+    max-width: 1000px;
     margin: 0 auto;
-    max-width: 100%;
-    min-height: 350px;
+    padding: 40px 20px;
 }
 
-#dailyDataContainer {
+/* Header & Search */
+.header {
     display: flex;
-    flex-wrap: wrap;
-    gap: 10px;
-    justify-content: center;
-    margin-top: 18px;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 40px;
+    gap: 20px;
 }
 
-#dailyDataContainer div {
-    background: #e3f6fc;
-    color: #222;
-    border-radius: 8px;
-    padding: 8px 16px;
-    font-size: 1rem;
-    box-shadow: 0 1px 4px rgba(0,0,0,0.04);
-}
-
-#solarTableContainer {
-    margin: 18px auto 0 auto;
-    max-width: 400px;
-}
-
-#solarTable {
-    width: 100%;
-    border-collapse: collapse;
-    background: #f8fafc;
-    border-radius: 8px;
-    overflow: hidden;
-    font-size: 1rem;
-    margin: 0 auto;
-    box-shadow: 0 1px 4px rgba(0,0,0,0.04);
-}
-
-#solarTable th, #solarTable td {
-    padding: 8px 12px;
+h1 {
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--primary-color);
+    margin: 0;
     text-align: center;
+    letter-spacing: -0.025em;
 }
 
-#solarTable th {
-    background: #e3f6fc;
+.search-container {
+    display: flex;
+    gap: 10px;
+    width: 100%;
+    max-width: 400px;
+    background: var(--card-bg);
+    padding: 6px;
+    border-radius: 50px;
+    box-shadow: var(--shadow-md);
+    transition: box-shadow 0.2s ease;
+}
+
+.search-container:focus-within {
+    box-shadow: var(--shadow-lg);
+}
+
+input[type="text"] {
+    flex: 1;
+    border: none;
+    padding: 12px 20px;
+    font-size: 1rem;
+    outline: none;
+    background: transparent;
+    font-family: inherit;
+    color: var(--primary-color);
+}
+
+input[type="text"]::placeholder {
+    color: #94a3b8;
+}
+
+button {
+    background-color: var(--primary-color);
+    color: white;
+    border: none;
+    padding: 10px 24px;
+    border-radius: 40px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background-color 0.2s ease, transform 0.1s ease;
+    font-family: inherit;
+}
+
+button:hover {
+    background-color: #1e293b;
+}
+
+button:active {
+    transform: scale(0.98);
+}
+
+button:disabled {
+    background-color: #94a3b8;
+    cursor: not-allowed;
+}
+
+/* Charts Section */
+.chart-section {
+    background: var(--card-bg);
+    border-radius: var(--border-radius);
+    padding: 30px;
+    margin-bottom: 30px;
+    box-shadow: var(--shadow-sm);
+    border: 1px solid #f1f5f9;
+}
+
+.section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    padding-bottom: 15px;
+    border-bottom: 1px solid #f1f5f9;
+}
+
+h2 {
+    font-size: 1.25rem;
     font-weight: 600;
+    color: var(--primary-color);
+    margin: 0;
 }
 
-#solarTable tr:nth-child(even) {
-    background: #f1faff;
+.badge {
+    background-color: #f1f5f9;
+    color: var(--text-light);
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
 }
 
-#solarTable tr:hover {
-    background: #d2f0fa;
+/* Data Grid */
+.data-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+    gap: 15px;
+    margin-top: 30px;
 }
 
+.data-grid div {
+    background: #f8fafc;
+    border-radius: 12px;
+    padding: 15px;
+    text-align: center;
+    font-size: 0.9rem;
+    color: var(--text-light);
+    border: 1px solid #e2e8f0;
+    transition: transform 0.2s ease;
+}
+
+.data-grid div:hover {
+    transform: translateY(-2px);
+    border-color: #cbd5e1;
+}
+
+.data-grid div strong {
+    display: block;
+    color: var(--primary-color);
+    font-size: 1rem;
+    margin-bottom: 4px;
+}
+
+/* Responsive */
 @media (max-width: 600px) {
     .container {
-        padding: 8px;
+        padding: 20px 15px;
     }
+    
+    h1 {
+        font-size: 1.5rem;
+    }
+    
     .chart-section {
-        padding: 10px 2px;
+        padding: 20px 15px;
     }
-    h1, h2, h3 {
-        font-size: 1.2rem;
+    
+    .search-container {
+        max-width: 100%;
     }
-    #dailyDataContainer div {
-        font-size: 0.95rem;
-        padding: 6px 8px;
+    
+    button {
+        padding: 10px 16px;
     }
 }

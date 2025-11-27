@@ -3,29 +3,41 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Neusiedl am See Wetter Vorschau</title>
+    <title>Wetter Vorschau</title>
     <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
     <link rel="stylesheet" href="styles.css">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   </head>
   <body>
     <div class="container">
-      <h1>Neusiedl am See Wetter Vorschau</h1>
+      <header class="header">
+        <h1 id="cityName">Wetter Vorschau</h1>
+        <div class="search-container">
+          <input type="text" id="cityInput" placeholder="Stadt eingeben..." />
+          <button id="searchButton">Suchen</button>
+        </div>
+      </header>
       
       <div class="chart-section">
-        <h2>Temperaturverlauf</h2>
+        <div class="section-header">
+          <h2>Temperatur & Regen</h2>
+          <span class="badge">4 Tage</span>
+        </div>
         <div id="tempChart"></div>
       </div>
       
       <div class="chart-section">
-        <h2>Sonnenstunden</h2>
+        <div class="section-header">
+          <h2>Sonnenenergie</h2>
+          <span class="badge">Täglich</span>
+        </div>
         <div id="solarChart"></div>
+        <div id="dailyDataContainer" class="data-grid"></div>
       </div>
-      
-      <div id="dailyDataContainer"></div>
     </div>
     
     <script src="temperature_chart.js"></script>
     <script src="solar_chart.js"></script>
+    <script src="app.js"></script>
   </body>
 </html>
