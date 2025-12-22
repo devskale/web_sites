@@ -1,43 +1,59 @@
 <!DOCTYPE html>
 <html lang="de">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Wetter Vorschau</title>
-    <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
-    <link rel="stylesheet" href="styles.css">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-  </head>
-  <body>
-    <div class="container">
-      <header class="header">
-        <h1 id="cityName">Wetter Vorschau</h1>
-        <div class="search-container">
-          <input type="text" id="cityInput" placeholder="Stadt eingeben..." />
-          <button id="searchButton">Suchen</button>
-        </div>
-      </header>
-      
-      <div class="chart-section">
-        <div class="section-header">
-          <h2>Temperatur & Regen</h2>
-          <span class="badge">4 Tage</span>
-        </div>
-        <div id="tempChart"></div>
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Wetter Vorschau</title>
+  <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+  <link rel="stylesheet" href="styles.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+
+<body>
+  <div class="container">
+    <header class="header">
+      <h1 id="cityName">Wetter Vorschau</h1>
+      <div class="search-container">
+        <input type="text" id="cityInput" placeholder="Stadt eingeben..." />
+        <button id="searchButton">Suchen</button>
       </div>
-      
-      <div class="chart-section">
-        <div class="section-header">
-          <h2>Sonnenenergie</h2>
-          <span class="badge">Täglich</span>
-        </div>
-        <div id="solarChart"></div>
-        <div id="dailyDataContainer" class="data-grid"></div>
+    </header>
+
+    <div class="chart-section">
+      <div class="section-header">
+        <h2>Temperatur & Regen</h2>
+        <span class="badge">4 Tage</span>
       </div>
+      <div id="tempChart"></div>
     </div>
-    
-    <script src="temperature_chart.js"></script>
-    <script src="solar_chart.js"></script>
-    <script src="app.js"></script>
-  </body>
+
+    <div class="chart-section">
+      <div class="section-header">
+        <h2>Sonnenenergie</h2>
+        <div class="controls">
+          <div class="input-group">
+            <label for="roofArea">Fläche (m²):</label>
+            <input type="number" id="roofArea" value="57" min="1" step="1" class="small-input">
+          </div>
+          <div class="input-group">
+            <label for="efficiency">Effizienz (%):</label>
+            <input type="number" id="efficiency" value="17.5" min="1" max="100" step="0.5" class="small-input">
+          </div>
+          <div class="input-group">
+            <span class="separator">=</span>
+            <span id="kwpDisplay" class="value-display">10.0 kWp</span>
+          </div>
+        </div>
+      </div>
+      <div id="solarChart"></div>
+      <div id="dailyDataContainer" class="data-grid"></div>
+    </div>
+  </div>
+
+  <script src="temperature_chart.js"></script>
+  <script src="solar_chart.js"></script>
+  <script src="app.js"></script>
+</body>
+
 </html>
