@@ -146,7 +146,7 @@ The context system enables rich interactions with AI models by providing relevan
 
 3. **Handling Web Content**:
    - URLs are validated with regex
-   - Web content is fetched through a proxy (`https://amd1.mooo.com/api/w3m`) to avoid CORS issues
+   - Web content is fetched through a proxy (`https://amd1.mooo.com/api/v1/w3m`) to avoid CORS issues
    - Content is returned as JSON and extracted for use as context
 
 #### Implementation Details

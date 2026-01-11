@@ -9,7 +9,7 @@ import { sendOllamaRequest } from "./ollama.js";
 import { sendLlamaRequest } from "./llamacpp.js";
 import { sendOpenAIRequest } from "./openai.js";
 import { fetchAvailableModels } from "./modelFetcher.js";
-import { servers } from "./config.js";
+import { servers, API_BEARER } from "./config.js";
 
 let controller;
 
@@ -118,13 +118,13 @@ document
       if (urlRegex.test(contextValue)) {
         try {
           const proxyUrl =
-            "https://amd1.mooo.com/api/w3m?url=" +
+            "https://amd1.mooo.com/api/v1/w3m?url=" +
             encodeURIComponent(contextValue);
           const response = await fetch(proxyUrl, {
             method: "GET",
             headers: {
               accept: "application/json",
-              Authorization: "Bearer test23",
+              Authorization: `Bearer ${API_BEARER}`,
             },
           });
 

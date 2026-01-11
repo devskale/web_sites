@@ -13,3 +13,4 @@ export const OPENAI_TOKEN = "%%OPENAI_TOKEN%%"; //
 //export const GEMINI_TOKEN = '%%GEMINI_TOKEN%%'; //
 export const GEMINI_TOKEN = "AIzaS....";
 export const ARLIAI_TOKEN = "5ea1bb.....";
+export const API_BEARER = "your_token_here";
