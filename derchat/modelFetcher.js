@@ -1,56 +1,76 @@
-export async function fetchAvailableModels(serverUrl, serverType) {
+/**
+ * Fetches available models from the specified server.
+ * @param {string} serverUrl - The base URL of the server.
+ * @param {string} serverType - The type of the server (e.g., 'ollama', 'openai').
+ * @param {string} apiKey - Optional API key for authentication.
+ */
+export async function fetchAvailableModels(serverUrl, serverType, apiKey) {
   const modelField = document.getElementById("modelField");
   modelField.innerHTML = '<option value="">Loading models...</option>';
 
   try {
-    let models;
+    let models = [];
 
     if (serverType === "ollama") {
       const fetchUrl = `${serverUrl}/api/tags`;
-      console.log("Fetching Ollama models from:", fetchUrl);
-
-      // Ensure using HTTP
       const response = await fetch(fetchUrl, {
         method: "GET",
-        mode: "cors",
-        cache: "no-cache",
-        credentials: "same-origin",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        redirect: "follow",
-        referrerPolicy: "no-referrer",
+        headers: { "Content-Type": "application/json" },
       });
 
       if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
+        throw new Error(`Ollama error: ${response.status}`);
       }
 
       const data = await response.json();
-      console.log("Received data:", data);
       models = data.models.map((model) => model.name);
+    } else if (
+      serverType === "openai" ||
+      serverType === "arliopenai" ||
+      serverType === "gemopenai" ||
+      serverType === "openai-compliant"
+    ) {
+      const fetchUrl = `${serverUrl}/models`;
+      const headers = { "Content-Type": "application/json" };
+      if (apiKey) {
+        headers["Authorization"] = `Bearer ${apiKey}`;
+      }
+
+      const response = await fetch(fetchUrl, {
+        method: "GET",
+        headers: headers,
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        if (data.data && Array.isArray(data.data)) {
+          models = data.data.map((m) => m.id);
+        } else if (Array.isArray(data)) {
+          models = data.map((m) => m.id || m);
+        }
+      }
+
+      // Fallback to hardcoded models if fetch fails or returns empty
+      if (models.length === 0) {
+        if (serverType === "arliopenai") {
+          models = [
+            "Gemma-3-27B-it",
+            "Mistral-Nemo-12B-Instruct-2407",
+            "Llama-3.1-8B-Instruct",
+            "Llama-3.1-70B-Instruct",
+          ];
+        } else if (serverType === "gemopenai") {
+          models = ["gemini-1.5-pro-latest", "gemini-1.5-flash-latest"];
+        } else {
+          models = ["gpt-3.5-turbo", "gpt-4"];
+        }
+      }
     } else if (serverType === "llama.cpp") {
-      console.log("Using fixed model list for llama.cpp");
-      models = ["llama-2-7b", "llama-2-13b", "llama-2-70b"];
-    } else if (serverType === "openai") {
-      console.log("Using fixed model list for openai");
-      models = ["llama-2-7b", "llama-2-13b", "llama-2-70b"];
-    } else if (serverType === "arliopenai") {
-      console.log("Using fixed model list for arli openai");
-      models = ["Mistral-Nemo-12B-Instruct-2407"];
-    } else if (serverType === "gemopenai") {
-      console.log("Using fixed model list for gemopenai");
-      models = [
-        "gemini-1.5-pro-latest",
-        "gemini-1.5-flash-latest",
-        "gemini-1.5-pro-latest",
-      ];
+      // llama.cpp often doesn't have a models endpoint, or it's different
+      models = ["default"];
     } else {
-      console.error(`Unsupported server type: ${serverType}`);
       throw new Error(`Unsupported server type: ${serverType}`);
     }
-
-    console.log("Available models:", models);
 
     modelField.innerHTML =
       '<option value="">--Please choose a model--</option>';
@@ -60,19 +80,16 @@ export async function fetchAvailableModels(serverUrl, serverType) {
       option.textContent = model;
       modelField.appendChild(option);
     });
+
+    // Try to restore default model if it exists
+    const defaultModel = modelField.getAttribute("data-default");
+    if (defaultModel && models.includes(defaultModel)) {
+      modelField.value = defaultModel;
+    } else if (models.length > 0) {
+      modelField.selectedIndex = 1;
+    }
   } catch (error) {
     console.error("Error fetching models:", error);
     modelField.innerHTML = `<option value="">Error: ${error.message}</option>`;
   }
 }
-
-document
-  .getElementById("serverField")
-  .addEventListener("change", async function () {
-    const serverField = document.getElementById("serverField");
-    const selectedOption = serverField.options[serverField.selectedIndex];
-    const serverUrl = selectedOption.value;
-    const serverType = selectedOption.getAttribute("data-description");
-
-    await fetchAvailableModels(serverUrl, serverType);
-  });
