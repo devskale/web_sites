@@ -118,7 +118,7 @@ document
       if (urlRegex.test(contextValue)) {
         try {
           const proxyUrl =
-            "https://amd1.mooo.com/api/v1/w3m?url=" +
+            "https://amd1.mooo.com/api/fetch_url?url=" +
             encodeURIComponent(contextValue);
           const response = await fetch(proxyUrl, {
             method: "GET",

@@ -54,12 +54,10 @@ A lightweight web interface for interacting with multiple AI inference endpoints
    ```
 
 2. Configure your endpoints:
-
    - Copy `config.js.template` to `config.js`
    - Edit `config.js` to add your AI servers and endpoints
 
 3. Serve the application:
-
    - Use any static file server like Python's `http.server`:
      ```bash
      python -m http.server
@@ -126,13 +124,11 @@ The context system enables rich interactions with AI models by providing relevan
 #### How Context Works
 
 1. **Context Collection**:
-
    - User can input text directly in the context field
    - User can input a URL, which is fetched through a proxy service
    - Content is normalized and sanitized
 
 2. **Context Integration**:
-
    - When the context checkbox is enabled, the application combines the user query with the context
    - The assembled query is structured as:
 
@@ -146,7 +142,7 @@ The context system enables rich interactions with AI models by providing relevan
 
 3. **Handling Web Content**:
    - URLs are validated with regex
-   - Web content is fetched through a proxy (`https://amd1.mooo.com/api/v1/w3m`) to avoid CORS issues
+   - Web content is fetched through a proxy (`https://amd1.mooo.com/api/fetch_url`) to avoid CORS issues
    - Content is returned as JSON and extracted for use as context
 
 #### Implementation Details
@@ -164,7 +160,6 @@ if (contextCheckbox.checked) {
 #### JSON Handling
 
 1. **Request Formatting**:
-
    - Each endpoint adapter formats requests according to the API's requirements
    - Requests are sent as JSON with proper headers and authentication
 
@@ -176,12 +171,10 @@ if (contextCheckbox.checked) {
 #### Web Communication
 
 1. **Fetch API Usage**:
-
    - The application uses the Fetch API for all network requests
    - Requests are made with proper headers and can be aborted using AbortController
 
 2. **Streaming Implementation**:
-
    - Text is streamed in real-time from supported endpoints
    - The UI updates progressively as tokens arrive
    - Performance metrics (time to first token, tokens per second) are calculated
