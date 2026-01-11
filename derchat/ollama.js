@@ -27,7 +27,8 @@ export async function sendOllamaRequest(
   responseDiv,
   signal,
   startTime,
-  apiKey
+  apiKey,
+  useJson = false
 ) {
   const data = {
     model: model,
@@ -36,6 +37,10 @@ export async function sendOllamaRequest(
       { role: "user", content: input },
     ],
   };
+
+  if (useJson) {
+    data.format = "json";
+  }
 
   const headers = {
     "Content-Type": "application/json",

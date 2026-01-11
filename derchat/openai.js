@@ -1,7 +1,7 @@
 import { displayAssistantMessage } from "./utils.js";
 
 // Configure marked to use highlight.js for code syntax highlighting
-if (typeof hljs !== 'undefined') {
+if (typeof hljs !== "undefined") {
   marked.setOptions({
     highlight: function (code, lang) {
       const language = hljs.getLanguage(lang) ? lang : "plaintext";
@@ -28,7 +28,8 @@ export async function sendOpenAIRequest(
   responseDiv,
   signal,
   startTime,
-  apiKey
+  apiKey,
+  useJson = false
 ) {
   const data = {
     model: model,
@@ -37,6 +38,10 @@ export async function sendOpenAIRequest(
     max_tokens: 1024,
     stream: true,
   };
+
+  if (useJson) {
+    data.response_format = { type: "json_object" };
+  }
 
   const headers = {
     "Content-Type": "application/json",
@@ -56,7 +61,10 @@ export async function sendOpenAIRequest(
 
     if (!response.ok) {
       const errorData = await response.json().catch(() => ({}));
-      throw new Error(errorData.error?.message || `Network response was not ok: ${response.status}`);
+      throw new Error(
+        errorData.error?.message ||
+          `Network response was not ok: ${response.status}`
+      );
     }
 
     const reader = response.body.getReader();
@@ -72,13 +80,17 @@ export async function sendOpenAIRequest(
 
       const chunk = decoder.decode(value, { stream: true });
       const lines = chunk.split("\n").filter((line) => line.trim() !== "");
-      
+
       for (const line of lines) {
         if (line === "data: [DONE]") break;
         if (line.startsWith("data: ")) {
           try {
             const json = JSON.parse(line.substring(6));
-            if (json.choices && json.choices[0].delta && json.choices[0].delta.content) {
+            if (
+              json.choices &&
+              json.choices[0].delta &&
+              json.choices[0].delta.content
+            ) {
               if (!firstCharTime) firstCharTime = performance.now();
               result += json.choices[0].delta.content;
               assistantMessage.innerHTML = marked.parse(result);
@@ -102,7 +114,7 @@ export async function sendOpenAIRequest(
       const statsElement = document.createElement("p");
       statsElement.className = "status-light";
       statsElement.innerHTML = `1st: ${tfc}s, tot: ${totalTime.toFixed(1)}s, ${cps} ch/s`;
-      
+
       if (usage) {
         statsElement.innerHTML += `<br>Tokens: ${usage.total_tokens} (P: ${usage.prompt_tokens}, C: ${usage.completion_tokens})`;
       }
@@ -110,7 +122,6 @@ export async function sendOpenAIRequest(
       responseDiv.appendChild(statsDiv);
       responseDiv.scrollTop = responseDiv.scrollHeight;
     }
-
   } catch (error) {
     if (error.name === "AbortError") {
       console.log("Fetch aborted");

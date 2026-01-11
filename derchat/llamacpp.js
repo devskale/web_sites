@@ -8,7 +8,8 @@ export async function sendLlamaRequest(
   responseDiv,
   signal,
   startTime,
-  apiKey
+  apiKey,
+  useJson = false
 ) {
   const data = {
     messages: [
@@ -19,6 +20,10 @@ export async function sendLlamaRequest(
     max_tokens: 512,
     stream: true,
   };
+
+  if (useJson) {
+    data.response_format = { type: "json_object" };
+  }
 
   const headers = {
     "Content-Type": "application/json",

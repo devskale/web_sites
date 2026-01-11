@@ -85,6 +85,8 @@ document
     const modelField = document.getElementById("modelField");
     const contextCheckbox = document.getElementById("contextCheck");
     const contextField = document.getElementById("contextField");
+    const jsonCheckbox = document.getElementById("jsonCheck");
+    const jsonField = document.getElementById("jsonField");
     const selectedModel = modelField.value;
     const config = getCurrentServerConfig();
 
@@ -94,6 +96,16 @@ document
     }
 
     let assembledQuery = inputField;
+
+    // Handle JSON format instructions
+    if (jsonCheckbox.checked && jsonField) {
+      const jsonValue = jsonField.value.trim();
+      if (jsonValue) {
+        assembledQuery += `\n\nReturn the response in JSON format according to this schema:\n${jsonValue}`;
+      } else {
+        assembledQuery += `\n\nReturn the response in valid JSON format.`;
+      }
+    }
 
     if (contextCheckbox.checked && contextField) {
       let contextValue = contextField.value;
@@ -148,7 +160,8 @@ document
           responseDiv,
           signal,
           startTime,
-          config.apiKey
+          config.apiKey,
+          jsonCheckbox.checked
         );
       } else if (desc.includes("llama.cpp")) {
         await sendLlamaRequest(
@@ -157,7 +170,8 @@ document
           responseDiv,
           signal,
           startTime,
-          config.apiKey
+          config.apiKey,
+          jsonCheckbox.checked
         );
       } else {
         // Default to OpenAI-compatible for arliopenai, gemopenai, openai, etc.
@@ -168,7 +182,8 @@ document
           responseDiv,
           signal,
           startTime,
-          config.apiKey
+          config.apiKey,
+          jsonCheckbox.checked
         );
       }
     } catch (error) {
