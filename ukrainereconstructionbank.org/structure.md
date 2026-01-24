@@ -45,7 +45,7 @@ This document outlines the proposed structure for the Ukraine Reconstruction Ban
     *   Political Risk Insurance
     *   Technical Assistance Grants
 *   **Application Process:** Step-by-step guide (Submission -> Due Diligence -> Approval -> Disbursement).
-*   **Secure Portal Login:** Link to `portal.urb.ua` for submissions.
+*   **Secure Portal Login:** Link to `portal.ukrainereconstructionbank.org` for submissions.
 
 ### 2.5. For Investors (`/investors`)
 *   **Investment Instruments:** Bonds, Green Funds, Direct Equity.
