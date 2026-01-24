@@ -62,8 +62,9 @@
 
 <body>
 
-    <!-- Decorative Background -->
+    <!-- Decorative Background & Mesh -->
     <div class="bg-grid"></div>
+    <div class="gradient-mesh"></div>
 
     <!-- Navigation -->
     <nav class="navbar">
@@ -75,11 +76,18 @@
             <div class="nav-links">
                 <a href="about.html">About</a>
                 <a href="index.html#sectors">Sectors</a>
-                <a href="investors.html" style="color: var(--c-accent-gold); opacity: 1;">For Investors</a>
-                <a href="apply.html">Apply</a>
-                <a href="media.html">News</a>
+                <a href="investors.html" style="color: var(--c-accent-gold); opacity: 1;">Investors</a>
+                <a href="apply.html">Funding</a>
+                <a href="media.html">Media</a>
             </div>
-            <a href="#portal" class="btn btn-primary">Client Portal</a>
+            <div style="display: flex; align-items: center; gap: 2rem;">
+                <div style="display: flex; gap: 0.5rem; font-size: 0.75rem; font-weight: 700;">
+                    <span style="color: var(--c-accent-gold);">EN</span>
+                    <span style="opacity: 0.3;">UA</span>
+                </div>
+                <a href="#portal" class="btn btn-primary btn-portal"><i class="ri-lock-2-line"></i> Institutional
+                    Portal</a>
+            </div>
         </div>
     </nav>
 

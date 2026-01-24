@@ -14,8 +14,9 @@
 
 <body>
 
-  <!-- Decorative Background -->
+  <!-- Decorative Background & Mesh -->
   <div class="bg-grid"></div>
+  <div class="gradient-mesh"></div>
 
   <!-- Navigation -->
   <nav class="navbar">
@@ -27,11 +28,17 @@
       <div class="nav-links">
         <a href="about.html">About</a>
         <a href="#sectors">Sectors</a>
-        <a href="investors.html">For Investors</a>
-        <a href="apply.html">Apply</a>
-        <a href="media.html">News</a>
+        <a href="investors.html">Investors</a>
+        <a href="apply.html">Funding</a>
+        <a href="media.html">Media</a>
       </div>
-      <a href="#portal" class="btn btn-primary">Client Portal</a>
+      <div style="display: flex; align-items: center; gap: 2rem;">
+        <div style="display: flex; gap: 0.5rem; font-size: 0.75rem; font-weight: 700;">
+          <span style="color: var(--c-accent-gold);">EN</span>
+          <span style="opacity: 0.3;">UA</span>
+        </div>
+        <a href="#portal" class="btn btn-primary btn-portal"><i class="ri-lock-2-line"></i> Institutional Portal</a>
+      </div>
     </div>
   </nav>
 
@@ -73,179 +80,256 @@
         </div>
       </div>
     </div>
-  </section>
-
-  <!-- About / Mission -->
-  <section id="about" style="padding: 8rem 0;">
-    <!-- Official Partners Banner -->
-    <div style="margin-bottom: 6rem; border-bottom: 1px solid var(--c-border); padding-bottom: 3rem;">
-      <div class="container"
-        style="display: flex; justify-content: center; gap: 4rem; align-items: center; flex-wrap: wrap;">
-        <div style="display: flex; align-items: center; gap: 1rem; opacity: 0.9;">
-          <img src="https://upload.wikimedia.org/wikipedia/commons/b/b7/Flag_of_Europe.svg"
-            style="height: 48px; width: auto;" alt="EU Flag">
-          <div style="text-align: left;">
-            <span
-              style="display: block; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--c-text-secondary);">Framework</span>
-            <span style="font-weight: 700; color: #fff; font-size: 1.1rem;">European Commission</span>
+    <!-- Partners Ticker -->
+    <section class="partners-ticker">
+      <div class="container">
+        <p class="partners-title">Strategic Institutional Partners</p>
+        <div class="ticker-track">
+          <div style="display: flex; align-items: center; gap: 0.5rem;">
+            <i class="ri-flag-2-fill"></i>
+            <span>European Union</span>
+          </div>
+          <div style="display: flex; align-items: center; gap: 0.5rem;">
+            <i class="ri-shield-user-fill"></i>
+            <span>United States DFC</span>
+          </div>
+          <div style="display: flex; align-items: center; gap: 0.5rem;">
+            <i class="ri-exchange-funds-fill"></i>
+            <span>IMF</span>
+          </div>
+          <div style="display: flex; align-items: center; gap: 0.5rem;">
+            <i class="ri-global-fill"></i>
+            <span>World Bank</span>
+          </div>
+          <div style="display: flex; align-items: center; gap: 0.5rem;">
+            <i class="ri-safe-2-fill"></i>
+            <span>BlackRock</span>
           </div>
         </div>
-        <div style="height: 50px; width: 1px; background: var(--c-border);"></div>
-        <div style="display: flex; align-items: center; gap: 1rem; opacity: 0.9;">
-          <img src="https://upload.wikimedia.org/wikipedia/commons/a/a4/Flag_of_the_United_States.svg"
-            style="height: 48px; width: auto;" alt="US Flag">
-          <div style="text-align: left;">
-            <span
-              style="display: block; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--c-text-secondary);">Strategic
-              Partner</span>
-            <span style="font-weight: 700; color: #fff; font-size: 1.1rem;">United States DFC</span>
+      </div>
+    </section>
+
+    <!-- About / Mission -->
+    <section id="about" style="padding: 8rem 0;">
+      <!-- Official Partners Banner -->
+      <div style="margin-bottom: 6rem; border-bottom: 1px solid var(--c-border); padding-bottom: 3rem;">
+        <div class="container"
+          style="display: flex; justify-content: center; gap: 4rem; align-items: center; flex-wrap: wrap;">
+          <div style="display: flex; align-items: center; gap: 1rem; opacity: 0.9;">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/b/b7/Flag_of_Europe.svg"
+              style="height: 48px; width: auto;" alt="EU Flag">
+            <div style="text-align: left;">
+              <span
+                style="display: block; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--c-text-secondary);">Framework</span>
+              <span style="font-weight: 700; color: #fff; font-size: 1.1rem;">European Commission</span>
+            </div>
+          </div>
+          <div style="height: 50px; width: 1px; background: var(--c-border);"></div>
+          <div style="display: flex; align-items: center; gap: 1rem; opacity: 0.9;">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/a/a4/Flag_of_the_United_States.svg"
+              style="height: 48px; width: auto;" alt="US Flag">
+            <div style="text-align: left;">
+              <span
+                style="display: block; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--c-text-secondary);">Strategic
+                Partner</span>
+              <span style="font-weight: 700; color: #fff; font-size: 1.1rem;">United States DFC</span>
+            </div>
           </div>
         </div>
       </div>
-    </div>
-    <div class="container">
-      <div class="reveal">
-        <span class="text-blue" style="text-transform: uppercase; letter-spacing: 0.1em; font-weight: 700;">Our
-          Mission</span>
-        <h2 style="max-width: 800px; margin-top: 1rem;">Executing the EU-US 10-year strategic roadmap for Ukraine's
-          recovery and fast-tracked EU membership.</h2>
-        <p>A coordinated effort with the European Commission and American private capital.</p>
-      </div>
-    </div>
-  </section>
-
-  <!-- Investment Sectors -->
-  <section id="sectors" class="sectors">
-    <div class="container">
-      <h2 class="reveal">Investment Focus</h2>
-      <div class="sector-grid">
-        <!-- Card 1 -->
-        <div class="card reveal">
-          <div class="card-icon"><i class="ri-hammer-line"></i></div>
-          <h3>Infrastructure</h3>
-          <p>Restoring bridges, roads, and municipal buildings with modern, resilient standards.</p>
-        </div>
-        <!-- Card 2 -->
-        <div class="card reveal">
-          <div class="card-icon"><i class="ri-pulse-line"></i></div>
-          <h3>Energy Security</h3>
-          <p>Decentralized grids, renewable integration, and nuclear safety upgrades.</p>
-        </div>
-        <!-- Card 3 -->
-        <div class="card reveal">
-          <div class="card-icon"><i class="ri-rocket-line"></i></div>
-          <h3>Tech & Innovation</h3>
-          <p>Digital public infrastructure and support for Ukraine's booming IT sector.</p>
-        </div>
-        <!-- Card 4 -->
-        <div class="card reveal">
-          <div class="card-icon"><i class="ri-tractor-line"></i></div>
-          <h3>Agriculture</h3>
-          <p>Logistics for grain exports, de-mining initiatives, and machinery financing.</p>
-        </div>
-        <!-- Card 5 -->
-        <div class="card reveal">
-          <div class="card-icon"><i class="ri-community-line"></i></div>
-          <h3>Housing</h3>
-          <p>Scalable residential solutions for displaced communities.</p>
-        </div>
-        <!-- Card 6 -->
-        <div class="card reveal">
-          <div class="card-icon"><i class="ri-shield-flash-line"></i></div>
-          <h3>Defense Industry</h3>
-          <p>Strategic investments in dual-use technologies and production.</p>
+      <div class="container">
+        <div class="reveal">
+          <span class="text-blue" style="text-transform: uppercase; letter-spacing: 0.1em; font-weight: 700;">Our
+            Mission</span>
+          <h2 style="max-width: 800px; margin-top: 1rem;">Executing the EU-US 10-year strategic roadmap for Ukraine's
+            recovery and fast-tracked EU membership.</h2>
+          <p>A coordinated effort with the European Commission and American private capital.</p>
         </div>
       </div>
-    </div>
-  </section>
+      <!-- Governance / Oversight Section -->
+      <section id="governance" style="padding: 10rem 0;">
+        <div class="container">
+          <div class="gov-grid">
+            <div class="reveal">
+              <div class="divider-text">Governance & Compliance</div>
+              <h2 style="font-size: 3rem;">Uncompromised Sovereign Accountability.</h2>
+              <p style="font-size: 1.25rem; margin-bottom: 2rem;">Operating under a trilateral mandate between the
+                Cabinet of Ministers of Ukraine, the European Commission, and the U.S. Department of State.</p>
 
-  <!-- News Snippet -->
-  <section id="media" class="news">
-    <div class="container">
-      <div style="display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 3rem;">
-        <h2 class="reveal">Latest Funds</h2>
-        <a href="#" class="btn btn-secondary reveal">View All Reports</a>
-      </div>
+              <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; margin-top: 4rem;">
+                <div>
+                  <h4 style="color: var(--c-accent-gold); margin-bottom: 0.5rem;">Independent Audit</h4>
+                  <p style="font-size: 0.95rem;">Full real-time financial transparency audited seasonally by Deloitte &
+                    EY.</p>
+                </div>
+                <div>
+                  <h4 style="color: var(--c-accent-gold); margin-bottom: 0.5rem;">Risk Mitigation</h4>
+                  <p style="font-size: 0.95rem;">Political risk insurance and sovereign guarantees integrated in all
+                    Tier-1 projects.</p>
+                </div>
+              </div>
 
-      <div class="news-list">
-        <div class="news-item reveal">
-          <div class="news-date">Oct 12, 2025</div>
-          <div>
-            <h3>$150M Grant Approved for Mykolaiv Water Systems</h3>
-            <p>Joint venture with EBRD to restore critical water supply infrastructure.</p>
+              <div style="margin-top: 3rem;">
+                <a href="about.html" class="btn btn-secondary">Review Governance Framework</a>
+              </div>
+            </div>
+            <div class="gov-image reveal">
+              <!-- Animated Dashboard Overlay placeholder -->
+              <div
+                style="position: absolute; top: 10%; left: 10%; background: var(--c-bg-card); padding: 2rem; border: 1px solid var(--c-accent-blue); box-shadow: 0 20px 40px rgba(0,0,0,0.5);">
+                <div style="width: 40px; height: 4px; background: var(--c-accent-gold); margin-bottom: 1rem;"></div>
+                <div style="font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.1em; opacity: 0.5;">Verified
+                  Capital Growth</div>
+                <div style="font-size: 1.5rem; font-weight: 700;">$800B <span
+                    style="font-size: 0.8rem; color: var(--c-success);">+12.4%</span></div>
+              </div>
+              <div
+                style="position: absolute; bottom: 10%; right: 10%; background: var(--c-bg-card); padding: 1.5rem; border: 1px solid var(--c-border); backdrop-filter: blur(10px);">
+                <div style="font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.1em; opacity: 0.5;">
+                  Compliance Status</div>
+                <div style="display: flex; align-items: center; gap: 0.5rem; margin-top: 0.5rem;">
+                  <div style="width: 8px; height: 8px; border-radius: 50%; background: var(--c-success);"></div>
+                  <span style="font-weight: 700;">AAA Verified</span>
+                </div>
+              </div>
+            </div>
           </div>
-          <a href="#" class="btn-secondary" style="border: none;"><i class="ri-arrow-right-line"></i></a>
         </div>
-        <div class="news-item reveal">
-          <div class="news-date">Sep 28, 2025</div>
-          <div>
-            <h3>Small Business Recovery Fund Launches</h3>
-            <p>Providing low-interest micro-loans to entrepreneurs in de-occupied territories.</p>
-          </div>
-          <a href="#" class="btn-secondary" style="border: none;"><i class="ri-arrow-right-line"></i></a>
-        </div>
-        <div class="news-item reveal">
-          <div class="news-date">Aug 15, 2025</div>
-          <div>
-            <h3>Energy Resilience Monitor Q2 Report</h3>
-            <p>Download the full transparency report on grid reconstruction expenditure.</p>
-          </div>
-          <a href="#" class="btn-secondary" style="border: none;"><i class="ri-arrow-right-line"></i></a>
-        </div>
-      </div>
-    </div>
-  </section>
+      </section>
 
-  <!-- Footer -->
-  <footer>
-    <div class="container">
-      <div class="footer-grid">
-        <div class="footer-col">
-          <a href="#" class="logo" style="margin-bottom: 1rem;">
-            <i class="ri-government-line text-blue"></i>
-            URB
-          </a>
-          <p>The Ukraine Reconstruction Bank is a state-owned specialized financial institution focused on rebuilding
-            Ukraine. A joint initiative of the <span style="color: #fff;">European Union</span> & <span
-              style="color: #fff;">United States</span>.</p>
+      <!-- Investment Sectors -->
+      <section id="sectors" class="sectors">
+        <div class="container">
+          <h2 class="reveal">Investment Focus</h2>
+          <div class="sector-grid">
+            <!-- Card 1 -->
+            <div class="card reveal">
+              <div class="card-icon"><i class="ri-hammer-line"></i></div>
+              <h3>Infrastructure</h3>
+              <p>Restoring bridges, roads, and municipal buildings with modern, resilient standards.</p>
+            </div>
+            <!-- Card 2 -->
+            <div class="card reveal">
+              <div class="card-icon"><i class="ri-pulse-line"></i></div>
+              <h3>Energy Security</h3>
+              <p>Decentralized grids, renewable integration, and nuclear safety upgrades.</p>
+            </div>
+            <!-- Card 3 -->
+            <div class="card reveal">
+              <div class="card-icon"><i class="ri-rocket-line"></i></div>
+              <h3>Tech & Innovation</h3>
+              <p>Digital public infrastructure and support for Ukraine's booming IT sector.</p>
+            </div>
+            <!-- Card 4 -->
+            <div class="card reveal">
+              <div class="card-icon"><i class="ri-tractor-line"></i></div>
+              <h3>Agriculture</h3>
+              <p>Logistics for grain exports, de-mining initiatives, and machinery financing.</p>
+            </div>
+            <!-- Card 5 -->
+            <div class="card reveal">
+              <div class="card-icon"><i class="ri-community-line"></i></div>
+              <h3>Housing</h3>
+              <p>Scalable residential solutions for displaced communities.</p>
+            </div>
+            <!-- Card 6 -->
+            <div class="card reveal">
+              <div class="card-icon"><i class="ri-shield-flash-line"></i></div>
+              <h3>Defense Industry</h3>
+              <p>Strategic investments in dual-use technologies and production.</p>
+            </div>
+          </div>
         </div>
-        <div class="footer-col">
-          <h4>Address</h4>
-          <p>77 Sichovih Striltsiv Street,<br>6th Floor<br>Kyiv, 04053<br>Ukraine</p>
-        </div>
-        <div class="footer-col">
-          <h4>Quick Links</h4>
-          <ul>
-            <li><a href="#">About Us</a></li>
-            <li><a href="#">Governance</a></li>
-            <li><a href="#">Compliance</a></li>
-            <li><a href="#">Careers</a></li>
-          </ul>
-        </div>
-        <div class="footer-col">
-          <h4>Contact</h4>
-          <ul>
-            <li><a href="mailto:info@ukrainereconstructionbank.org">info@ukrainereconstructionbank.org</a></li>
-            <li><a href="tel:+380440000000">+380 44 000 0000</a></li>
-            <li style="margin-top: 1rem;">
-              <a href="#" style="font-size: 1.2rem; margin-right: 0.5rem;" aria-label="Follow us on X (Twitter)"><i
-                  class="ri-twitter-x-line"></i></a>
-              <a href="#" style="font-size: 1.2rem; margin-right: 0.5rem;" aria-label="Follow us on LinkedIn"><i
-                  class="ri-linkedin-fill"></i></a>
-              <a href="#" style="font-size: 1.2rem;" aria-label="Follow us on Facebook"><i
-                  class="ri-facebook-fill"></i></a>
-            </li>
-          </ul>
-        </div>
-      </div>
-      <div
-        style="margin-top: 4rem; padding-top: 2rem; border-top: 1px solid rgba(255,255,255,0.05); text-align: center; color: var(--c-text-secondary); font-size: 0.8rem;">
-        &copy; 2025 Ukraine Reconstruction Bank. All rights reserved. | Privacy Policy | Terms of Use
-      </div>
-    </div>
-  </footer>
+      </section>
 
-  <script src="script.js"></script>
+      <!-- News Snippet -->
+      <section id="media" class="news">
+        <div class="container">
+          <div style="display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 3rem;">
+            <h2 class="reveal">Latest Funds</h2>
+            <a href="#" class="btn btn-secondary reveal">View All Reports</a>
+          </div>
+
+          <div class="news-list">
+            <div class="news-item reveal">
+              <div class="news-date">Oct 12, 2025</div>
+              <div>
+                <h3>$150M Grant Approved for Mykolaiv Water Systems</h3>
+                <p>Joint venture with EBRD to restore critical water supply infrastructure.</p>
+              </div>
+              <a href="#" class="btn-secondary" style="border: none;"><i class="ri-arrow-right-line"></i></a>
+            </div>
+            <div class="news-item reveal">
+              <div class="news-date">Sep 28, 2025</div>
+              <div>
+                <h3>Small Business Recovery Fund Launches</h3>
+                <p>Providing low-interest micro-loans to entrepreneurs in de-occupied territories.</p>
+              </div>
+              <a href="#" class="btn-secondary" style="border: none;"><i class="ri-arrow-right-line"></i></a>
+            </div>
+            <div class="news-item reveal">
+              <div class="news-date">Aug 15, 2025</div>
+              <div>
+                <h3>Energy Resilience Monitor Q2 Report</h3>
+                <p>Download the full transparency report on grid reconstruction expenditure.</p>
+              </div>
+              <a href="#" class="btn-secondary" style="border: none;"><i class="ri-arrow-right-line"></i></a>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Footer -->
+      <footer>
+        <div class="container">
+          <div class="footer-grid">
+            <div class="footer-col">
+              <a href="#" class="logo" style="margin-bottom: 1rem;">
+                <i class="ri-government-line text-blue"></i>
+                URB
+              </a>
+              <p>The Ukraine Reconstruction Bank is a state-owned specialized financial institution focused on
+                rebuilding
+                Ukraine. A joint initiative of the <span style="color: #fff;">European Union</span> & <span
+                  style="color: #fff;">United States</span>.</p>
+            </div>
+            <div class="footer-col">
+              <h4>Address</h4>
+              <p>77 Sichovih Striltsiv Street,<br>6th Floor<br>Kyiv, 04053<br>Ukraine</p>
+            </div>
+            <div class="footer-col">
+              <h4>Quick Links</h4>
+              <ul>
+                <li><a href="#">About Us</a></li>
+                <li><a href="#">Governance</a></li>
+                <li><a href="#">Compliance</a></li>
+                <li><a href="#">Careers</a></li>
+              </ul>
+            </div>
+            <div class="footer-col">
+              <h4>Contact</h4>
+              <ul>
+                <li><a href="mailto:info@ukrainereconstructionbank.org">info@ukrainereconstructionbank.org</a></li>
+                <li><a href="tel:+380440000000">+380 44 000 0000</a></li>
+                <li style="margin-top: 1rem;">
+                  <a href="#" style="font-size: 1.2rem; margin-right: 0.5rem;" aria-label="Follow us on X (Twitter)"><i
+                      class="ri-twitter-x-line"></i></a>
+                  <a href="#" style="font-size: 1.2rem; margin-right: 0.5rem;" aria-label="Follow us on LinkedIn"><i
+                      class="ri-linkedin-fill"></i></a>
+                  <a href="#" style="font-size: 1.2rem;" aria-label="Follow us on Facebook"><i
+                      class="ri-facebook-fill"></i></a>
+                </li>
+              </ul>
+            </div>
+          </div>
+          <div
+            style="margin-top: 4rem; padding-top: 2rem; border-top: 1px solid rgba(255,255,255,0.05); text-align: center; color: var(--c-text-secondary); font-size: 0.8rem;">
+            &copy; 2025 Ukraine Reconstruction Bank. All rights reserved. | Privacy Policy | Terms of Use
+          </div>
+        </div>
+      </footer>
+
+      <script src="script.js"></script>
 </body>
 
 </html>
