@@ -2,6 +2,7 @@ document.addEventListener("DOMContentLoaded", function () {
     const searchInput = document.getElementById('cityInput');
     const searchButton = document.getElementById('searchButton');
     const cityNameDisplay = document.getElementById('cityName');
+    const suggestionsContainer = document.getElementById('suggestions');
     const btnText = searchButton.querySelector('.btn-text');
 
     const searchWrapper = document.getElementById('searchWrapper');
@@ -31,10 +32,71 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     });
 
-    // Close search on click outside
+    // Autocomplete Logic
+    const debounce = (fn, delay) => {
+        let timeoutId;
+        return (...args) => {
+            if (timeoutId) clearTimeout(timeoutId);
+            timeoutId = setTimeout(() => fn(...args), delay);
+        };
+    };
+
+    const fetchSuggestions = debounce((query) => {
+        if (query.length < 2) {
+            suggestionsContainer.style.display = 'none';
+            return;
+        }
+
+        const url = `https://geocoding-api.open-meteo.com/v1/search?name=${encodeURIComponent(query)}&count=5&language=de&format=json`;
+
+        fetch(url)
+            .then(res => res.json())
+            .then(data => {
+                if (data.results) {
+                    renderSuggestions(data.results);
+                } else {
+                    suggestionsContainer.style.display = 'none';
+                }
+            })
+            .catch(() => {
+                suggestionsContainer.style.display = 'none';
+            });
+    }, 300);
+
+    function renderSuggestions(results) {
+        suggestionsContainer.innerHTML = '';
+        suggestionsContainer.style.display = 'block';
+
+        results.forEach(result => {
+            const item = document.createElement('div');
+            item.className = 'suggestion-item';
+
+            const region = [result.admin1, result.country].filter(Boolean).join(', ');
+            item.innerHTML = `
+                ${result.name}
+                <span>${region}</span>
+            `;
+
+            item.addEventListener('click', () => {
+                loadWeather(result.latitude, result.longitude, result.name);
+                searchInput.value = '';
+                suggestionsContainer.style.display = 'none';
+                searchWrapper.classList.remove('expanded');
+            });
+
+            suggestionsContainer.appendChild(item);
+        });
+    }
+
+    searchInput.addEventListener('input', (e) => fetchSuggestions(e.target.value.trim()));
+
+    // Close suggestions on click outside
     document.addEventListener('click', (e) => {
-        if (!searchWrapper.contains(e.target) && searchWrapper.classList.contains('expanded')) {
-            searchWrapper.classList.remove('expanded');
+        if (!searchWrapper.contains(e.target)) {
+            suggestionsContainer.style.display = 'none';
+            if (searchWrapper.classList.contains('expanded')) {
+                searchWrapper.classList.remove('expanded');
+            }
         }
     });
 
@@ -81,6 +143,7 @@ document.addEventListener("DOMContentLoaded", function () {
                     currentName = result.name;
                     loadWeather(currentLat, currentLon, currentName);
                     searchInput.value = ''; // Clear input
+                    suggestionsContainer.style.display = 'none';
                     searchWrapper.classList.remove('expanded'); // Collapse after search
                 } else {
                     alert('Stadt nicht gefunden. Bitte versuchen Sie es erneut.');

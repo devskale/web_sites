@@ -32,9 +32,11 @@
             </svg>
           </button>
           <div class="search-container">
-            <input type="text" id="cityInput" placeholder="Stadt suchen..." aria-label="Stadt suchen" />
+            <input type="text" id="cityInput" placeholder="Stadt suchen..." aria-label="Stadt suchen"
+              autocomplete="off" />
             <button id="searchButton" class="go-btn">Go</button>
           </div>
+          <div id="suggestions" class="suggestions-list"></div>
         </div>
         <div class="presets">
           <button class="preset-btn" data-city="Neusiedl am See" data-lat="47.949" data-lon="16.8417">Neusiedl</button>
