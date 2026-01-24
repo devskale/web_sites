@@ -1,245 +1,223 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Ukraine Reconstruction Bank</title>
-    s
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="styles.css" />
-  </head>
-  <body>
-    <header>
-      <div
-        class="max-w-[1200px] mx-auto px-4 flex justify-between items-center">
-        <div class="flex items-center gap-2 text-xl font-bold">
-          <img
-            src="images/urb7white.png"
-            alt="Ukraine Reconstruction Bank Logo"
-            width="200"
-            height="60" />
-          <span>Ukraine Reconstruction Bank</span>
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ukraine Reconstruction Bank | Building the Future</title>
+  <meta name="description"
+    content="The official hub for international investment and transparent reconstruction funding in Ukraine.">
+  <link rel="stylesheet" href="index.css">
+  <!-- Icons -->
+  <link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet">
+</head>
+
+<body>
+
+  <!-- Decorative Background -->
+  <div class="bg-grid"></div>
+
+  <!-- Navigation -->
+  <nav class="navbar">
+    <div class="container">
+      <a href="#" class="logo">
+        <i class="ri-government-line text-blue"></i>
+        URB
+        <span>.ua</span>
+      </a>
+      <div class="nav-links">
+        <a href="#about">About</a>
+        <a href="#sectors">Sectors</a>
+        <a href="#investors">For Investors</a>
+        <a href="#apply">Apply</a>
+        <a href="#media">News</a>
+      </div>
+      <a href="#portal" class="btn btn-primary">Client Portal</a>
+    </div>
+  </nav>
+
+  <!-- Hero Section -->
+  <header class="hero">
+    <div class="container">
+      <div class="hero-content">
+        <span class="hero-tag">Official Investment Platform</span>
+        <h1>Invest in<br> <span class="text-blue">Tomorrow's</span> <span class="text-gold">Ukraine</span>.</h1>
+        <p>The central hub coordinating international capital for the rebuilding of critical infrastructure, energy
+          security, and economic revitalization.</p>
+        <div class="hero-buttons">
+          <a href="#invest" class="btn btn-primary">Become an Investor</a>
+          <a href="#apply" class="btn btn-secondary">Project Funding</a>
         </div>
-        <nav class="hidden md:block">
-          <ul class="flex gap-8">
-            <li>
-              <a
-                href="#about"
-                class="text-white hover:text-yellow-400 transition-colors"
-                >About</a
-              >
-            </li>
-            <li>
-              <a
-                href="#services"
-                class="text-white hover:text-yellow-400 transition-colors"
-                >Services</a
-              >
-            </li>
-            <li>
-              <a
-                href="#contact"
-                class="text-white hover:text-yellow-400 transition-colors"
-                >Contact</a
-              >
+      </div>
+    </div>
+  </header>
+
+  <!-- Stats Banner -->
+  <section class="stats-banner">
+    <div class="container">
+      <div class="stats-grid">
+        <div class="stat-item reveal">
+          <h3 data-target="24">0</h3>
+          <p>Billion $ Mobilized</p>
+        </div>
+        <div class="stat-item reveal">
+          <h3 data-target="156">0</h3>
+          <p>Active Projects</p>
+        </div>
+        <div class="stat-item reveal">
+          <h3 data-target="8500">0</h3>
+          <p>Jobs Secured</p>
+        </div>
+        <div class="stat-item reveal">
+          <h3 data-target="100">0</h3>
+          <p>% Transparency</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- About / Mission -->
+  <section id="about" style="padding: 8rem 0;">
+    <div class="container">
+      <div class="reveal">
+        <span class="text-blue" style="text-transform: uppercase; letter-spacing: 0.1em; font-weight: 700;">Our
+          Mission</span>
+        <h2 style="max-width: 800px; margin-top: 1rem;">To bridge global capital with on-the-ground reconstruction needs
+          through uncompromised transparency and governance.</h2>
+        <p>Est. 2024 in partnership with DFC and global financial institutions.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Investment Sectors -->
+  <section id="sectors" class="sectors">
+    <div class="container">
+      <h2 class="reveal">Investment Focus</h2>
+      <div class="sector-grid">
+        <!-- Card 1 -->
+        <div class="card reveal">
+          <div class="card-icon"><i class="ri-building-2-line"></i></div>
+          <h3>Infrastructure</h3>
+          <p>Restoring bridges, roads, and municipal buildings with modern, resilient standards.</p>
+        </div>
+        <!-- Card 2 -->
+        <div class="card reveal">
+          <div class="card-icon"><i class="ri-flashlight-line"></i></div>
+          <h3>Energy Security</h3>
+          <p>Decentralized grids, renewable integration, and nuclear safety upgrades.</p>
+        </div>
+        <!-- Card 3 -->
+        <div class="card reveal">
+          <div class="card-icon"><i class="ri-globe-line"></i></div>
+          <h3>Tech & Innovation</h3>
+          <p>Digital public infrastructure and support for Ukraine's booming IT sector.</p>
+        </div>
+        <!-- Card 4 -->
+        <div class="card reveal">
+          <div class="card-icon"><i class="ri-plant-line"></i></div>
+          <h3>Agriculture</h3>
+          <p>Logistics for grain exports, de-mining initiatives, and machinery financing.</p>
+        </div>
+        <!-- Card 5 -->
+        <div class="card reveal">
+          <div class="card-icon"><i class="ri-home-line"></i></div>
+          <h3>Housing</h3>
+          <p>Scalable residential solutions for displaced communities.</p>
+        </div>
+        <!-- Card 6 -->
+        <div class="card reveal">
+          <div class="card-icon"><i class="ri-shield-check-line"></i></div>
+          <h3>Defense Industry</h3>
+          <p>Strategic investments in dual-use technologies and production.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- News Snippet -->
+  <section id="media" class="news">
+    <div class="container">
+      <div style="display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 3rem;">
+        <h2 class="reveal">Latest Funds</h2>
+        <a href="#" class="btn btn-secondary reveal">View All Reports</a>
+      </div>
+
+      <div class="news-list">
+        <div class="news-item reveal">
+          <div class="news-date">Oct 12, 2025</div>
+          <div>
+            <h3>$150M Grant Approved for Mykolaiv Water Systems</h3>
+            <p>Joint venture with EBRD to restore critical water supply infrastructure.</p>
+          </div>
+          <a href="#" class="btn-secondary" style="border: none;"><i class="ri-arrow-right-line"></i></a>
+        </div>
+        <div class="news-item reveal">
+          <div class="news-date">Sep 28, 2025</div>
+          <div>
+            <h3>Small Business Recovery Fund Launches</h3>
+            <p>Providing low-interest micro-loans to entrepreneurs in de-occupied territories.</p>
+          </div>
+          <a href="#" class="btn-secondary" style="border: none;"><i class="ri-arrow-right-line"></i></a>
+        </div>
+        <div class="news-item reveal">
+          <div class="news-date">Aug 15, 2025</div>
+          <div>
+            <h3>Energy Resilience Monitor Q2 Report</h3>
+            <p>Download the full transparency report on grid reconstruction expenditure.</p>
+          </div>
+          <a href="#" class="btn-secondary" style="border: none;"><i class="ri-arrow-right-line"></i></a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer>
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-col">
+          <a href="#" class="logo" style="margin-bottom: 1rem;">
+            <i class="ri-government-line text-blue"></i>
+            URB
+            <span>.ua</span>
+          </a>
+          <p>The Ukraine Reconstruction Bank is a state-owned specialized financial institution focused on rebuilding
+            Ukraine.</p>
+        </div>
+        <div class="footer-col">
+          <h4>Address</h4>
+          <p>77 Sichovih Striltsiv Street,<br>6th Floor<br>Kyiv, 04053<br>Ukraine</p>
+        </div>
+        <div class="footer-col">
+          <h4>Quick Links</h4>
+          <ul>
+            <li><a href="#">About Us</a></li>
+            <li><a href="#">Governance</a></li>
+            <li><a href="#">Compliance</a></li>
+            <li><a href="#">Careers</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>Contact</h4>
+          <ul>
+            <li><a href="mailto:info@urb.ua">info@urb.ua</a></li>
+            <li><a href="tel:+380440000000">+380 44 000 0000</a></li>
+            <li style="margin-top: 1rem;">
+              <a href="#" style="font-size: 1.2rem; margin-right: 0.5rem;"><i class="ri-twitter-x-line"></i></a>
+              <a href="#" style="font-size: 1.2rem; margin-right: 0.5rem;"><i class="ri-linkedin-fill"></i></a>
+              <a href="#" style="font-size: 1.2rem;"><i class="ri-facebook-fill"></i></a>
             </li>
           </ul>
-        </nav>
-        <button class="md:hidden text-white text-2xl">☰</button>
-      </div>
-    </header>
-
-    <main>
-      <section
-        class="bg-gradient-to-r from-blue-700 to-blue-800 text-white py-16 text-center">
-        <div class="max-w-[1200px] mx-auto px-4">
-          <h1>Rebuilding Ukraine Together</h1>
-          <p>
-            The Ukraine Reconstruction Bank is committed to supporting the
-            reconstruction and sustainable development of Ukraine, fostering
-            economic growth and resilience.
-          </p>
-          <a
-            href="#about"
-            class="inline-block bg-yellow-500 hover:bg-yellow-600 text-white font-bold py-3 px-6 rounded-lg transition-colors"
-            >Learn More</a
-          >
-        </div>
-      </section>
-
-      <section id="about" class="about">
-        <div class="max-w-[1200px] mx-auto px-4">
-          <h2>About The Ukraine Reconstruction Bank (URB)</h2>
-          <div class="about-content">
-            <p>
-              The Ukraine Reconstruction Bank (URB) is a dedicated financial
-              institution established to spearhead the reconstruction and
-              development efforts in Ukraine. Our mission is to provide robust
-              financial resources, expert guidance, and unwavering support for
-              rebuilding critical infrastructure, revitalizing the economy, and
-              fostering sustainable growth across the nation.
-            </p>
-            <p>
-              Working in close collaboration with international partners,
-              government agencies, and private sector entities, URB aims to
-              channel investments strategically and efficiently to areas most in
-              need of reconstruction and development. We are committed to
-              transparency, accountability, and the highest standards of
-              financial management to ensure that every investment contributes
-              meaningfully to Ukraine's recovery and future prosperity.
-            </p>
-          </div>
-        </div>
-      </section>
-
-      <section id="services" class="services">
-        <div class="max-w-[1200px] mx-auto px-4">
-          <h2>Our Services</h2>
-          <div class="services-grid">
-            <div class="service-card">
-              <svg
-                class="service-icon"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                stroke-width="2"
-                stroke-linecap="round"
-                stroke-linejoin="round">
-                <path d="M20 22h-2"></path>
-                <path d="M20 15v7"></path>
-                <path d="M4 22h16"></path>
-                <path d="M15 22v-4a3 3 0 0 0-3-3v0a3 3 0 0 0-3 3v4"></path>
-                <path d="M4 15v7"></path>
-                <path d="M6 22H4"></path>
-                <path d="M2 14h20"></path>
-                <path d="M2 14v1a5 5 0 0 0 5 5"></path>
-                <path d="M22 14v1a5 5 0 0 1-5 5"></path>
-                <path d="M4 3h16l-4 8H8Z"></path>
-              </svg>
-              <h3>Infrastructure Financing</h3>
-              <p>
-                Supporting the rebuilding of critical infrastructure across
-                Ukraine, including transportation networks, energy systems, and
-                public facilities.
-              </p>
-            </div>
-            <div class="service-card">
-              <svg
-                class="service-icon"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                stroke-width="2"
-                stroke-linecap="round"
-                stroke-linejoin="round">
-                <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path>
-                <circle cx="9" cy="7" r="4"></circle>
-                <path d="M22 21v-2a4 4 0 0 0-3-3.87"></path>
-                <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
-              </svg>
-              <h3>SME Support</h3>
-              <p>
-                Providing loans and financial assistance to small and
-                medium-sized enterprises, fostering economic recovery and job
-                creation.
-              </p>
-            </div>
-            <div class="service-card">
-              <svg
-                class="service-icon"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                stroke-width="2"
-                stroke-linecap="round"
-                stroke-linejoin="round">
-                <path
-                  d="M21.2 8.4c.5.38.8.97.8 1.6v10a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V10a2 2 0 0 1 .8-1.6l8-6a2 2 0 0 1 2.4 0l8 6Z"></path>
-                <path d="m22 10-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 10"></path>
-              </svg>
-              <h3>Project Consultation</h3>
-              <p>
-                Offering expert advice on reconstruction projects, financial
-                planning, and sustainable development strategies.
-              </p>
-            </div>
-          </div>
-        </div>
-      </section>
-    </main>
-
-    <footer id="contact">
-      <div class="max-w-[1200px] mx-auto px-4">
-        <h2>Contact Us</h2>
-        <p>Email: info@ukrainereconstructionbank.org</p>
-        <p>Phone: +380 44 123 4567</p>
-        <p>Address: 1 Hrushevsky Street, Kyiv, Ukraine 01008</p>
-        <div class="social-links">
-          <a href="#" aria-label="Facebook">
-            <svg
-              width="24"
-              height="24"
-              viewBox="0 0 24 24"
-              fill="currentColor"
-              stroke="currentColor"
-              stroke-width="2"
-              stroke-linecap="round"
-              stroke-linejoin="round">
-              <path
-                d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"></path>
-            </svg>
-          </a>
-          <a href="#" aria-label="Twitter">
-            <svg
-              width="24"
-              height="24"
-              viewBox="0 0 24 24"
-              fill="currentColor"
-              stroke="currentColor"
-              stroke-width="2"
-              stroke-linecap="round"
-              stroke-linejoin="round">
-              <path
-                d="M22 4s-.7 2.1-2 3.4c1.6 10-9.4 17.3-18 11.6 2.2.1 4.4-.6 6-2C3 15.5.5 9.6 3 5c2.2 2.6 5.6 4.1 9 4-.9-4.2 4-6.6 7-3.8 1.1 0 3-1.2 3-1.2z"></path>
-            </svg>
-          </a>
-          <a href="#" aria-label="Instagram">
-            <svg
-              width="24"
-              height="24"
-              viewBox="0 0 24 24"
-              fill="currentColor"
-              stroke="currentColor"
-              stroke-width="2"
-              stroke-linecap="round"
-              stroke-linejoin="round">
-              <rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect>
-              <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path>
-              <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line>
-            </svg>
-          </a>
         </div>
       </div>
-    </footer>
+      <div
+        style="margin-top: 4rem; padding-top: 2rem; border-top: 1px solid rgba(255,255,255,0.05); text-align: center; color: var(--c-text-secondary); font-size: 0.8rem;">
+        &copy; 2025 Ukraine Reconstruction Bank. All rights reserved. | Privacy Policy | Terms of Use
+      </div>
+    </div>
+  </footer>
 
-    <script>
-      // Mobile menu toggle
-      const menuButton = document.querySelector(".menu-button");
-      const nav = document.querySelector("nav ul");
+  <script src="script.js"></script>
+</body>
 
-      menuButton.addEventListener("click", () => {
-        nav.style.display = nav.style.display === "flex" ? "none" : "flex";
-      });
-
-      // Smooth scrolling for anchor links
-      document.querySelectorAll('a[href^="#"]').forEach((anchor) => {
-        anchor.addEventListener("click", function (e) {
-          e.preventDefault();
-          document.querySelector(this.getAttribute("href")).scrollIntoView({
-            behavior: "smooth",
-          });
-        });
-      });
-    </script>
-  </body>
 </html>
