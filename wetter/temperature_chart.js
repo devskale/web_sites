@@ -1,157 +1,152 @@
 // Export the function so it can be used by other scripts
 window.loadTemperatureData = function (lat, lon, cityName) {
-    const apiUrl = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&hourly=temperature_2m,rain&past_days=2&forecast_days=4`;
+    const apiUrl = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&hourly=temperature_2m,rain&past_days=1&forecast_days=4`;
+
+    const chartContainer = document.querySelector("#tempChart");
+    if (chartContainer) chartContainer.classList.add('loading');
 
     fetch(apiUrl)
         .then(response => response.json())
         .then(data => {
+            if (chartContainer) chartContainer.classList.remove('loading');
             createTemperatureChart(data.hourly.time, data.hourly.temperature_2m, data.hourly.rain, cityName);
         })
-        .catch(error => console.error('Error fetching data:', error));
+        .catch(error => {
+            console.error('Error fetching data:', error);
+            if (chartContainer) chartContainer.classList.remove('loading');
+        });
 };
 
 function createTemperatureChart(timeData, tempData, rainData, cityName) {
-    // Destroy existing chart if it exists to avoid duplicates/overlaps
     if (window.tempChartInstance) {
         window.tempChartInstance.destroy();
     }
 
-    var today = new Date();
-    var todayStart = new Date(today.getFullYear(), today.getMonth(), today.getDate()).getTime(); // Start of today
-    var todayEnd = new Date(today.getFullYear(), today.getMonth(), today.getDate() + 1).getTime() - 1; // End of today
+    const today = new Date();
+    const todayStart = new Date(today.getFullYear(), today.getMonth(), today.getDate()).getTime();
+    const todayEnd = new Date(today.getFullYear(), today.getMonth(), today.getDate() + 1).getTime() - 1;
 
-    var futureTimes = timeData.map(time => new Date(time).getTime() > today.getTime());
+    // Get colors from CSS variables
+    const style = getComputedStyle(document.documentElement);
+    const accentColor = style.getPropertyValue('--accent').trim() || '#3b82f6';
+    const sunColor = style.getPropertyValue('--sun').trim() || '#FDB813';
+    const textMain = style.getPropertyValue('--text-main').trim() || '#334155';
+    const textMuted = style.getPropertyValue('--text-muted').trim() || '#64748b';
 
-    var options = {
+    const options = {
         series: [
             {
-                name: 'Hourly Temperature (°C)',
+                name: 'Temperatur',
                 type: 'line',
-                data: tempData,
-                color: '#FFA500', // Set the color of the temperature line to orange
-                stroke: {
-                    width: 2, // Slightly thicker for better visibility
-                    curve: 'smooth' // Set the curve type to smooth
-                }
+                data: tempData
             },
             {
-                name: 'Hourly Rainfall (mm)',
+                name: 'Regen',
                 type: 'bar',
-                data: rainData,
-                color: '#1E90FF' // Set the color of the rain bars to blue
+                data: rainData
             }
         ],
+        colors: [sunColor, accentColor],
         chart: {
-            height: 350,
+            height: 400,
             type: 'line',
             fontFamily: 'Inter, sans-serif',
-            toolbar: {
-                show: false
+            toolbar: { show: false },
+            animations: {
+                enabled: true,
+                easing: 'easeinout',
+                speed: 800
+            },
+            dropShadow: {
+                enabled: true,
+                top: 10,
+                left: 0,
+                blur: 10,
+                opacity: 0.05
             }
         },
         stroke: {
             curve: 'smooth',
-            width: [2, 0],
-            dashArray: [0, 0] // Removed dashed line for future times for cleaner look, or keep if preferred. Let's keep it simple.
+            width: [4, 0],
+            lineCap: 'round'
+        },
+        fill: {
+            type: ['gradient', 'solid'],
+            gradient: {
+                shade: 'light',
+                type: "vertical",
+                shadeIntensity: 0.5,
+                gradientToColors: [sunColor],
+                inverseColors: true,
+                opacityFrom: 0.7,
+                opacityTo: 0.9,
+                stops: [0, 100]
+            }
         },
         annotations: {
             xaxis: generateMidnightAnnotations(timeData).concat([
                 {
                     x: todayStart,
                     x2: todayEnd,
-                    fillColor: '#B3F7CA',
-                    opacity: 0.2,
+                    fillColor: accentColor,
+                    opacity: 0.05,
+                    borderWidth: 0,
                     label: {
-                        borderColor: 'transparent',
+                        text: 'HEUTE',
                         style: {
-                            fontSize: '10px',
-                            color: '#008FFB',
+                            color: accentColor,
                             background: 'transparent',
+                            fontSize: '10px',
+                            fontWeight: 800
                         },
-                        offsetY: -10,
-                        text: ''
+                        offsetY: -10
                     }
                 },
                 ...generateDayLabels(timeData)
             ])
         },
         grid: {
-            borderColor: '#f1f1f1',
-            row: {
-                colors: ['transparent', 'transparent'],
-                opacity: 0.5
-            },
-        },
-        title: {
-            text: cityName ? `Wetter in ${cityName}` : '',
-            align: 'left',
-            style: {
-                fontSize: '14px',
-                fontWeight: 600,
-                color: '#64748b'
-            }
+            borderColor: 'rgba(0,0,0,0.05)',
+            padding: { top: 20, bottom: 0, left: 20, right: 20 }
         },
         xaxis: {
             type: 'datetime',
             categories: timeData,
             labels: {
-                style: {
-                    colors: '#64748b',
-                    fontSize: '12px'
-                }
+                style: { colors: textMuted, fontSize: '12px' },
+                datetimeUTC: false
             },
-            axisBorder: {
-                show: false
-            },
-            axisTicks: {
-                show: false
-            }
-        },
-        fill: {
-            type: ['solid', 'solid'],
-            opacity: [1, 1]
+            axisBorder: { show: false },
+            axisTicks: { show: false }
         },
         yaxis: [
             {
-                title: {
-                    text: 'Temperature (°C)',
-                    style: {
-                        color: '#64748b'
-                    }
-                },
-                labels: {
-                    style: {
-                        colors: '#64748b'
-                    }
-                }
+                title: { text: 'Temp (°C)', style: { color: textMuted, fontWeight: 600 } },
+                labels: { style: { colors: textMuted } }
             },
             {
                 opposite: true,
-                title: {
-                    text: 'Rainfall (mm)',
-                    style: {
-                        color: '#64748b'
-                    }
-                },
-                labels: {
-                    style: {
-                        colors: '#64748b'
-                    }
-                }
+                title: { text: 'Regen (mm)', style: { color: textMuted, fontWeight: 600 } },
+                labels: { style: { colors: textMuted } }
             }
         ],
         tooltip: {
             theme: 'light',
-            x: {
-                format: 'dd MMM HH:mm'
+            x: { format: 'dd. MMM HH:mm' },
+            shared: true,
+            intersect: false,
+            y: {
+                formatter: function (val, { seriesIndex }) {
+                    return val + (seriesIndex === 0 ? " °C" : " mm");
+                }
             }
-        },
-        dataLabels: {
-            enabled: false // Disable data labels
         },
         legend: {
             position: 'top',
-            horizontalAlign: 'right'
+            horizontalAlign: 'right',
+            fontSize: '14px',
+            fontWeight: 500,
+            markers: { radius: 12 }
         }
     };
 
@@ -167,15 +162,8 @@ function generateMidnightAnnotations(timeData) {
         if (datePart !== lastDate) {
             annotations.push({
                 x: new Date(datePart + 'T00:00').getTime(),
-                borderColor: '#e2e8f0',
-                strokeDashArray: 4,
-                label: {
-                    borderColor: 'transparent',
-                    style: {
-                        color: '#fff',
-                        background: 'transparent'
-                    },
-                }
+                borderColor: 'rgba(0,0,0,0.1)',
+                strokeDashArray: 4
             });
             lastDate = datePart;
         }
@@ -186,26 +174,28 @@ function generateMidnightAnnotations(timeData) {
 function generateDayLabels(timeData) {
     let labels = [];
     let lastDate = '';
+    const style = getComputedStyle(document.documentElement);
+    const textMuted = style.getPropertyValue('--text-muted').trim() || '#64748b';
+
     timeData.forEach(time => {
         const datePart = time.split('T')[0];
         const dateObj = new Date(datePart);
         const dayName = dateObj.toLocaleString('de-DE', { weekday: 'short' });
 
         if (datePart !== lastDate) {
-            const midpoint = dateObj.getTime() + (12 * 60 * 60 * 1000); // Calculate midpoint of the day
+            const midpoint = dateObj.getTime() + (12 * 60 * 60 * 1000);
             labels.push({
                 x: midpoint,
                 borderColor: 'transparent',
                 label: {
                     style: {
-                        color: '#64748b', // Change text color to black for visibility
+                        color: textMuted,
                         background: 'transparent',
-                        fontSize: '12px',
-                        fontWeight: 600
+                        fontSize: '11px',
+                        fontWeight: 700
                     },
-                    text: dayName,
-                    orientation: 'horizontal',
-                    offsetY: -10, // Position the day label above the chart
+                    text: dayName.toUpperCase(),
+                    offsetY: -20
                 }
             });
             lastDate = datePart;

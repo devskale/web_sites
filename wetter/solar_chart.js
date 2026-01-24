@@ -2,25 +2,28 @@ let currentDailyData = [];
 let currentCityName = '';
 
 window.loadSolarData = function (lat, lon, cityName) {
-    const apiUrl = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&hourly=global_tilted_irradiance&past_days=10&forecast_days=5`;
+    const apiUrl = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&hourly=global_tilted_irradiance&past_days=7&forecast_days=5`;
     currentCityName = cityName;
+
+    const chartContainer = document.querySelector("#solarChart");
+    if (chartContainer) chartContainer.classList.add('loading');
 
     fetch(apiUrl)
         .then(response => response.json())
         .then(data => {
-            const hourlyGTI = data.hourly.global_tilted_irradiance; // Get the global tilted irradiance data
-            const timeData = data.hourly.time; // Get the time data
+            if (chartContainer) chartContainer.classList.remove('loading');
+            const hourlyGTI = data.hourly.global_tilted_irradiance;
+            const timeData = data.hourly.time;
 
-            // Calculate daily kWh/m² from hourly GTI
             currentDailyData = calculateDailySolarPower(timeData, hourlyGTI);
-            console.log("Calculated daily data:", currentDailyData);
-
             updateSolarUI();
         })
-        .catch(error => console.error('Error fetching data:', error));
+        .catch(error => {
+            console.error('Error fetching data:', error);
+            if (chartContainer) chartContainer.classList.remove('loading');
+        });
 };
 
-// Event listener for inputs
 document.addEventListener("DOMContentLoaded", function () {
     const roofAreaInput = document.getElementById('roofArea');
     const efficiencyInput = document.getElementById('efficiency');
@@ -41,15 +44,10 @@ function updateSolarUI() {
     const area = parseFloat(roofAreaInput ? roofAreaInput.value : 0) || 57;
     const efficiency = parseFloat(efficiencyInput ? efficiencyInput.value : 0) || 17.5;
 
-    // Calculate kWp for display
-    // kWp = Area (m²) * 1 kW/m² * Efficiency
     const kwp = (area * (efficiency / 100)).toFixed(1);
     if (kwpDisplay) {
         kwpDisplay.textContent = `${kwp} kWp`;
     }
-
-    // Calculate total energy based on Area and Efficiency
-    // Energy (kWh) = Irradiance (kWh/m²) * Area (m²) * Efficiency
 
     const calculatedData = currentDailyData.map(item => ({
         day: item.day,
@@ -57,10 +55,7 @@ function updateSolarUI() {
         totalKWh: parseFloat((item.kWh * area * (efficiency / 100)).toFixed(1))
     }));
 
-    // Print the calculated daily data in a text list (Energy Production)
     displayDailyData(calculatedData);
-
-    // Create the chart with raw irradiance data (kWh/m²)
     createDailySolarPowerChart(calculatedData, currentCityName, kwp);
 }
 
@@ -71,21 +66,19 @@ function calculateDailySolarPower(timeData, gtiData) {
 
     timeData.forEach((time, index) => {
         const day = time.split("T")[0];
-        const gtiValue = gtiData[index];
+        const gtiValue = gtiData[index] || 0;
 
         if (day !== currentDay) {
             if (currentDay !== "") {
-                const dailyKWhValue = parseFloat((dailySum / 1000).toFixed(1)); // Convert Wh/m² to kWh/m²
+                const dailyKWhValue = parseFloat((dailySum / 1000).toFixed(1));
                 dailyKWh.push({ day: currentDay, kWh: dailyKWhValue });
             }
             currentDay = day;
             dailySum = 0;
         }
-
-        dailySum += gtiValue; // Sum up hourly GTI values
+        dailySum += gtiValue;
     });
 
-    // Add the last day's data
     if (currentDay !== "") {
         const dailyKWhValue = parseFloat((dailySum / 1000).toFixed(1));
         dailyKWh.push({ day: currentDay, kWh: dailyKWhValue });
@@ -96,13 +89,25 @@ function calculateDailySolarPower(timeData, gtiData) {
 
 function displayDailyData(dailyData) {
     const container = document.getElementById("dailyDataContainer");
-    container.innerHTML = ''; // Clear previous data
+    if (!container) return;
+    container.innerHTML = '';
+
+    // Sort to show today first if possible, or just latest. 
+    // For now, keep the order but maybe highlight today.
+    const todayStr = new Date().toISOString().split('T')[0];
+
     dailyData.forEach(data => {
+        const isToday = data.day === todayStr;
         const listItem = document.createElement("div");
+        if (isToday) listItem.style.borderColor = 'var(--accent)';
+
         const date = new Date(data.day);
         const dayName = date.toLocaleDateString('de-DE', { weekday: 'short', day: 'numeric', month: 'numeric' });
-        // Display calculated Energy (totalKWh)
-        listItem.innerHTML = `<strong>${dayName}</strong><br>${data.totalKWh} kWh`;
+
+        listItem.innerHTML = `
+            <strong>${dayName}</strong>
+            <span>${data.totalKWh} kWh</span>
+        `;
         container.appendChild(listItem);
     });
 }
@@ -113,101 +118,77 @@ function createDailySolarPowerChart(dailyData, cityName, systemSize) {
     }
 
     const days = dailyData.map(data => data.day);
-    // Use kWhPerM2 for the chart
     const kWhValues = dailyData.map(data => data.kWhPerM2);
 
-    const options = {
+    const style = getComputedStyle(document.documentElement);
+    const sunColor = style.getPropertyValue('--sun').trim() || '#FDB813';
+    const textMuted = style.getPropertyValue('--text-muted').trim() || '#64748b';
 
+    const options = {
         series: [{
-            name: 'Einstrahlung (kWh/m²)',
+            name: 'Einstrahlung',
             data: kWhValues
         }],
+        colors: [sunColor],
         chart: {
             type: 'bar',
-            height: 350,
+            height: 400,
             fontFamily: 'Inter, sans-serif',
-            toolbar: {
-                show: false
+            toolbar: { show: false },
+            animations: {
+                enabled: true,
+                easing: 'easeinout',
+                speed: 800
             }
         },
         plotOptions: {
             bar: {
                 horizontal: false,
-                borderRadius: 4,
+                borderRadius: 8,
+                columnWidth: '60%',
                 dataLabels: {
-                    enabled: true,
-                    enabledOnSeries: [1],
-                    position: 'top',
-                    formatter: function (val) {
-                        return val;
-                    },
-                    style: {
-                        fontSize: '10px',
-                        colors: ["#334155"]
-                    },
-                    offsetY: -20
+                    position: 'top'
                 }
             }
         },
-        title: {
-            text: cityName ? `Sonnenenergie in ${cityName}` : '',
-            align: 'center',
+        dataLabels: {
+            enabled: true,
+            formatter: (val) => val.toFixed(1),
+            offsetY: -25,
             style: {
-                fontSize: '14px',
-                fontWeight: 600,
-                color: '#64748b'
-            }
-        },
-        xaxis: {
-            categories: days,
-            title: {
-                text: ''
-            },
-            labels: {
-                formatter: function (val) {
-                    const date = new Date(val);
-                    return date.toLocaleDateString('de-DE', { weekday: 'short', day: 'numeric' });
-                },
-                rotate: -45,
-                maxHeight: 70,
-                style: {
-                    colors: '#64748b',
-                    fontSize: '12px'
-                }
-            },
-            axisBorder: {
-                show: false
-            },
-            axisTicks: {
-                show: false
-            }
-        },
-        yaxis: {
-            title: {
-                text: 'Einstrahlung (kWh/m²)',
-                style: {
-                    color: '#64748b'
-                }
-            },
-            labels: {
-                style: {
-                    colors: '#64748b'
-                }
+                fontSize: '11px',
+                fontWeight: 700,
+                colors: [textMuted]
             }
         },
         grid: {
-            borderColor: '#f1f1f1',
+            borderColor: 'rgba(0,0,0,0.05)',
+            padding: { top: 20, bottom: 0, left: 20, right: 20 }
         },
-        colors: ['#FDB813'], // Sun color
+        xaxis: {
+            categories: days,
+            labels: {
+                formatter: (val) => {
+                    const date = new Date(val);
+                    return date.toLocaleDateString('de-DE', { weekday: 'short', day: 'numeric' });
+                },
+                style: { colors: textMuted, fontSize: '11px' }
+            },
+            axisBorder: { show: false },
+            axisTicks: { show: false }
+        },
+        yaxis: {
+            title: { text: 'kWh/m²', style: { color: textMuted, fontWeight: 600 } },
+            labels: { style: { colors: textMuted } }
+        },
         tooltip: {
             theme: 'light',
             y: {
-                formatter: function (val) {
-                    return val + " kWh/m²";
-                }
+                formatter: (val) => val + " kWh/m²"
             }
         }
     };
+
     window.solarChartInstance = new ApexCharts(document.querySelector("#solarChart"), options);
     window.solarChartInstance.render();
 }

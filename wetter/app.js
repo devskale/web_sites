@@ -2,6 +2,7 @@ document.addEventListener("DOMContentLoaded", function () {
     const searchInput = document.getElementById('cityInput');
     const searchButton = document.getElementById('searchButton');
     const cityNameDisplay = document.getElementById('cityName');
+    const btnText = searchButton.querySelector('.btn-text');
 
     // Default location: Neusiedl am See
     const defaultLat = 47.949;
@@ -23,9 +24,13 @@ document.addEventListener("DOMContentLoaded", function () {
         const city = searchInput.value.trim();
         if (!city) return;
 
-        // Show loading state (optional, but good for UX)
+        // Enhanced loading state
         searchButton.disabled = true;
-        searchButton.textContent = '...';
+        if (btnText) btnText.textContent = 'Lädt...';
+
+        // Add a subtle animation class to the search bar
+        const container = document.querySelector('.search-container');
+        if (container) container.style.opacity = '0.7';
 
         // Geocoding API
         const geocodingUrl = `https://geocoding-api.open-meteo.com/v1/search?name=${encodeURIComponent(city)}&count=1&language=de&format=json`;
@@ -47,14 +52,20 @@ document.addEventListener("DOMContentLoaded", function () {
             })
             .finally(() => {
                 searchButton.disabled = false;
-                searchButton.textContent = 'Suchen';
+                if (btnText) btnText.textContent = 'Suchen';
+                if (container) container.style.opacity = '1';
             });
     }
 
     function loadWeather(lat, lon, name) {
-        // Update title
-        cityNameDisplay.textContent = `${name} Wetter Vorschau`;
-        document.title = `${name} Wetter Vorschau`;
+        // Update title with animation feel
+        cityNameDisplay.style.opacity = '0';
+        setTimeout(() => {
+            cityNameDisplay.textContent = name;
+            cityNameDisplay.style.transition = 'opacity 0.5s ease-in-out';
+            cityNameDisplay.style.opacity = '1';
+            document.title = `${name} | Wetter Vorschau`;
+        }, 200);
 
         // Call functions from other scripts
         if (window.loadTemperatureData) {
