@@ -171,10 +171,11 @@ function createDailySolarPowerChart(dailyData, cityName) {
         },
         stroke: {
             width: [0, 4],
-            curve: 'smooth'
+            curve: 'smooth',
+            lineCap: 'round'
         },
         fill: {
-            type: 'gradient',
+            type: ['gradient', 'solid'],
             gradient: {
                 shade: 'light',
                 type: "vertical",
