@@ -110,7 +110,27 @@ function createTemperatureChart(timeData, tempData, rainData, cityName, duration
                     }
                 },
                 ...generateDayLabels(timeData)
-            ])
+            ]),
+            yaxis: [
+                {
+                    y: 0,
+                    borderColor: '#cbd5e1',
+                    borderWidth: 1,
+                    strokeDashArray: 0,
+                    label: {
+                        borderColor: 'transparent',
+                        style: {
+                            color: '#64748b',
+                            background: 'transparent',
+                            fontSize: '10px',
+                            fontWeight: 700
+                        },
+                        text: '0°C',
+                        position: 'left',
+                        offsetX: -10
+                    }
+                }
+            ]
         },
         grid: {
             borderColor: 'rgba(0,0,0,0.05)',
