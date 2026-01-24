@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Apply for Funding | Ukraine Reconstruction Bank</title>
+    <meta name="description"
+        content="Funding applications for reconstruction projects in Ukraine. Eligibility criteria and submission process.">
+    <link rel="stylesheet" href="index.css">
+    <link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet">
+    <style>
+        .page-header {
+            padding-top: 180px;
+            padding-bottom: 80px;
+            background: linear-gradient(to bottom, rgba(10, 14, 20, 0.8), rgba(10, 14, 20, 1));
+            border-bottom: 1px solid var(--c-border);
+        }
+
+        .process-steps {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 4rem;
+            position: relative;
+        }
+
+        .process-steps::before {
+            content: '';
+            position: absolute;
+            top: 25px;
+            left: 50px;
+            right: 50px;
+            height: 2px;
+            background: var(--c-border);
+            z-index: 0;
+        }
+
+        .process-step {
+            position: relative;
+            z-index: 2;
+            text-align: center;
+            flex: 1;
+        }
+
+        .step-icon {
+            width: 50px;
+            height: 50px;
+            background: var(--c-bg-card);
+            border: 2px solid var(--c-accent-blue);
+            color: var(--c-accent-blue);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1.5rem;
+            font-size: 1.2rem;
+            font-weight: 700;
+        }
+
+        .process-step.active .step-icon {
+            background: var(--c-accent-blue);
+            color: white;
+            box-shadow: 0 0 15px rgba(0, 87, 183, 0.5);
+        }
+
+        .eligibility-check {
+            background: var(--c-bg-card);
+            padding: 3rem;
+            border-radius: 4px;
+            border: 1px solid var(--c-border);
+            margin-top: 4rem;
+        }
+
+        .eligibility-list {
+            list-style: none;
+            margin-top: 2rem;
+        }
+
+        .eligibility-list li {
+            display: flex;
+            align-items: center;
+            margin-bottom: 1rem;
+            font-size: 1.1rem;
+        }
+
+        .eligibility-list li i {
+            color: var(--c-success);
+            margin-right: 1rem;
+            font-size: 1.5rem;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="bg-grid"></div>
+
+    <nav class="navbar">
+        <div class="container">
+            <a href="index.html" class="logo">
+                <i class="ri-government-line text-blue"></i>
+                URB
+                <span>.ua</span>
+            </a>
+            <div class="nav-links">
+                <a href="about.html">About</a>
+                <a href="index.html#sectors">Sectors</a>
+                <a href="investors.html">For Investors</a>
+                <a href="apply.html" style="color: var(--c-accent-gold); opacity: 1;">Apply</a>
+                <a href="media.html">News</a>
+            </div>
+            <a href="#portal" class="btn btn-primary">Client Portal</a>
+        </div>
+    </nav>
+
+    <header class="page-header">
+        <div class="container">
+            <span class="hero-tag">Project Financing</span>
+            <h1 class="reveal">Apply for <span class="text-blue">Funding</span></h1>
+            <p class="reveal" style="font-size: 1.5rem; max-width: 800px; margin-top: 1rem;">
+                Providing capital for competitive projects that rebuild Ukraine and drive economic growth.
+            </p>
+        </div>
+    </header>
+
+    <section style="padding: 6rem 0;">
+        <div class="container">
+
+            <div class="reveal">
+                <h2>Application Process</h2>
+                <div class="process-steps">
+                    <div class="process-step active">
+                        <div class="step-icon">1</div>
+                        <h3>Eligibility</h3>
+                        <p>Self-check criteria</p>
+                    </div>
+                    <div class="process-step">
+                        <div class="step-icon">2</div>
+                        <h3>Submission</h3>
+                        <p>Upload documentation</p>
+                    </div>
+                    <div class="process-step">
+                        <div class="step-icon">3</div>
+                        <h3>Screening</h3>
+                        <p>KYC & AML Checks</p>
+                    </div>
+                    <div class="process-step">
+                        <div class="step-icon">4</div>
+                        <h3>Decision</h3>
+                        <p>Committee Review</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="eligibility-check reveal">
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 4rem;">
+                    <div>
+                        <h2>Who Can Apply?</h2>
+                        <ul class="eligibility-list">
+                            <li><i class="ri-checkbox-circle-line"></i> Registered Ukrainian Legal Entities</li>
+                            <li><i class="ri-checkbox-circle-line"></i> Municipalities & Local Governments</li>
+                            <li><i class="ri-checkbox-circle-line"></i> International Joint Ventures operating in
+                                Ukraine</li>
+                            <li><i class="ri-checkbox-circle-line"></i> Proven track record (active > 2 years)*</li>
+                        </ul>
+                        <p style="font-size: 0.9rem; margin-top: 1rem; opacity: 0.6;">*Startups may apply for specific
+                            innovation grants requiring lesser operational history.</p>
+                    </div>
+                    <div>
+                        <h2>Required Documents</h2>
+                        <ul class="eligibility-list">
+                            <li><i class="ri-file-list-3-line" style="color: var(--c-accent-gold);"></i> Verified
+                                Financial Statements (Last 2 Years)</li>
+                            <li><i class="ri-file-list-3-line" style="color: var(--c-accent-gold);"></i> Detailed
+                                Project Plan & Budget</li>
+                            <li><i class="ri-file-list-3-line" style="color: var(--c-accent-gold);"></i> Ultimate
+                                Beneficial Owner (UBO) Disclosure</li>
+                            <li><i class="ri-file-list-3-line" style="color: var(--c-accent-gold);"></i> Environmental
+                                Impact Assessment</li>
+                        </ul>
+                        <div style="margin-top: 2rem;">
+                            <a href="#" class="btn btn-primary" style="width: 100%;">Start Application -></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-col">
+                    <a href="index.html" class="logo" style="margin-bottom: 1rem;">
+                        <i class="ri-government-line text-blue"></i>
+                        URB
+                        <span>.ua</span>
+                    </a>
+                    <p>The Ukraine Reconstruction Bank is a state-owned specialized financial institution focused on
+                        rebuilding Ukraine.</p>
+                </div>
+                <div class="footer-col">
+                    <h4>Address</h4>
+                    <p>77 Sichovih Striltsiv Street,<br>6th Floor<br>Kyiv, 04053<br>Ukraine</p>
+                </div>
+                <div class="footer-col">
+                    <h4>Quick Links</h4>
+                    <ul>
+                        <li><a href="about.html">About Us</a></li>
+                        <li><a href="#">Governance</a></li>
+                    </ul>
+                </div>
+                <div class="footer-col">
+                    <h4>Contact</h4>
+                    <ul>
+                        <li><a href="mailto:info@urb.ua">info@urb.ua</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div
+                style="margin-top: 4rem; padding-top: 2rem; border-top: 1px solid rgba(255,255,255,0.05); text-align: center; color: var(--c-text-secondary); font-size: 0.8rem;">
+                &copy; 2025 Ukraine Reconstruction Bank. All rights reserved. | Privacy Policy | Terms of Use
+            </div>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+
+</html>
