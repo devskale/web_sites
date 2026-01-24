@@ -4,29 +4,95 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tommi - Links</title>
+    <title>Tommi's World 🎮</title>
     <link rel="stylesheet" href="styles.css">
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Bangers&family=Outfit:wght@400;700;900&display=swap"
+        rel="stylesheet">
 </head>
 
 <body>
-    <div class="container">
+    <div class="bg-shapes">
+        <div class="shape shape-1"></div>
+        <div class="shape shape-2"></div>
+        <div class="shape shape-3"></div>
+    </div>
+
+    <div class="main-card">
         <div class="header">
-            <img src="tommi.jpg" alt="Tommi" class="profile-picture">
+            <div class="avatar-container">
+                <img src="tommi.jpg" alt="Tommi" class="profile-picture">
+                <div class="avatar-decor"></div>
+            </div>
             <div class="header-text">
-                <h1>Tommi</h1>
-                <p>🌟🎉 Willkommen bei mir! 🎈🎊✨🌺🤗</p>
+                <h1>TOMMI</h1>
+                <p class="status">🚀 Level 11 Unlocked</p>
+                <p class="bio">Willkommen in meiner Base! 🛹</p>
             </div>
         </div>
 
-        <div class="links">
-            <a href="mailto:der@tommmi.com" class="link-item">email</a>
-            <a href="https://wa.me/4367764085551" class="link-item">w/app</a>
-            <a href="https://www.gymnasium-neusiedl.at/" class="link-item">Gymnasium Neusiedl</a>
-            <a href="https://tommmi.com/photos" class="link-item">photos</a>
-
-
-
+        <div class="links-grid">
+            <a href="#" id="email-btn" class="game-btn btn-blue">
+                <span class="icon">📧</span>
+                <span class="label">Email Me</span>
+            </a>
+            <a href="#" id="wa-btn" class="game-btn btn-green">
+                <span class="icon">💬</span>
+                <span class="label">WhatsApp</span>
+            </a>
+            <a href="https://www.gymnasium-neusiedl.at/" class="game-btn btn-yellow">
+                <span class="icon">🏫</span>
+                <span class="label">My School</span>
+            </a>
+            <a href="https://tommmi.com/photos" class="game-btn btn-pink">
+                <span class="icon">📸</span>
+                <span class="label">Photos</span>
+            </a>
+            <a href="https://open.spotify.com/playlist/3yZpU8ZJHjXUtoD8PYblUT" class="game-btn btn-spotify">
+                <span class="icon">🎧</span>
+                <span class="label">My Beats</span>
+            </a>
         </div>
+
+        <div class="footer-decor">
+            GAME OVER? NEVER.
+        </div>
+    </div>
+
+    <script>
+        // Obfuscated contact details - reveals only on interaction
+        const emailBtn = document.getElementById('email-btn');
+        const waBtn = document.getElementById('wa-btn');
+
+        function revealEmail() {
+            const user = 'der';
+            const domain = 'tommmi.com';
+            emailBtn.href = 'mailto:' + user + '@' + domain;
+            // Remove listener after first trigger
+            emailBtn.removeEventListener('mouseover', revealEmail);
+            emailBtn.removeEventListener('touchstart', revealEmail);
+        }
+
+        function revealWhatsApp() {
+            // 43 677 64085551
+            const p1 = '43';
+            const p2 = '677';
+            const p3 = '64085551';
+            waBtn.href = 'https://wa.me/' + p1 + p2 + p3;
+            // Remove listener after first trigger
+            waBtn.removeEventListener('mouseover', revealWhatsApp);
+            waBtn.removeEventListener('touchstart', revealWhatsApp);
+        }
+
+        // Reveal on hover or touch
+        emailBtn.addEventListener('mouseover', revealEmail);
+        emailBtn.addEventListener('touchstart', revealEmail);
+
+        waBtn.addEventListener('mouseover', revealWhatsApp);
+        waBtn.addEventListener('touchstart', revealWhatsApp);
+    </script>
 </body>
 
 </html>
