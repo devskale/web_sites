@@ -4,6 +4,9 @@ document.addEventListener("DOMContentLoaded", function () {
     const cityNameDisplay = document.getElementById('cityName');
     const btnText = searchButton.querySelector('.btn-text');
 
+    const searchWrapper = document.getElementById('searchWrapper');
+    const searchToggle = document.getElementById('searchToggle');
+
     // Default location & settings
     let currentLat = 47.949;
     let currentLon = 16.8417;
@@ -18,6 +21,20 @@ document.addEventListener("DOMContentLoaded", function () {
     searchInput.addEventListener('keypress', function (e) {
         if (e.key === 'Enter') {
             handleSearch();
+        }
+    });
+
+    searchToggle.addEventListener('click', () => {
+        searchWrapper.classList.toggle('expanded');
+        if (searchWrapper.classList.contains('expanded')) {
+            searchInput.focus();
+        }
+    });
+
+    // Close search on click outside
+    document.addEventListener('click', (e) => {
+        if (!searchWrapper.contains(e.target) && searchWrapper.classList.contains('expanded')) {
+            searchWrapper.classList.remove('expanded');
         }
     });
 
@@ -64,6 +81,7 @@ document.addEventListener("DOMContentLoaded", function () {
                     currentName = result.name;
                     loadWeather(currentLat, currentLon, currentName);
                     searchInput.value = ''; // Clear input
+                    searchWrapper.classList.remove('expanded'); // Collapse after search
                 } else {
                     alert('Stadt nicht gefunden. Bitte versuchen Sie es erneut.');
                 }
@@ -83,7 +101,7 @@ document.addEventListener("DOMContentLoaded", function () {
         // Update title with animation feel
         cityNameDisplay.style.opacity = '0';
         setTimeout(() => {
-            cityNameDisplay.textContent = name;
+            cityNameDisplay.textContent = `Wetter: ${name}`;
             cityNameDisplay.style.transition = 'opacity 0.5s ease-in-out';
             cityNameDisplay.style.opacity = '1';
             document.title = `${name} | Wetter Vorschau`;

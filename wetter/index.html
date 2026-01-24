@@ -21,16 +21,25 @@
 <body>
   <div class="container">
     <header class="header">
-      <h1 id="cityName">Wetter Vorschau</h1>
-      <div class="search-container">
-        <input type="text" id="cityInput" placeholder="Suchen Sie nach einer Stadt..." aria-label="Stadt suchen" />
-        <button id="searchButton">
-          <span class="btn-text">Suchen</span>
-        </button>
-      </div>
-      <div class="presets">
-        <button class="preset-btn" data-city="Neusiedl am See" data-lat="47.949" data-lon="16.8417">Neusiedl</button>
-        <button class="preset-btn" data-city="Wien" data-lat="48.2082" data-lon="16.3738">Wien</button>
+      <h1 id="cityName">Wetter: ...</h1>
+      <div class="search-and-presets">
+        <div class="search-wrapper" id="searchWrapper">
+          <button id="searchToggle" class="icon-btn" aria-label="Suche öffnen">
+            <svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="2.5" fill="none"
+              stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="11" cy="11" r="8"></circle>
+              <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+            </svg>
+          </button>
+          <div class="search-container">
+            <input type="text" id="cityInput" placeholder="Stadt suchen..." aria-label="Stadt suchen" />
+            <button id="searchButton" class="go-btn">Go</button>
+          </div>
+        </div>
+        <div class="presets">
+          <button class="preset-btn" data-city="Neusiedl am See" data-lat="47.949" data-lon="16.8417">Neusiedl</button>
+          <button class="preset-btn" data-city="Wien" data-lat="48.2082" data-lon="16.3738">Wien</button>
+        </div>
       </div>
       <div class="forecast-options">
         <label>Zeitraum:</label>
@@ -65,12 +74,13 @@
           <div class="controls-wrapper">
             <div class="controls">
               <div class="input-group">
-                <input type="number" id="roofArea" value="57" min="1" step="1" class="small-input" title="m²">
+                <input type="number" id="roofArea" value="57" min="1" step="1" class="small-input" title="m²"
+                  aria-label="Dachfläche in m²">
                 <span class="unit">m²</span>
               </div>
               <div class="input-group">
                 <input type="number" id="efficiency" value="17.5" min="1" max="100" step="0.5" class="small-input"
-                  title="Effizienz %">
+                  title="Effizienz %" aria-label="Modul-Effizienz in Prozent">
                 <span class="unit">%</span>
               </div>
               <div class="input-group">
