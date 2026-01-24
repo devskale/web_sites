@@ -48,72 +48,133 @@ body {
 /* Header & Search */
 .header {
     display: flex;
-    flex-direction: column;
+    flex-wrap: wrap;
     align-items: center;
-    margin-bottom: 60px;
-    gap: 32px;
+    justify-content: space-between;
+    margin-bottom: 32px;
+    gap: 16px;
+    background: hsla(215, 40%, 96%, 0.4);
+    padding: 16px 24px;
+    border-radius: 24px;
+    border: 1px solid var(--card-border);
+    backdrop-filter: blur(10px);
 }
 
 h1 {
-    font-size: 3rem;
+    font-size: 1.25rem;
     font-weight: 800;
     color: var(--primary);
     margin: 0;
-    text-align: center;
-    letter-spacing: -0.04em;
-    text-wrap: balance;
-    /* From baseline-ui principles */
+    letter-spacing: -0.02em;
+    min-width: 150px;
+}
+
+.presets {
+    display: flex;
+    gap: 8px;
+    justify-content: center;
+}
+
+.preset-btn {
+    background: hsla(215, 40%, 94%, 0.5);
+    color: var(--text-muted);
+    padding: 6px 14px;
+    font-size: 0.8rem;
+    min-width: unset;
+    border: 1px solid var(--card-border);
+    backdrop-filter: blur(4px);
+}
+
+.preset-btn:hover {
+    background: var(--accent);
+    color: white;
+    border-color: var(--accent);
+}
+
+.forecast-options {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.forecast-options label {
+    display: none;
+    /* Accessible but hidden for compactness */
+}
+
+.duration-selector {
+    display: flex;
+    background: hsla(215, 40%, 94%, 0.5);
+    padding: 4px;
+    border-radius: 100px;
+    border: 1px solid var(--card-border);
+    backdrop-filter: blur(4px);
+}
+
+.duration-btn {
+    background: transparent;
+    color: var(--text-muted);
+    border: none;
+    padding: 6px 14px;
+    font-size: 0.8rem;
+    font-weight: 700;
+    min-width: unset;
+    border-radius: 100px;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.duration-btn.active {
+    background: var(--primary);
+    color: white;
+    box-shadow: 0 4px 10px hsla(222, 47%, 11%, 0.1);
+}
+
+.duration-btn:hover:not(.active) {
+    background: hsla(215, 40%, 90%, 0.8);
+    color: var(--primary);
 }
 
 .search-container {
     display: flex;
-    gap: 8px;
-    width: 100%;
-    max-width: 480px;
-    background: var(--card-bg);
-    padding: 8px;
+    gap: 4px;
+    flex: 1;
+    min-width: 200px;
+    max-width: 350px;
+    background: white;
+    padding: 2px 4px;
     border-radius: 100px;
-    box-shadow: var(--shadow-soft);
     border: 1px solid var(--card-border);
-    backdrop-filter: blur(8px);
     transition: all 0.3s var(--transition);
 }
 
 .search-container:focus-within {
-    box-shadow: 0 20px 40px -15px hsla(222, 47%, 11%, 0.1);
-    transform: translateY(-2px);
     border-color: var(--accent);
+    box-shadow: 0 0 0 4px var(--accent-glow);
 }
 
 input[type="text"] {
     flex: 1;
     border: none;
-    padding: 12px 24px;
-    font-size: 1.1rem;
+    padding: 6px 12px;
+    font-size: 0.9rem;
     outline: none;
     background: transparent;
     font-family: inherit;
     color: var(--primary);
 }
 
-input[type="text"]::placeholder {
-    color: hsl(215, 20%, 75%);
-}
-
 button {
     background-color: var(--primary);
     color: white;
     border: none;
-    padding: 12px 32px;
+    padding: 6px 16px;
     border-radius: 100px;
     font-weight: 600;
+    font-size: 0.85rem;
     cursor: pointer;
     transition: all 0.2s var(--transition);
-    font-family: inherit;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    min-width: 120px;
+    min-width: 80px;
 }
 
 button:hover:not(:disabled) {

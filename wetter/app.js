@@ -4,13 +4,14 @@ document.addEventListener("DOMContentLoaded", function () {
     const cityNameDisplay = document.getElementById('cityName');
     const btnText = searchButton.querySelector('.btn-text');
 
-    // Default location: Neusiedl am See
-    const defaultLat = 47.949;
-    const defaultLon = 16.8417;
-    const defaultName = "Neusiedl am See";
+    // Default location & settings
+    let currentLat = 47.949;
+    let currentLon = 16.8417;
+    let currentName = "Neusiedl am See";
+    let currentDuration = 4;
 
     // Initialize with default location
-    loadWeather(defaultLat, defaultLon, defaultName);
+    loadWeather(currentLat, currentLon, currentName);
 
     // Event listeners
     searchButton.addEventListener('click', handleSearch);
@@ -18,6 +19,24 @@ document.addEventListener("DOMContentLoaded", function () {
         if (e.key === 'Enter') {
             handleSearch();
         }
+    });
+
+    document.querySelectorAll('.preset-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+            currentLat = btn.dataset.lat;
+            currentLon = btn.dataset.lon;
+            currentName = btn.dataset.city;
+            loadWeather(currentLat, currentLon, currentName);
+        });
+    });
+
+    document.querySelectorAll('.duration-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+            document.querySelectorAll('.duration-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            currentDuration = parseInt(btn.dataset.days);
+            loadWeather(currentLat, currentLon, currentName);
+        });
     });
 
     function handleSearch() {
@@ -40,7 +59,10 @@ document.addEventListener("DOMContentLoaded", function () {
             .then(data => {
                 if (data.results && data.results.length > 0) {
                     const result = data.results[0];
-                    loadWeather(result.latitude, result.longitude, result.name);
+                    currentLat = result.latitude;
+                    currentLon = result.longitude;
+                    currentName = result.name;
+                    loadWeather(currentLat, currentLon, currentName);
                     searchInput.value = ''; // Clear input
                 } else {
                     alert('Stadt nicht gefunden. Bitte versuchen Sie es erneut.');
@@ -69,10 +91,10 @@ document.addEventListener("DOMContentLoaded", function () {
 
         // Call functions from other scripts
         if (window.loadTemperatureData) {
-            window.loadTemperatureData(lat, lon, name);
+            window.loadTemperatureData(lat, lon, name, currentDuration);
         }
         if (window.loadSolarData) {
-            window.loadSolarData(lat, lon, name);
+            window.loadSolarData(lat, lon, name, currentDuration);
         }
     }
 });

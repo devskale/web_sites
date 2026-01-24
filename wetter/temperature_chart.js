@@ -1,15 +1,22 @@
 // Export the function so it can be used by other scripts
-window.loadTemperatureData = function (lat, lon, cityName) {
-    const apiUrl = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&hourly=temperature_2m,rain&past_days=1&forecast_days=4`;
+window.loadTemperatureData = function (lat, lon, cityName, duration = 4) {
+    const apiUrl = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&hourly=temperature_2m,rain&past_days=1&forecast_days=${duration}`;
 
     const chartContainer = document.querySelector("#tempChart");
     if (chartContainer) chartContainer.classList.add('loading');
+
+    // Update UI badge if exists
+    const badge = document.querySelector('.chart-section [aria-labelledby="temp-heading"] .badge');
+    if (badge) badge.textContent = `${duration} Tage`;
+    // Alternative if the badge is in the expected HTML structure from previous turns
+    const tempBadge = document.querySelector('.chart-section:first-child .badge');
+    if (tempBadge) tempBadge.textContent = `${duration} Tage`;
 
     fetch(apiUrl)
         .then(response => response.json())
         .then(data => {
             if (chartContainer) chartContainer.classList.remove('loading');
-            createTemperatureChart(data.hourly.time, data.hourly.temperature_2m, data.hourly.rain, cityName);
+            createTemperatureChart(data.hourly.time, data.hourly.temperature_2m, data.hourly.rain, cityName, duration);
         })
         .catch(error => {
             console.error('Error fetching data:', error);
@@ -17,7 +24,7 @@ window.loadTemperatureData = function (lat, lon, cityName) {
         });
 };
 
-function createTemperatureChart(timeData, tempData, rainData, cityName) {
+function createTemperatureChart(timeData, tempData, rainData, cityName, duration) {
     if (window.tempChartInstance) {
         window.tempChartInstance.destroy();
     }

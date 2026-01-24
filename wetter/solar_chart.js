@@ -1,12 +1,16 @@
 let currentDailyData = [];
 let currentCityName = '';
 
-window.loadSolarData = function (lat, lon, cityName) {
-    const apiUrl = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&hourly=global_tilted_irradiance&past_days=7&forecast_days=5`;
+window.loadSolarData = function (lat, lon, cityName, duration = 4) {
+    const apiUrl = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&hourly=global_tilted_irradiance&past_days=1&forecast_days=${duration}`;
     currentCityName = cityName;
 
     const chartContainer = document.querySelector("#solarChart");
     if (chartContainer) chartContainer.classList.add('loading');
+
+    // Update UI badge if exists
+    const solarBadge = document.querySelector('.chart-section:last-of-type .badge');
+    if (solarBadge) solarBadge.textContent = `${duration} Tage`;
 
     fetch(apiUrl)
         .then(response => response.json())
@@ -55,8 +59,18 @@ function updateSolarUI() {
         totalKWh: parseFloat((item.kWh * area * (efficiency / 100)).toFixed(1))
     }));
 
-    displayDailyData(calculatedData);
-    createDailySolarPowerChart(calculatedData, currentCityName, kwp);
+    updateSolarSummary(calculatedData);
+    createDailySolarPowerChart(calculatedData, currentCityName);
+}
+
+function updateSolarSummary(data) {
+    const total = data.reduce((acc, curr) => acc + curr.totalKWh, 0).toFixed(0);
+    const avg = (total / data.length).toFixed(1);
+
+    const summarySpan = document.getElementById('solar-summary');
+    if (summarySpan) {
+        summarySpan.innerHTML = `Ø <strong>${avg} kWh</strong>/Tag • Total <strong>${total} kWh</strong>`;
+    }
 }
 
 function calculateDailySolarPower(timeData, gtiData) {
@@ -87,38 +101,15 @@ function calculateDailySolarPower(timeData, gtiData) {
     return dailyKWh;
 }
 
-function displayDailyData(dailyData) {
-    const container = document.getElementById("dailyDataContainer");
-    if (!container) return;
-    container.innerHTML = '';
+// displayDailyData removed for compactness
 
-    // Sort to show today first if possible, or just latest. 
-    // For now, keep the order but maybe highlight today.
-    const todayStr = new Date().toISOString().split('T')[0];
-
-    dailyData.forEach(data => {
-        const isToday = data.day === todayStr;
-        const listItem = document.createElement("div");
-        if (isToday) listItem.style.borderColor = 'var(--accent)';
-
-        const date = new Date(data.day);
-        const dayName = date.toLocaleDateString('de-DE', { weekday: 'short', day: 'numeric', month: 'numeric' });
-
-        listItem.innerHTML = `
-            <strong>${dayName}</strong>
-            <span>${data.totalKWh} kWh</span>
-        `;
-        container.appendChild(listItem);
-    });
-}
-
-function createDailySolarPowerChart(dailyData, cityName, systemSize) {
+function createDailySolarPowerChart(dailyData, cityName) {
     if (window.solarChartInstance) {
         window.solarChartInstance.destroy();
     }
 
     const days = dailyData.map(data => data.day);
-    const kWhValues = dailyData.map(data => data.kWhPerM2);
+    const productionValues = dailyData.map(data => data.totalKWh);
 
     const style = getComputedStyle(document.documentElement);
     const sunColor = style.getPropertyValue('--sun').trim() || '#FDB813';
@@ -126,26 +117,29 @@ function createDailySolarPowerChart(dailyData, cityName, systemSize) {
 
     const options = {
         series: [{
-            name: 'Einstrahlung',
-            data: kWhValues
+            name: 'Ertrag',
+            data: productionValues
         }],
         colors: [sunColor],
         chart: {
             type: 'bar',
-            height: 400,
+            height: 220, // More compact
             fontFamily: 'Inter, sans-serif',
             toolbar: { show: false },
             animations: {
                 enabled: true,
                 easing: 'easeinout',
-                speed: 800
+                speed: 600
+            },
+            sparkline: {
+                enabled: false // We still want axes but very clean
             }
         },
         plotOptions: {
             bar: {
                 horizontal: false,
-                borderRadius: 8,
-                columnWidth: '60%',
+                borderRadius: 4,
+                columnWidth: '70%',
                 dataLabels: {
                     position: 'top'
                 }
@@ -178,13 +172,12 @@ function createDailySolarPowerChart(dailyData, cityName, systemSize) {
             axisTicks: { show: false }
         },
         yaxis: {
-            title: { text: 'kWh/m²', style: { color: textMuted, fontWeight: 600 } },
-            labels: { style: { colors: textMuted } }
+            show: false // Strip away useless axes
         },
         tooltip: {
             theme: 'light',
             y: {
-                formatter: (val) => val + " kWh/m²"
+                formatter: (val) => val + " kWh"
             }
         }
     };
