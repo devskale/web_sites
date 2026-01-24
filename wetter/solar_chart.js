@@ -8,9 +8,6 @@ window.loadSolarData = function (lat, lon, cityName, duration = 4) {
     const chartContainer = document.querySelector("#solarChart");
     if (chartContainer) chartContainer.classList.add('loading');
 
-    // Update UI badge if exists
-    const solarBadge = document.querySelector('.chart-section:last-of-type .badge');
-    if (solarBadge) solarBadge.textContent = `${duration} Tage`;
 
     fetch(apiUrl)
         .then(response => response.json())

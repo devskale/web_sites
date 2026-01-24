@@ -111,9 +111,18 @@ document.addEventListener("DOMContentLoaded", function () {
 
     document.querySelectorAll('.duration-btn').forEach(btn => {
         btn.addEventListener('click', () => {
-            document.querySelectorAll('.duration-btn').forEach(b => b.classList.remove('active'));
-            btn.classList.add('active');
-            currentDuration = parseInt(btn.dataset.days);
+            const days = parseInt(btn.dataset.days);
+            currentDuration = days;
+
+            // Sync all duration selectors
+            document.querySelectorAll('.duration-btn').forEach(b => {
+                if (parseInt(b.dataset.days) === days) {
+                    b.classList.add('active');
+                } else {
+                    b.classList.remove('active');
+                }
+            });
+
             loadWeather(currentLat, currentLon, currentName);
         });
     });

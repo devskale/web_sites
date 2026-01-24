@@ -5,12 +5,6 @@ window.loadTemperatureData = function (lat, lon, cityName, duration = 4) {
     const chartContainer = document.querySelector("#tempChart");
     if (chartContainer) chartContainer.classList.add('loading');
 
-    // Update UI badge if exists
-    const badge = document.querySelector('.chart-section [aria-labelledby="temp-heading"] .badge');
-    if (badge) badge.textContent = `${duration} Tage`;
-    // Alternative if the badge is in the expected HTML structure from previous turns
-    const tempBadge = document.querySelector('.chart-section:first-child .badge');
-    if (tempBadge) tempBadge.textContent = `${duration} Tage`;
 
     fetch(apiUrl)
         .then(response => response.json())

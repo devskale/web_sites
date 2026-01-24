@@ -46,14 +46,6 @@
       </div>
     </header>
 
-    <div class="forecast-options">
-      <div class="duration-selector">
-        <button class="duration-btn" data-days="2">2T</button>
-        <button class="duration-btn active" data-days="4">4T</button>
-        <button class="duration-btn" data-days="7">7T</button>
-        <button class="duration-btn" data-days="10">10T</button>
-      </div>
-    </div>
 
     <main>
       <section class="chart-section" aria-labelledby="temp-heading">
@@ -62,7 +54,12 @@
             <h2 id="temp-heading">Temperatur & Niederschlag</h2>
             <p id="temp-summary"></p>
           </div>
-          <span class="badge">Live</span>
+          <div class="duration-selector">
+            <button class="duration-btn" data-days="2">2</button>
+            <button class="duration-btn active" data-days="4">4</button>
+            <button class="duration-btn" data-days="7">7</button>
+            <button class="duration-btn" data-days="10">10</button>
+          </div>
         </div>
         <div id="tempChart"></div>
       </section>
@@ -73,20 +70,28 @@
             <h2 id="solar-heading">Sonnenenergie</h2>
             <p id="solar-summary"></p>
           </div>
-          <div class="controls-wrapper">
-            <div class="controls">
-              <div class="input-group">
-                <input type="number" id="roofArea" value="57" min="1" step="1" class="small-input" title="m²"
-                  aria-label="Dachfläche in m²">
-                <span class="unit">m²</span>
-              </div>
-              <div class="input-group">
-                <input type="number" id="efficiency" value="17.5" min="1" max="100" step="0.5" class="small-input"
-                  title="Effizienz %" aria-label="Modul-Effizienz in Prozent">
-                <span class="unit">%</span>
-              </div>
-              <div class="input-group">
-                <span id="kwpDisplay" class="value-display">10.0 kWp</span>
+          <div class="header-tools">
+            <div class="duration-selector">
+              <button class="duration-btn" data-days="2">2</button>
+              <button class="duration-btn active" data-days="4">4</button>
+              <button class="duration-btn" data-days="7">7</button>
+              <button class="duration-btn" data-days="10">10</button>
+            </div>
+            <div class="controls-wrapper">
+              <div class="controls">
+                <div class="input-group">
+                  <input type="number" id="roofArea" value="57" min="1" step="1" class="small-input" title="m²"
+                    aria-label="Dachfläche in m²">
+                  <span class="unit">m²</span>
+                </div>
+                <div class="input-group">
+                  <input type="number" id="efficiency" value="17.5" min="1" max="100" step="0.5" class="small-input"
+                    title="Effizienz %" aria-label="Modul-Effizienz in Prozent">
+                  <span class="unit">%</span>
+                </div>
+                <div class="input-group">
+                  <span id="kwpDisplay" class="value-display">10.0 kWp</span>
+                </div>
               </div>
             </div>
           </div>

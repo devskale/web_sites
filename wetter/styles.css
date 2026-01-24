@@ -175,40 +175,50 @@ input[type="text"] {
     background: var(--accent-soft);
 }
 
-/* Duration Selector: Subtle */
-.forecast-options {
-    width: 100%;
-    display: flex;
-    justify-content: flex-start;
-    margin-top: -60px;
-    margin-bottom: 60px;
-}
-
+/* Duration Selector: Combined with N TAGE Tag */
 .duration-selector {
     display: flex;
-    gap: 4px;
-    background: hsla(225, 20%, 90%, 0.3);
-    padding: 4px;
-    border-radius: 12px;
+    gap: 2px;
+    background: var(--accent-soft);
+    padding: 3px;
+    border-radius: 10px;
+    align-self: flex-start;
 }
 
 .duration-btn {
     background: transparent;
-    color: var(--text-muted);
+    color: var(--accent);
     border: none;
-    padding: 6px 14px;
-    font-size: 0.8rem;
-    font-weight: 600;
-    border-radius: 8px;
+    padding: 5px 12px;
+    font-size: 0.65rem;
+    font-weight: 800;
+    border-radius: 7px;
     cursor: pointer;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
     transition: all 0.3s var(--ease-out);
+    white-space: nowrap;
+}
+
+.duration-btn::after {
+    content: 'T';
+}
+
+.duration-btn.active::after {
+    content: ' TAGE';
 }
 
 .duration-btn.active {
-    background: white;
-    color: var(--primary);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    background: var(--accent);
+    color: white;
+    box-shadow: 0 4px 12px rgba(205, 90, 50, 0.2);
 }
+
+.duration-btn:hover:not(.active) {
+    background: hsla(205, 90%, 50%, 0.15);
+}
+
+
 
 /* Section Header: Cardless Separation */
 .chart-section {
@@ -219,8 +229,16 @@ input[type="text"] {
 .section-header {
     display: flex;
     justify-content: space-between;
-    align-items: baseline;
+    align-items: flex-start;
     margin-bottom: 48px;
+    gap: 32px;
+}
+
+.header-tools {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 20px;
 }
 
 h2 {
