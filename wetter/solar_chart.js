@@ -1,6 +1,21 @@
 let currentDailyData = [];
 let currentCityName = '';
 
+const DAYS_IN_MONTH = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
+
+function getConsumptionEstimate(dateStr) {
+    const date = new Date(dateStr);
+    const month = date.getMonth(); // 0-11
+
+    // Use data from consumption_data.js if available
+    const monthlyTotal = (window.CONSUMPTION_DATA && window.CONSUMPTION_DATA[month])
+        ? window.CONSUMPTION_DATA[month].total
+        : 800; // Default fallback
+
+    const days = DAYS_IN_MONTH[month];
+    return monthlyTotal / days;
+}
+
 window.loadSolarData = function (lat, lon, cityName, duration = 4) {
     const apiUrl = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&hourly=global_tilted_irradiance&past_days=1&forecast_days=${duration}`;
     currentCityName = cityName;
@@ -53,7 +68,8 @@ function updateSolarUI() {
     const calculatedData = currentDailyData.map(item => ({
         day: item.day,
         kWhPerM2: item.kWh,
-        totalKWh: parseFloat((item.kWh * area * (efficiency / 100)).toFixed(1))
+        totalKWh: parseFloat((item.kWh * area * (efficiency / 100)).toFixed(1)),
+        consumptionKWh: parseFloat(getConsumptionEstimate(item.day).toFixed(1))
     }));
 
     updateSolarSummary(calculatedData);
@@ -61,12 +77,18 @@ function updateSolarUI() {
 }
 
 function updateSolarSummary(data) {
-    const total = data.reduce((acc, curr) => acc + curr.totalKWh, 0).toFixed(0);
-    const avg = (total / data.length).toFixed(1);
+    const totalErtrag = data.reduce((acc, curr) => acc + curr.totalKWh, 0).toFixed(0);
+    const avgErtrag = (totalErtrag / data.length).toFixed(1);
+
+    const totalVerbrauch = data.reduce((acc, curr) => acc + curr.consumptionKWh, 0);
+    const avgVerbrauch = (totalVerbrauch / data.length).toFixed(1);
 
     const summarySpan = document.getElementById('solar-summary');
     if (summarySpan) {
-        summarySpan.innerHTML = `Ø <strong>${avg}</strong> kWh/Tag • Total <strong>${total}</strong> kWh`;
+        summarySpan.innerHTML = `
+            Ertrag Ø <strong>${avgErtrag}</strong> kWh/Tag • Total <strong>${totalErtrag}</strong> kWh<br>
+            Verbrauch Ø <strong>${avgVerbrauch}</strong> kWh/Tag
+        `;
     }
 }
 
@@ -107,79 +129,121 @@ function createDailySolarPowerChart(dailyData, cityName) {
 
     const days = dailyData.map(data => data.day);
     const productionValues = dailyData.map(data => data.totalKWh);
+    const consumptionValues = dailyData.map(data => data.consumptionKWh);
 
     const style = getComputedStyle(document.documentElement);
     const sunColor = style.getPropertyValue('--sun').trim() || '#FDB813';
+    const accentColor = style.getPropertyValue('--accent').trim() || '#3b82f6';
     const textMuted = style.getPropertyValue('--text-muted').trim() || '#64748b';
 
     const options = {
-        series: [{
-            name: 'Ertrag',
-            data: productionValues
-        }],
-        colors: [sunColor],
+        series: [
+            {
+                name: 'Ertrag',
+                type: 'bar',
+                data: productionValues
+            },
+            {
+                name: 'Verbrauch',
+                type: 'line',
+                data: consumptionValues
+            }
+        ],
+        colors: [sunColor, accentColor],
         chart: {
-            type: 'bar',
-            height: 250,
+            height: 450,
+            type: 'line',
             fontFamily: 'Outfit, sans-serif',
             toolbar: { show: false },
             zoom: { enabled: false },
             animations: {
                 enabled: true,
                 easing: 'easeinout',
-                speed: 800
+                speed: 1000
             },
-            sparkline: {
-                enabled: false // We still want axes but very clean
+            dropShadow: {
+                enabled: true,
+                top: 10,
+                left: 0,
+                blur: 10,
+                opacity: 0.05
+            }
+        },
+        stroke: {
+            width: [0, 4],
+            curve: 'smooth'
+        },
+        fill: {
+            type: 'gradient',
+            gradient: {
+                shade: 'light',
+                type: "vertical",
+                shadeIntensity: 0.5,
+                gradientToColors: [sunColor],
+                inverseColors: true,
+                opacityFrom: 0.85,
+                opacityTo: 0.95,
+                stops: [0, 100]
             }
         },
         plotOptions: {
             bar: {
                 horizontal: false,
                 borderRadius: 4,
-                columnWidth: '70%',
+                columnWidth: '60%',
                 dataLabels: {
                     position: 'top'
                 }
             }
         },
         dataLabels: {
-            enabled: true,
-            formatter: (val) => val.toFixed(1),
-            offsetY: -25,
-            style: {
-                fontSize: '11px',
-                fontWeight: 700,
-                colors: [textMuted]
-            }
+            enabled: false
         },
         grid: {
-            borderColor: 'rgba(0,0,0,0.05)',
-            padding: { top: 20, bottom: 20, left: 20, right: 20 }
+            borderColor: 'rgba(0,0,0,0.03)',
+            strokeDashArray: 2,
+            padding: { top: 20, bottom: 20, left: 10, right: 10 },
+            xaxis: { lines: { show: false } },
+            yaxis: { lines: { show: true } }
         },
         xaxis: {
+            type: 'category',
             categories: days,
             labels: {
+                style: { colors: textMuted, fontSize: '11px', fontWeight: 600, fontFamily: 'Outfit' },
                 minHeight: 45,
                 formatter: (val) => {
                     const date = new Date(val);
                     const day = date.toLocaleDateString('de-DE', { weekday: 'short' });
                     const datePart = date.toLocaleDateString('de-DE', { day: 'numeric', month: 'short' });
-                    return [day, datePart]; // Multi-line array for ApexCharts
-                },
-                style: { colors: textMuted, fontSize: '11px', fontWeight: 600, fontFamily: 'Outfit' }
+                    return [day, datePart];
+                }
             },
             axisBorder: { show: false },
             axisTicks: { show: false }
         },
         yaxis: {
-            show: false // Strip away useless axes
+            title: {
+                text: 'Energie (kWh)',
+                style: { color: textMuted, fontWeight: 600 }
+            },
+            labels: {
+                style: { colors: textMuted }
+            }
         },
         tooltip: {
             theme: 'light',
             y: {
-                formatter: (val) => val + " kWh"
+                formatter: (val) => val.toFixed(1) + " kWh"
             }
+        },
+        legend: {
+            show: true,
+            position: 'top',
+            horizontalAlign: 'right',
+            fontSize: '14px',
+            fontWeight: 500,
+            markers: { radius: 12 }
         }
     };
 
