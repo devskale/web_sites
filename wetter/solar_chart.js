@@ -69,7 +69,7 @@ function updateSolarSummary(data) {
 
     const summarySpan = document.getElementById('solar-summary');
     if (summarySpan) {
-        summarySpan.innerHTML = `Ø <strong>${avg} kWh</strong>/Tag • Total <strong>${total} kWh</strong>`;
+        summarySpan.innerHTML = `Ø <strong>${avg}</strong> kWh/Tag • Total <strong>${total}</strong> kWh`;
     }
 }
 
@@ -123,13 +123,14 @@ function createDailySolarPowerChart(dailyData, cityName) {
         colors: [sunColor],
         chart: {
             type: 'bar',
-            height: 220, // More compact
-            fontFamily: 'Inter, sans-serif',
+            height: 250,
+            fontFamily: 'Outfit, sans-serif',
             toolbar: { show: false },
+            zoom: { enabled: false },
             animations: {
                 enabled: true,
                 easing: 'easeinout',
-                speed: 600
+                speed: 800
             },
             sparkline: {
                 enabled: false // We still want axes but very clean
@@ -157,16 +158,19 @@ function createDailySolarPowerChart(dailyData, cityName) {
         },
         grid: {
             borderColor: 'rgba(0,0,0,0.05)',
-            padding: { top: 20, bottom: 0, left: 20, right: 20 }
+            padding: { top: 20, bottom: 20, left: 20, right: 20 }
         },
         xaxis: {
             categories: days,
             labels: {
+                minHeight: 45,
                 formatter: (val) => {
                     const date = new Date(val);
-                    return date.toLocaleDateString('de-DE', { weekday: 'short', day: 'numeric' });
+                    const day = date.toLocaleDateString('de-DE', { weekday: 'short' });
+                    const datePart = date.toLocaleDateString('de-DE', { day: 'numeric', month: 'short' });
+                    return [day, datePart]; // Multi-line array for ApexCharts
                 },
-                style: { colors: textMuted, fontSize: '11px' }
+                style: { colors: textMuted, fontSize: '11px', fontWeight: 600, fontFamily: 'Outfit' }
             },
             axisBorder: { show: false },
             axisTicks: { show: false }

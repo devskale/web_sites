@@ -8,10 +8,10 @@
   <meta name="description"
     content="Erhalten Sie präzise Wettervorhersagen und berechnen Sie das Solarenergiepotenzial für Ihr Dach.">
 
-  <!-- Preload fonts for better performance -->
+  <!-- Distinctive Editorial Typography -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap"
     rel="stylesheet">
 
   <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
@@ -22,6 +22,7 @@
   <div class="container">
     <header class="header">
       <h1 id="cityName">Wetter: ...</h1>
+
       <div class="search-and-presets">
         <div class="search-wrapper" id="searchWrapper">
           <button id="searchToggle" class="icon-btn" aria-label="Suche öffnen">
@@ -43,26 +44,25 @@
           <button class="preset-btn" data-city="Wien" data-lat="48.2082" data-lon="16.3738">Wien</button>
         </div>
       </div>
-      <div class="forecast-options">
-        <label>Zeitraum:</label>
-        <div class="duration-selector">
-          <button class="duration-btn" data-days="2">2T</button>
-          <button class="duration-btn active" data-days="4">4T</button>
-          <button class="duration-btn" data-days="7">7T</button>
-          <button class="duration-btn" data-days="10">10T</button>
-        </div>
-      </div>
     </header>
+
+    <div class="forecast-options">
+      <div class="duration-selector">
+        <button class="duration-btn" data-days="2">2T</button>
+        <button class="duration-btn active" data-days="4">4T</button>
+        <button class="duration-btn" data-days="7">7T</button>
+        <button class="duration-btn" data-days="10">10T</button>
+      </div>
+    </div>
 
     <main>
       <section class="chart-section" aria-labelledby="temp-heading">
         <div class="section-header">
           <div>
             <h2 id="temp-heading">Temperatur & Niederschlag</h2>
-            <p style="color: var(--text-muted); font-size: 0.9rem; margin-top: 4px;">Stündliche Vorhersage für die
-              nächsten 4 Tage</p>
+            <p id="temp-summary"></p>
           </div>
-          <span class="badge">Live Daten</span>
+          <span class="badge">Live</span>
         </div>
         <div id="tempChart"></div>
       </section>
@@ -71,7 +71,7 @@
         <div class="section-header">
           <div style="flex: 1;">
             <h2 id="solar-heading">Sonnenenergie</h2>
-            <p id="solar-summary" style="color: var(--text-muted); font-size: 0.9rem; margin-top: 4px;"></p>
+            <p id="solar-summary"></p>
           </div>
           <div class="controls-wrapper">
             <div class="controls">

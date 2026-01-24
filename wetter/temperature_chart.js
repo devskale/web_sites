@@ -16,6 +16,7 @@ window.loadTemperatureData = function (lat, lon, cityName, duration = 4) {
         .then(response => response.json())
         .then(data => {
             if (chartContainer) chartContainer.classList.remove('loading');
+            updateTempSummary(data.hourly.temperature_2m, data.hourly.rain);
             createTemperatureChart(data.hourly.time, data.hourly.temperature_2m, data.hourly.rain, cityName, duration);
         })
         .catch(error => {
@@ -23,6 +24,15 @@ window.loadTemperatureData = function (lat, lon, cityName, duration = 4) {
             if (chartContainer) chartContainer.classList.remove('loading');
         });
 };
+
+function updateTempSummary(temps, rains) {
+    const avgTemp = (temps.reduce((a, b) => a + b, 0) / temps.length).toFixed(1);
+    const totalRain = rains.reduce((a, b) => a + b, 0).toFixed(1);
+    const summarySpan = document.getElementById('temp-summary');
+    if (summarySpan) {
+        summarySpan.innerHTML = `Ø <strong>${avgTemp}</strong> °C • Total <strong>${totalRain}</strong> mm Regen`;
+    }
+}
 
 function createTemperatureChart(timeData, tempData, rainData, cityName, duration) {
     if (window.tempChartInstance) {
@@ -55,14 +65,15 @@ function createTemperatureChart(timeData, tempData, rainData, cityName, duration
         ],
         colors: [sunColor, accentColor],
         chart: {
-            height: 400,
+            height: 450,
             type: 'line',
-            fontFamily: 'Inter, sans-serif',
+            fontFamily: 'Outfit, sans-serif',
             toolbar: { show: false },
+            zoom: { enabled: false },
             animations: {
                 enabled: true,
                 easing: 'easeinout',
-                speed: 800
+                speed: 1000
             },
             dropShadow: {
                 enabled: true,
@@ -106,10 +117,15 @@ function createTemperatureChart(timeData, tempData, rainData, cityName, duration
                             fontSize: '10px',
                             fontWeight: 800
                         },
-                        offsetY: -10
+                        offsetY: -10,
+                        orientation: 'horizontal'
                     }
                 },
-                ...generateDayLabels(timeData)
+                {
+                    x: new Date().getTime(),
+                    borderColor: accentColor,
+                    strokeDashArray: 2
+                }
             ]),
             yaxis: [
                 {
@@ -133,16 +149,28 @@ function createTemperatureChart(timeData, tempData, rainData, cityName, duration
             ]
         },
         grid: {
-            borderColor: 'rgba(0,0,0,0.05)',
-            padding: { top: 20, bottom: 0, left: 20, right: 20 }
+            borderColor: 'rgba(0,0,0,0.03)',
+            strokeDashArray: 2,
+            padding: { top: 20, bottom: 20, left: 10, right: 10 },
+            xaxis: { lines: { show: false } },
+            yaxis: { lines: { show: true } }
         },
         xaxis: {
             type: 'datetime',
             categories: timeData,
             labels: {
-                style: { colors: textMuted, fontSize: '12px' },
-                datetimeUTC: false
+                style: { colors: textMuted, fontSize: '11px', fontWeight: 600, fontFamily: 'Outfit' },
+                datetimeUTC: false,
+                minHeight: 45,
+                formatter: function (val, timestamp) {
+                    const date = new Date(timestamp);
+                    // Force display of day labels at the transition of each day
+                    const day = date.toLocaleDateString('de-DE', { weekday: 'short' });
+                    const datePart = date.toLocaleDateString('de-DE', { day: 'numeric', month: 'short' });
+                    return [day, datePart];
+                }
             },
+            tickAmount: duration, // One tick per day
             axisBorder: { show: false },
             axisTicks: { show: false }
         },
@@ -198,35 +226,4 @@ function generateMidnightAnnotations(timeData) {
     return annotations;
 }
 
-function generateDayLabels(timeData) {
-    let labels = [];
-    let lastDate = '';
-    const style = getComputedStyle(document.documentElement);
-    const textMuted = style.getPropertyValue('--text-muted').trim() || '#64748b';
 
-    timeData.forEach(time => {
-        const datePart = time.split('T')[0];
-        const dateObj = new Date(datePart);
-        const dayName = dateObj.toLocaleString('de-DE', { weekday: 'short' });
-
-        if (datePart !== lastDate) {
-            const midpoint = dateObj.getTime() + (12 * 60 * 60 * 1000);
-            labels.push({
-                x: midpoint,
-                borderColor: 'transparent',
-                label: {
-                    style: {
-                        color: textMuted,
-                        background: 'transparent',
-                        fontSize: '11px',
-                        fontWeight: 700
-                    },
-                    text: dayName.toUpperCase(),
-                    offsetY: -20
-                }
-            });
-            lastDate = datePart;
-        }
-    });
-    return labels;
-}
