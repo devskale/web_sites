@@ -4,102 +4,92 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Web App & Api Arsenal</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css" />
   </head>
   <body>
     <header>
-      <h1>Web App & Api Arsenal</h1>
-      <h2>ubuntu linux webapps</h2>
+      <h1>Arsenal</h1>
+      <h2>ubuntu linux webapps & apis</h2>
     </header>
 
-    <div class="container">
-      <h1>Web Applications</h1>
-    </div>
+    <main class="container">
+      <section>
+        <h2 class="section-title">Applications</h2>
+        <div class="grid">
+          <div class="item">
+            <h2>SearX</h2>
+            <p>
+              Privacy-respecting meta-search engine. No tracking, diverse sources.
+            </p>
+            <div class="link-group">
+              <a class="button-link" href="https://neusiedl.duckdns.org:8002/">Launch</a>
+              <a class="button-link" href="https://docs.searxng.org/">Docs</a>
+            </div>
+          </div>
 
-    <div class="container">
-      <div class="card">
-        <h2>SearX</h2>
-        <p>
-          SearX: A privacy-respecting meta-search engine, gathering results from
-          diverse sources without tracking you. Learn more at
-          <a href="https://docs.searxng.org/">official docs</a>.
-        </p>
-        <a class="button-link" href="https://neusiedl.duckdns.org:8002/"
-          >Go to SearX</a
-        >
-      </div>
-      <div class="card">
-        <h2>Der Chat</h2>
-        <p>
-          Interact with a small language model for fast, local text generation.
-          Experience it directly at
-          <a href="https://amd1.mooo.com">amd1.mooo.com</a>.
-        </p>
-        <a class="button-link" href="/derchat">Go to the UI</a>
-      </div>
-      <div class="card">
-        <h2>Bgld Wetter</h2>
-        <p>Wetterdiagramm zur Abschätzung der Solarleistung</p>
-        <a class="button-link" href="/wetter">Go to the Diagramm</a>
-      </div>
-      <div class="card">
-        <h2>HAZY</h2>
-        <p>Home Assistant Installation</p>
-        <a class="button-link" href="http://pind.mooo.com:8123"
-          >Go to Home Assistant</a
-        >
-      </div>
-      <div class="card">
-        <h2>Lastprofile</h2>
-        <p>APCS synthetische Lasptrofil Viewer</p>
-        <a class="button-link" href="/last/index.html">Go to Home Assistant</a>
-      </div>
-      <div class="card">
-        <h2>uniinfer</h2>
-        <p>Universal Inference</p>
-        <a class="button-link" href="/uniinfer/">Go to Uniinfer</a>
-      </div>
-      <div class="card">
-        <h2>uniinfer APIDocs</h2>
-        <p>Universal Inference</p>
-        <a class="button-link" href="https://amd1.mooo.com:8123/docs"
-          >Go to API Docs</a
-        >
-      </div>
-    </div>
+          <div class="item">
+            <h2>Der Chat</h2>
+            <p>
+              Local SLM interface for fast text generation.
+            </p>
+            <div class="link-group">
+              <a class="button-link" href="/derchat">Launch</a>
+              <a class="button-link" href="https://amd1.mooo.com">Remote</a>
+            </div>
+          </div>
 
-    <div class="container">
-      <h1>Web APIs</h1>
-    </div>
+          <div class="item">
+            <h2>Bgld Wetter</h2>
+            <p>Solar power estimation via weather diagrams.</p>
+            <a class="button-link" href="/wetter">View Diagram</a>
+          </div>
 
-    <div class="container">
-      <div class="card">
-        <h2>FastAPIs</h2>
-        <p>A collection of APIs</p>
-        <a class="button-link" href="https://amd1.mooo.com/api/docs"
-          >Go to APIs</a
-        >
-      </div>
-    </div>
+          <div class="item">
+            <h2>HAZY</h2>
+            <p>Home Assistant Instance.</p>
+            <a class="button-link" href="http://pind.mooo.com:8123">Connect</a>
+          </div>
 
-    <div class="container">
-      <h1>Remotes</h1>
-    </div>
+          <div class="item">
+            <h2>Lastprofile</h2>
+            <p>APCS synthetic load profile viewer.</p>
+            <a class="button-link" href="/last/index.html">Launch</a>
+          </div>
 
-    <div class="container">
-      <div class="card">
-        <h2>Home Assistant</h2>
-        <p>Home Assistant in Frk</p>
-        <a class="button-link" href="http://83.64.26.104:8123/"
-          >Go to Home Assistant</a
-        >
-      </div>
-      <div class="card">
-        <h2>Searx</h2>
-        <p>Searx in Frk</p>
-        <a class="button-link" href="http://83.64.26.104:8123/">Go to Searx</a>
-      </div>
-    </div>
+          <div class="item">
+            <h2>Uniinfer</h2>
+            <p>Universal Inference engine and documentation.</p>
+            <div class="link-group">
+              <a class="button-link" href="/uniinfer/">Launch</a>
+              <a class="button-link" href="https://amd1.mooo.com:8123/docs">API Docs</a>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section style="margin-top: 60px;">
+        <h2 class="section-title">Infrastructure</h2>
+        <div class="grid">
+          <div class="item">
+            <h2>FastAPIs</h2>
+            <p>Collection of backend services and endpoints.</p>
+            <a class="button-link" href="https://amd1.mooo.com/api/docs">Endpoints</a>
+          </div>
+          
+          <div class="item">
+            <h2>Remote Nodes</h2>
+            <p>Access external instances and failover nodes.</p>
+            <div class="link-group">
+              <a class="button-link" href="http://83.64.26.104:8123/">HA Frk</a>
+              <a class="button-link" href="http://83.64.26.104:8123/">Searx Frk</a>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
 
     <footer>
       <p>Created by <a href="https://skale.dev">skale.dev</a></p>
