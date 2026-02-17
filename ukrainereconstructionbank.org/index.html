@@ -7,6 +7,7 @@
   <title>Ukraine Reconstruction Bank | Building the Future</title>
   <meta name="description"
     content="The official hub for international investment and transparent reconstruction funding in Ukraine.">
+  <link rel="icon" type="image/svg+xml" href="favicon.svg">
   <link rel="stylesheet" href="index.css">
   <!-- Icons -->
   <link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet">
@@ -25,6 +26,11 @@
         <i class="ri-bank-line text-blue" aria-hidden="true"></i>
         URB
       </a>
+      <button class="mobile-menu-toggle" aria-label="Toggle menu" aria-expanded="false">
+        <span class="hamburger-line"></span>
+        <span class="hamburger-line"></span>
+        <span class="hamburger-line"></span>
+      </button>
       <div class="nav-links">
         <a href="about.html">About</a>
         <a href="#sectors">Sectors</a>
@@ -76,37 +82,29 @@
         </div>
       </div>
     </div>
-    <!-- Partners Ticker -->
-    <section class="partners-ticker">
-      <div class="container">
-        <p class="partners-title">Strategic Institutional Partners</p>
-        <div class="ticker-track">
-          <div style="display: flex; align-items: center; gap: 0.5rem;">
-            <i class="ri-flag-2-fill"></i>
-            <span>European Union</span>
-          </div>
-          <div style="display: flex; align-items: center; gap: 0.5rem;">
-            <i class="ri-shield-user-fill"></i>
-            <span>United States DFC</span>
-          </div>
-          <div style="display: flex; align-items: center; gap: 0.5rem;">
-            <i class="ri-exchange-funds-fill"></i>
-            <span>IMF</span>
-          </div>
-          <div style="display: flex; align-items: center; gap: 0.5rem;">
-            <i class="ri-global-fill"></i>
-            <span>World Bank</span>
-          </div>
-          <div style="display: flex; align-items: center; gap: 0.5rem;">
-            <i class="ri-safe-2-fill"></i>
-            <span>BlackRock</span>
-          </div>
-        </div>
-      </div>
-    </section>
+  </section>
 
-    <!-- About / Mission -->
-    <section id="about" style="padding: 8rem 0;">
+  <!-- Partners Ticker -->
+  <section class="partners-ticker">
+    <p class="partners-title">Strategic Institutional Partners</p>
+    <div class="ticker-container" id="ticker-container">
+      <div class="ticker-content" id="ticker-content">
+        <span class="ticker-item"><i class="ri-flag-2-fill"></i> European Union</span>
+        <span class="ticker-item"><i class="ri-shield-user-fill"></i> United States DFC</span>
+        <span class="ticker-item"><i class="ri-exchange-funds-fill"></i> IMF</span>
+        <span class="ticker-item"><i class="ri-global-fill"></i> World Bank</span>
+        <span class="ticker-item"><i class="ri-safe-2-fill"></i> BlackRock</span>
+        <span class="ticker-item"><i class="ri-flag-2-fill"></i> European Union</span>
+        <span class="ticker-item"><i class="ri-shield-user-fill"></i> United States DFC</span>
+        <span class="ticker-item"><i class="ri-exchange-funds-fill"></i> IMF</span>
+        <span class="ticker-item"><i class="ri-global-fill"></i> World Bank</span>
+        <span class="ticker-item"><i class="ri-safe-2-fill"></i> BlackRock</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- About / Mission -->
+  <section id="about" style="padding: 8rem 0;">
       <!-- Official Partners Banner -->
       <div style="margin-bottom: 6rem; border-bottom: 1px solid var(--c-border); padding-bottom: 3rem;">
         <div class="container"
@@ -219,7 +217,7 @@
             </div>
             <!-- Card 4 -->
             <div class="card reveal">
-              <div class="card-icon"><i class="ri-tractor-line"></i></div>
+              <div class="card-icon"><i class="ri-seedling-line"></i></div>
               <h3>Agriculture</h3>
               <p>Logistics for grain exports, de-mining initiatives, and machinery financing.</p>
             </div>

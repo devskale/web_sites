@@ -5,7 +5,92 @@
 document.addEventListener('DOMContentLoaded', () => {
     initScrollReveal();
     initCounters();
+    initMobileMenu();
+    initPartnerTicker();
 });
+
+function initPartnerTicker() {
+    const content = document.getElementById('ticker-content');
+    if (!content) return;
+    
+    // Check for reduced motion preference
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+        content.style.justifyContent = 'center';
+        return;
+    }
+    
+    let position = 0; // Start visible from the left
+    const speed = 1; // pixels per frame
+    
+    // Get the width of original items (first half)
+    function getHalfWidth() {
+        const items = content.querySelectorAll('.ticker-item');
+        let width = 0;
+        for (let i = 0; i < items.length / 2; i++) {
+            width += items[i].offsetWidth + 64; // 64 = gap (4rem)
+        }
+        return width;
+    }
+    
+    let isPaused = false;
+    const container = document.getElementById('ticker-container');
+    
+    if (container) {
+        container.addEventListener('mouseenter', () => isPaused = true);
+        container.addEventListener('mouseleave', () => isPaused = false);
+    }
+    
+    function animate() {
+        if (!isPaused) {
+            position -= speed;
+            
+            // Reset when we've scrolled the width of original items
+            const halfWidth = getHalfWidth();
+            if (position <= -halfWidth) {
+                position = 0;
+            }
+            
+            content.style.transform = `translateX(${position}px)`;
+        }
+        requestAnimationFrame(animate);
+    }
+    
+    animate();
+}
+
+function initMobileMenu() {
+    const toggle = document.querySelector('.mobile-menu-toggle');
+    const navLinks = document.querySelector('.nav-links');
+    
+    if (!toggle || !navLinks) return;
+    
+    toggle.addEventListener('click', () => {
+        toggle.classList.toggle('active');
+        navLinks.classList.toggle('active');
+        
+        // Update aria-expanded for accessibility
+        const isExpanded = toggle.classList.contains('active');
+        toggle.setAttribute('aria-expanded', isExpanded);
+    });
+    
+    // Close menu when clicking a link
+    navLinks.querySelectorAll('a').forEach(link => {
+        link.addEventListener('click', () => {
+            toggle.classList.remove('active');
+            navLinks.classList.remove('active');
+            toggle.setAttribute('aria-expanded', 'false');
+        });
+    });
+    
+    // Close menu when clicking outside
+    document.addEventListener('click', (e) => {
+        if (!toggle.contains(e.target) && !navLinks.contains(e.target)) {
+            toggle.classList.remove('active');
+            navLinks.classList.remove('active');
+            toggle.setAttribute('aria-expanded', 'false');
+        }
+    });
+}
 
 function initScrollReveal() {
     const reveals = document.querySelectorAll('.reveal');
