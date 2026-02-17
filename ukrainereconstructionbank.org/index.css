@@ -725,6 +725,18 @@ footer {
   font-size: 1.25rem;
   font-weight: 700;
   color: var(--c-text-primary);
+  text-decoration: none;
+  transition: all 0.3s;
+}
+
+.ticker-item:hover {
+  color: var(--c-accent-gold);
+  opacity: 1 !important;
+  filter: none !important;
+}
+
+.ticker-item i {
+  font-size: 2.5rem;
 }
 
 .ticker-item i {
