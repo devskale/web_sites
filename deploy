@@ -118,6 +118,22 @@ if [ ! -w "$DEST_DIR" ]; then
    handle_error "Destination path is not writeable: $DEST_DIR"
 fi
 
+# Confirm destination path with user
+echo ""
+echo "=============================================="
+echo "  DEPLOYMENT CONFIRMATION"
+echo "=============================================="
+echo "  Source:      $SRC_PATH"
+echo "  Destination: $DEST_DIR"
+echo "=============================================="
+echo ""
+read -p "Confirm deployment to destination? [y/N] " -n 1 -r
+echo
+if [[ ! $REPLY =~ ^[Yy]$ ]]; then
+  echo "Deployment cancelled."
+  exit 0
+fi
+echo ""
 
 # Check if backup directory is provided
 if [ -n "$3" ]; then
@@ -138,8 +154,8 @@ fi
 
 # Check if source is a file or directory and sync accordingly
 if [ -d "$SRC_PATH" ]; then
-  # Sync directory
-  rsync -rltvz "$SRC_PATH/" "$DEST_DIR/" || handle_error "Error syncing directory from $SRC_PATH to $DEST_DIR"
+  # Sync directory (skip hidden directories)
+  rsync -rltvz --exclude='.*/' "$SRC_PATH/" "$DEST_DIR/" || handle_error "Error syncing directory from $SRC_PATH to $DEST_DIR"
 elif [ -f "$SRC_PATH" ]; then
   # Sync single file, remove trailing slash from the destination
   rsync -rltvz "$SRC_PATH" "$DEST_DIR" || handle_error "Error syncing file from $SRC_PATH to $DEST_DIR"
