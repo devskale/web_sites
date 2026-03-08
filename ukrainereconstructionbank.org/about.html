@@ -32,16 +32,31 @@
         }
 
         .team-avatar {
-            width: 120px;
-            height: 120px;
+            width: 160px;
+            height: 200px;
             background: #2a3441;
-            border-radius: 50%;
+            border-radius: 8px;
             margin: 0 auto 1.5rem;
             display: flex;
             align-items: center;
             justify-content: center;
             font-size: 2rem;
             color: var(--c-text-secondary);
+            overflow: hidden;
+            border: 2px solid var(--c-border);
+            transition: transform var(--transition-fast), box-shadow var(--transition-fast);
+        }
+
+        .team-avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .team-member:hover .team-avatar {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(255, 200, 69, 0.2);
+            border-color: var(--c-accent-gold);
         }
 
         .split-section {
@@ -78,7 +93,7 @@
                 <span class="hamburger-line"></span>
             </button>
             <div class="nav-links">
-                <a href="about.html" style="color: var(--c-accent-gold); opacity: 1;">About</a>
+                <a href="about.html" class="nav-active">About</a>
                 <a href="index.html#sectors">Sectors</a>
                 <a href="investors.html">Investors</a>
                 <a href="apply.html">Funding</a>
@@ -89,7 +104,7 @@
                     <span style="color: var(--c-accent-gold);">EN</span>
                     <span style="opacity: 0.3;">UA</span>
                 </div>
-                <a href="#portal" class="btn btn-primary">Institutional Portal</a>
+                <a href="contact.html" class="btn btn-primary">Institutional Portal</a>
             </div>
         </div>
     </nav>
@@ -131,25 +146,33 @@
                 <h2>Leadership</h2>
                 <div class="team-grid">
                     <div class="team-member">
-                        <div class="team-avatar"><i class="ri-user-line"></i></div>
+                        <div class="team-avatar">
+                            <img src="images/olenka.jpg" alt="Dr. Olena Kovalenko">
+                        </div>
                         <h3>Dr. Olena Kovalenko</h3>
                         <p class="text-blue" style="font-size: 0.9rem; text-transform: uppercase; font-weight: 700;">
                             Chairperson</p>
                     </div>
                     <div class="team-member">
-                        <div class="team-avatar"><i class="ri-user-line"></i></div>
+                        <div class="team-avatar">
+                            <img src="images/2 marko.jpg" alt="Marko Petrenko">
+                        </div>
                         <h3>Marko Petrenko</h3>
                         <p class="text-blue" style="font-size: 0.9rem; text-transform: uppercase; font-weight: 700;">
                             Chief Investment Officer</p>
                     </div>
                     <div class="team-member">
-                        <div class="team-avatar"><i class="ri-user-line"></i></div>
+                        <div class="team-avatar">
+                            <img src="images/3 sarah.jpg" alt="Sarah Jenkins">
+                        </div>
                         <h3>Sarah Jenkins</h3>
                         <p class="text-blue" style="font-size: 0.9rem; text-transform: uppercase; font-weight: 700;">
                             Head of Compliance</p>
                     </div>
                     <div class="team-member">
-                        <div class="team-avatar"><i class="ri-user-line"></i></div>
+                        <div class="team-avatar">
+                            <img src="images/4 ihor.jpg" alt="Ihor Bondar">
+                        </div>
                         <h3>Ihor Bondar</h3>
                         <p class="text-blue" style="font-size: 0.9rem; text-transform: uppercase; font-weight: 700;">
                             Chief Technology Officer</p>
@@ -220,8 +243,8 @@
                                     Street,
                                     6th Floor<br>Kyiv, 04053, Ukraine</p>
                                 <div style="margin-top: 2rem; display: flex; gap: 1rem;">
-                                    <a href="#" class="btn btn-secondary">Get Directions to Kyiv Office</a>
-                                    <a href="#" class="btn btn-secondary">Submit Press Inquiry</a>
+                                    <a href="contact.html" class="btn btn-secondary">Get Directions to Kyiv Office</a>
+                                    <a href="contact.html" class="btn btn-secondary">Submit Press Inquiry</a>
                                 </div>
                             </div>
                         </div>
@@ -253,7 +276,7 @@
                     <h4>Quick Links</h4>
                     <ul>
                         <li><a href="about.html">About Us</a></li>
-                        <li><a href="#">Governance</a></li>
+                        <li><a href="about.html">Governance</a></li>
                     </ul>
                 </div>
                 <div class="footer-col">
@@ -266,7 +289,7 @@
                                 aria-label="Follow us on X (Twitter)"><i class="ri-twitter-x-line"></i></a>
                             <a href="#" style="font-size: 1.2rem; margin-right: 0.5rem;"
                                 aria-label="Follow us on LinkedIn"><i class="ri-linkedin-fill"></i></a>
-                            <a href="#" style="font-size: 1.2rem;" aria-label="Follow us on Facebook"><i
+                            <a href="https://www.facebook.com/UnitedForUkraine" target="_blank" rel="noopener" style="font-size: 1.2rem;" aria-label="Follow us on Facebook"><i
                                     class="ri-facebook-fill"></i></a>
                         </li>
                     </ul>
