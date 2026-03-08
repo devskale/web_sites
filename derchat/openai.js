@@ -29,7 +29,7 @@ export async function sendOpenAIRequest(
   signal,
   startTime,
   apiKey,
-  useJson = false
+  useJson = false,
 ) {
   const data = {
     model: model,
@@ -63,7 +63,7 @@ export async function sendOpenAIRequest(
       const errorData = await response.json().catch(() => ({}));
       throw new Error(
         errorData.error?.message ||
-          `Network response was not ok: ${response.status}`
+          `Network response was not ok: ${response.status}`,
       );
     }
 
@@ -74,18 +74,48 @@ export async function sendOpenAIRequest(
     let usage = null;
     let firstCharTime = null;
 
+    let buffer = "";
+
     while (true) {
       const { done, value } = await reader.read();
-      if (done) break;
+      if (done) {
+        // Process any remaining buffer
+        if (buffer.trim() !== "") {
+          const line = buffer.trim();
+          if (line.startsWith("data: ") && line !== "data: [DONE]") {
+            try {
+              const json = JSON.parse(line.substring(6));
+              if (
+                json.choices &&
+                json.choices[0].delta &&
+                json.choices[0].delta.content
+              ) {
+                result += json.choices[0].delta.content;
+                assistantMessage.innerHTML = marked.parse(result);
+                responseDiv.scrollTop = responseDiv.scrollHeight;
+              }
+            } catch (e) {
+              console.error("Error parsing final JSON chunk:", e);
+            }
+          }
+        }
+        break;
+      }
 
       const chunk = decoder.decode(value, { stream: true });
-      const lines = chunk.split("\n").filter((line) => line.trim() !== "");
+      buffer += chunk;
+
+      const lines = buffer.split("\n");
+      // Keep the last line in the buffer as it might be incomplete
+      buffer = lines.pop();
 
       for (const line of lines) {
-        if (line === "data: [DONE]") break;
-        if (line.startsWith("data: ")) {
+        const trimmedLine = line.trim();
+        if (trimmedLine === "" || trimmedLine === "data: [DONE]") continue;
+
+        if (trimmedLine.startsWith("data: ")) {
           try {
-            const json = JSON.parse(line.substring(6));
+            const json = JSON.parse(trimmedLine.substring(6));
             if (
               json.choices &&
               json.choices[0].delta &&
@@ -98,7 +128,7 @@ export async function sendOpenAIRequest(
             }
             if (json.usage) usage = json.usage;
           } catch (e) {
-            console.warn("Error parsing JSON chunk:", e, line);
+            console.error("Error parsing JSON chunk:", e);
           }
         }
       }

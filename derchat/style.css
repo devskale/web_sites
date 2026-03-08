@@ -474,3 +474,123 @@ main {
     max-width: 95%;
   }
 }
+
+/* Thinking container styles */
+.thinking-container {
+    margin-bottom: 1rem;
+}
+
+.thinking-details {
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius);
+    background-color: #f8f8f8;
+    padding: 0.5rem;
+    margin-bottom: 0.5rem;
+}
+
+.thinking-summary {
+    cursor: pointer;
+    font-weight: 500;
+    color: var(--text-muted);
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.thinking-spinner {
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+.thinking-content {
+    padding: 0.75rem;
+    font-family: monospace;
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    white-space: pre-wrap;
+    line-height: 1.4;
+    background-color: rgba(0, 0, 0, 0.05);
+    border-radius: var(--radius-sm);
+    margin-top: 0.5rem;
+}
+
+/* Tool call styles */
+.tool-call {
+    margin-bottom: 0.75rem;
+    border-left: 3px solid var(--primary-color);
+    background-color: rgba(0, 122, 255, 0.05);
+    padding: 0.75rem;
+    border-radius: var(--radius);
+}
+
+.tool-header {
+    font-weight: 500;
+    color: var(--primary-color);
+    margin-bottom: 0.5rem;
+}
+
+.tool-args {
+    font-family: monospace;
+    font-size: 0.85rem;
+    background-color: rgba(255, 255, 255, 0.5);
+    padding: 0.5rem;
+    border-radius: var(--radius-sm);
+}
+
+/* Tool result styles */
+.tool-result {
+    margin-bottom: 0.75rem;
+    border-left: 3px solid var(--secondary-color);
+    background-color: rgba(76, 175, 80, 0.05);
+    padding: 0.75rem;
+    border-radius: var(--radius);
+}
+
+.result-header {
+    font-weight: 500;
+    color: var(--secondary-color);
+    margin-bottom: 0.5rem;
+}
+
+.result-content {
+    font-family: monospace;
+    font-size: 0.85rem;
+    background-color: rgba(255, 255, 255, 0.5);
+    padding: 0.5rem;
+    border-radius: var(--radius-sm);
+    max-height: 200px;
+    overflow-y: auto;
+}
+
+@media (max-width: 768px) {
+  #sidebar {
+    position: fixed;
+    left: -240px;
+    z-index: 1000;
+    height: 100vh;
+    box-shadow: var(--shadow-md);
+  }
+
+  #sidebar.show {
+    left: 0;
+  }
+
+  main {
+    width: 100%;
+    padding-top: 50px;
+  }
+
+  #response,
+  #chatFormContainer {
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
+
+  .message {
+    max-width: 95%;
+  }
+}

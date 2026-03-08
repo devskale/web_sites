@@ -4,3 +4,6 @@
 .nginx*
 **/config.js
 **/ver/
+derchat/lechat
+derchat/nginx_openresty.conf
+derchat/nginx_default.conf
