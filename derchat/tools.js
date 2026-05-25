@@ -23,13 +23,17 @@ const AVAILABLE_TOOLS = [
 const TOOL_IMPLEMENTATIONS = {
     web_search: async (args) => {
         try {
-            // Use uart.mooo.com API directly with bearer token
-            const response = await fetch(`https://uart.mooo.com/api/fetch_url?url=${encodeURIComponent(args.query)}`, {
-                headers: {
-                    'Authorization': 'Bearer uart',
-                    'Accept': 'application/json'
-                }
-            });
+            // Try local proxy first (LeChat server), fallback to public SearXNG
+            let response;
+            
+            try {
+                // Try local proxy (requires LeChat server running at localhost:3000)
+                response = await fetch(`http://localhost:3000/search?q=${encodeURIComponent(args.query)}`);
+            } catch (e) {
+                // Fallback to public SearXNG instance
+                console.log("Local proxy not available, using public SearXNG");
+                response = await fetch(`https://searx.be/search?q=${encodeURIComponent(args.query)}&format=json&language=en`);
+            }
             
             if (!response.ok) {
                 return JSON.stringify({ error: `Search failed: ${response.status}` });

@@ -1,4 +1,5 @@
-import { displayAssistantMessage } from "./utils.js";
+import { displayAssistantMessage, createReasoningBlock } from "./utils.js";
+import OpenAI from "https://esm.sh/openai@4.28.0";
 
 // Configure marked to use highlight.js for code syntax highlighting
 if (typeof hljs !== "undefined") {
@@ -31,132 +32,82 @@ export async function sendOpenAIRequest(
   apiKey,
   useJson = false,
 ) {
-  const data = {
+  const client = new OpenAI({
+    baseURL: url,
+    apiKey: apiKey || "dummy", // OpenAI SDK requires an API key
+    dangerouslyAllowBrowser: true,
+  });
+
+  const messages = [{ role: "user", content: input }];
+  const params = {
     model: model,
-    messages: [{ role: "user", content: input }],
+    messages: messages,
     temperature: 0.7,
     max_tokens: 1024,
     stream: true,
   };
 
   if (useJson) {
-    data.response_format = { type: "json_object" };
-  }
-
-  const headers = {
-    "Content-Type": "application/json",
-  };
-
-  if (apiKey) {
-    headers["Authorization"] = `Bearer ${apiKey}`;
+    params.response_format = { type: "json_object" };
   }
 
   try {
-    const response = await fetch(`${url}/chat/completions`, {
-      method: "POST",
-      headers: headers,
-      body: JSON.stringify(data),
+    const stream = await client.chat.completions.create(params, {
       signal: signal,
     });
 
-    if (!response.ok) {
-      const errorData = await response.json().catch(() => ({}));
-      throw new Error(
-        errorData.error?.message ||
-          `Network response was not ok: ${response.status}`,
-      );
-    }
-
-    const reader = response.body.getReader();
-    const decoder = new TextDecoder();
     let assistantMessage = displayAssistantMessage(responseDiv, "", true);
     let result = "";
-    let usage = null;
+    let reasoningBlock = null;
     let firstCharTime = null;
 
-    let buffer = "";
-
-    while (true) {
-      const { done, value } = await reader.read();
-      if (done) {
-        // Process any remaining buffer
-        if (buffer.trim() !== "") {
-          const line = buffer.trim();
-          if (line.startsWith("data: ") && line !== "data: [DONE]") {
-            try {
-              const json = JSON.parse(line.substring(6));
-              if (
-                json.choices &&
-                json.choices[0].delta &&
-                json.choices[0].delta.content
-              ) {
-                result += json.choices[0].delta.content;
-                assistantMessage.innerHTML = marked.parse(result);
-                responseDiv.scrollTop = responseDiv.scrollHeight;
-              }
-            } catch (e) {
-              console.error("Error parsing final JSON chunk:", e);
-            }
+    for await (const chunk of stream) {
+      const delta = chunk.choices[0]?.delta;
+      if (delta) {
+        // Handle reasoning content (if present in delta)
+        // Some models/proxies might return reasoning_content in delta
+        if (delta.reasoning_content) {
+          if (!reasoningBlock) {
+            reasoningBlock = createReasoningBlock(assistantMessage);
           }
+          reasoningBlock.content.textContent += delta.reasoning_content;
         }
-        break;
-      }
 
-      const chunk = decoder.decode(value, { stream: true });
-      buffer += chunk;
-
-      const lines = buffer.split("\n");
-      // Keep the last line in the buffer as it might be incomplete
-      buffer = lines.pop();
-
-      for (const line of lines) {
-        const trimmedLine = line.trim();
-        if (trimmedLine === "" || trimmedLine === "data: [DONE]") continue;
-
-        if (trimmedLine.startsWith("data: ")) {
-          try {
-            const json = JSON.parse(trimmedLine.substring(6));
-            if (
-              json.choices &&
-              json.choices[0].delta &&
-              json.choices[0].delta.content
-            ) {
-              if (!firstCharTime) firstCharTime = performance.now();
-              result += json.choices[0].delta.content;
-              assistantMessage.innerHTML = marked.parse(result);
-              responseDiv.scrollTop = responseDiv.scrollHeight;
-            }
-            if (json.usage) usage = json.usage;
-          } catch (e) {
-            console.error("Error parsing JSON chunk:", e);
+        if (delta.content) {
+          if (!firstCharTime) {
+            firstCharTime = performance.now();
           }
+          result += delta.content;
+          assistantMessage.contentDiv.innerHTML = marked.parse(result);
+          responseDiv.scrollTop = responseDiv.scrollHeight;
         }
       }
+    }
+
+    // Stop spinner when done
+    if (reasoningBlock) {
+      reasoningBlock.spinner.style.animation = "none";
+      reasoningBlock.spinner.style.borderRightColor = "inherit";
     }
 
     const endTime = performance.now();
     if (firstCharTime) {
-      const tfc = ((firstCharTime - startTime) / 1000).toFixed(1);
-      const totalTime = (endTime - startTime) / 1000;
-      const cps = (result.length / totalTime).toFixed(1);
+      const tfc = (firstCharTime - startTime).toFixed(2);
+      const totalTime = (endTime - startTime) / 1000; // in seconds
+      const cps = (result.length / totalTime).toFixed(2);
 
       const statsDiv = document.createElement("div");
-      const statsElement = document.createElement("p");
-      statsElement.className = "status-light";
-      statsElement.innerHTML = `1st: ${tfc}s, tot: ${totalTime.toFixed(1)}s, ${cps} ch/s`;
-
-      if (usage) {
-        statsElement.innerHTML += `<br>Tokens: ${usage.total_tokens} (P: ${usage.prompt_tokens}, C: ${usage.completion_tokens})`;
-      }
-      statsDiv.appendChild(statsElement);
+      statsDiv.className = "text-muted small mt-2";
+      statsDiv.style.fontSize = "0.8rem";
+      statsDiv.textContent = `TFC: ${tfc} ms, Speed: ${cps} chars/sec`;
       responseDiv.appendChild(statsDiv);
-      responseDiv.scrollTop = responseDiv.scrollHeight;
     }
   } catch (error) {
-    if (error.name === "AbortError") {
-      console.log("Fetch aborted");
+    if (error instanceof OpenAI.APIError) {
+      console.error(error.status, error.message, error.code, error.type);
+      throw new Error(error.message);
     } else {
-      console.error("Error in sendOpenAIRequest:", error);
+      console.error("OpenAI SDK Error:", error);
       throw error;
     }
   }

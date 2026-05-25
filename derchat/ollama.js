@@ -1,15 +1,6 @@
 // ollama.js
-import { displayAssistantMessage } from "./utils.js";
+import { displayAssistantMessage, createReasoningBlock } from "./utils.js";
 import { AVAILABLE_TOOLS, TOOL_IMPLEMENTATIONS } from "./tools.js";
-
-// Configure marked to use highlight.js for code syntax highlighting
-marked.setOptions({
-  highlight: function (code, lang) {
-    const language = hljs.getLanguage(lang) ? lang : "plaintext";
-    return hljs.highlight(code, { language }).value;
-  },
-  langPrefix: "hljs language-",
-});
 
 // Configure marked to use highlight.js for code syntax highlighting
 marked.setOptions({
@@ -30,13 +21,13 @@ RULES:
 WEB SEARCH:
 - Use web_search ONLY for current info (news, weather, prices, recent events)
 - Do NOT use web_search for: greetings, opinions, coding, general knowledge, casual chat
- - If unsure about facts → search. Otherwise → respond directly.
+- If unsure about facts → search. Otherwise → respond directly.
 
 Examples:
 "Hi" → Brief thought: "Greeting" → Reply: "Hello! How can I help?"
 "What's 2+2?" → Brief thought: "Simple math" → Reply: "4"
 "What's the weather in Tokyo?" → Search for current info, then elaborate answer
-"Explain quantum computing" → Think through it give detailed elaborate answer`;
+"Explain quantum computing" → Think through it, give detailed elaborate answer`;
 
 export async function sendOllamaRequest(
   url,
@@ -47,212 +38,251 @@ export async function sendOllamaRequest(
   startTime,
   apiKey,
   toolsEnabled = false,
-  useJson = false
+  useJson = false,
 ) {
-    const messages = [
-        { role: "system", content: SYSTEM_PROMPT },
-        { role: "user", content: input },
-    ];
+  let messages = [
+    { role: "system", content: SYSTEM_PROMPT },
+    { role: "user", content: input },
+  ];
 
-    const data = {
-        model: model,
-        messages: messages,
-        stream: true,
+  const data = {
+    model: model,
+    messages: messages,
+    stream: true,
+  };
+
+  if (toolsEnabled && AVAILABLE_TOOLS.length > 0) {
+    data.tools = AVAILABLE_TOOLS;
+  }
+
+  if (useJson) {
+    data.format = "json";
+  }
+
+  const headers = {
+    "Content-Type": "application/json",
+  };
+
+  if (apiKey) {
+    headers["Authorization"] = `Bearer ${apiKey}`;
+  }
+
+  try {
+    const response = await fetch(url, {
+      method: "POST",
+      headers: headers,
+      body: JSON.stringify(data),
+      signal: signal,
+    });
+
+    if (!response.ok) {
+      throw new Error("Network response was not ok");
+    }
+
+    const reader = response.body.getReader();
+    const decoder = new TextDecoder();
+
+    let reasoningBlock = null;
+    let assistantMessage = null;
+    let result = "";
+    let firstCharTime = null;
+
+    // Helper to ensure assistant message exists
+    const ensureAssistantMessage = () => {
+      if (!assistantMessage) {
+        assistantMessage = displayAssistantMessage(responseDiv, "", true);
+      }
+      return assistantMessage;
     };
 
-    if (toolsEnabled && AVAILABLE_TOOLS.length > 0) {
-        data.tools = AVAILABLE_TOOLS;
-    }
-
-    if (useJson) {
-        data.format = "json";
-    }
-
-    const headers = {
-        "Content-Type": "application/json",
+    // Helper function to update thinking display
+    const updateThinkingDisplay = (text) => {
+      const msg = ensureAssistantMessage();
+      if (!reasoningBlock) {
+        reasoningBlock = createReasoningBlock(msg);
+      }
+      reasoningBlock.content.textContent += text;
     };
 
-    if (apiKey) {
-        headers["Authorization"] = `Bearer ${apiKey}`;
+    // Read first chunk
+    const firstChunk = await reader.read();
+    if (!firstChunk.done) {
+      firstCharTime = performance.now();
+      await processChunk(
+        firstChunk.value,
+        decoder,
+        responseDiv,
+        (content) => {
+          const msg = ensureAssistantMessage();
+          result += content;
+          msg.contentDiv.innerHTML = marked.parse(result);
+        },
+        (reasoning) => {
+          updateThinkingDisplay(reasoning);
+        },
+        (toolCalls) => {
+          handleToolCalls(responseDiv, toolCalls, messages);
+        },
+      );
     }
 
-    try {
-        const response = await fetch(url, {
-            method: "POST",
-            headers: headers,
-            body: JSON.stringify(data),
-            signal: signal,
-        });
-
-        if (!response.ok) {
-            throw new Error("Network response was not ok");
-        }
-
-        const reader = response.body.getReader();
-        const decoder = new TextDecoder();
-
-        // Create thinking container (like LeChat)
-        let thinkingContainer = null;
-        let assistantMessage = null;
-        let result = "";
-        let fullReasoning = "";
-        let reasoningDiv = null;
-
-        let firstCharTime = null;
-        const firstChunk = await reader.read();
-        if (!firstChunk.done) {
-            firstCharTime = performance.now();
-            const textChunk = decoder.decode(firstChunk.value);
-            const lines = textChunk.split("\n");
-            for (const line of lines) {
-                if (line.trim() === "") continue;
-                try {
-                    const json = JSON.parse(line);
-                    if (json.done === false) {
-                        // Handle thinking/reasoning (LFM2.5-thinking)
-                        if (json.message?.reasoning || json.message?.thinking) {
-                            fullReasoning += json.message.reasoning || json.message.thinking;
-                            
-                            // Create thinking display if not exists
-                            if (!thinkingContainer) {
-                                thinkingContainer = document.createElement("div");
-                                thinkingContainer.className = "thinking-container";
-                                thinkingContainer.innerHTML = `
-                                    <details class="thinking-details">
-                                        <summary class="thinking-summary">
-                                            <span class="thinking-spinner">💭</span>
-                                            <span>Thinking Process</span>
-                                        </summary>
-                                        <div class="thinking-content">${fullReasoning}</div>
-                                    </details>
-                                `;
-                                responseDiv.appendChild(thinkingContainer);
-                            } else {
-                                // Update existing thinking content
-                                const contentDiv = thinkingContainer.querySelector(".thinking-content");
-                                if (contentDiv) {
-                                    contentDiv.textContent = fullReasoning;
-                                }
-                            }
-                        }
-
-                        // Handle regular content
-                        if (json.message?.content) {
-                            result += json.message.content;
-                            if (!assistantMessage) {
-                                assistantMessage = displayAssistantMessage(responseDiv, "", true);
-                            }
-                            assistantMessage.innerHTML = marked.parse(result);
-                            responseDiv.scrollTop = responseDiv.scrollHeight;
-                        }
-
-                        // Handle tool calls (NEW)
-                        if (json.message?.tool_calls && json.message.tool_calls.length > 0) {
-                            handleToolCalls(responseDiv, json.message.tool_calls);
-                        }
-                    }
-                } catch (error) {
-                    console.error("JSON parse error:", error);
-            }
-        }
-    }
-
+    // Read remaining chunks
     while (true) {
-        const { done, value } = await reader.read();
-        if (done) break;
-        const textChunk = decoder.decode(value);
+      const { done, value } = await reader.read();
+      if (done) break;
 
-        const lines = textChunk.split("\n");
-        for (const line of lines) {
-            if (line.trim() === "") continue;
-            try {
-                const json = JSON.parse(line);
-                if (json.done === false) {
-                    // Handle thinking/reasoning (LFM2.5-thinking)
-                    if (json.message?.reasoning || json.message?.thinking) {
-                        fullReasoning += json.message.reasoning || json.message.thinking;
-                        
-                        // Update thinking display
-                        if (thinkingContainer) {
-                            const contentDiv = thinkingContainer.querySelector(".thinking-content");
-                            if (contentDiv) {
-                                contentDiv.textContent = fullReasoning;
-                            }
-                        }
-                    }
-
-                    // Handle regular content
-                    if (json.message?.content) {
-                        result += json.message.content;
-                        assistantMessage.innerHTML = marked.parse(result);
-                        responseDiv.scrollTop = responseDiv.scrollHeight;
-                    }
-
-                    // Handle tool calls
-                    if (json.message?.tool_calls && json.message.tool_calls.length > 0) {
-                        handleToolCalls(responseDiv, json.message.tool_calls);
-                    }
-                }
-            } catch (error) {
-                console.error("JSON parse error:", error);
-            }
-        }
+      await processChunk(
+        value,
+        decoder,
+        responseDiv,
+        (content) => {
+          const msg = ensureAssistantMessage();
+          result += content;
+          msg.contentDiv.innerHTML = marked.parse(result);
+        },
+        (reasoning) => {
+          updateThinkingDisplay(reasoning);
+        },
+        (toolCalls) => {
+          handleToolCalls(responseDiv, toolCalls, messages);
+        },
+      );
     }
 
+    // Stop spinner when done
+    if (reasoningBlock) {
+      reasoningBlock.spinner.style.animation = "none";
+      reasoningBlock.spinner.style.borderRightColor = "inherit";
+    }
+
+    // Display stats
     const endTime = performance.now();
     if (firstCharTime) {
-        const tfc = ((firstCharTime - startTime) / 1000).toFixed(1);
-        const totalTime = (endTime - startTime) / 1000;
-        const cps = (result.length / totalTime).toFixed(1);
+      const tfc = ((firstCharTime - startTime) / 1000).toFixed(1);
+      const totalTime = (endTime - startTime) / 1000;
+      const cps = (result.length / totalTime).toFixed(1);
 
-        const statsDiv = document.createElement("div");
-        const statsElement = document.createElement("p");
-        statsElement.className = "status-light";
-        statsElement.innerHTML = `1st: ${tfc} s, tot ${totalTime.toFixed(1)} s<br>${cps} char/s`;
-        statsDiv.appendChild(statsElement);
-        responseDiv.appendChild(statsDiv);
+      const statsDiv = document.createElement("div");
+      const statsElement = document.createElement("p");
+      statsElement.className = "status-light";
+      statsElement.innerHTML = `1st: ${tfc} s, tot ${totalTime.toFixed(1)} s<br>${cps} char/s`;
+      statsDiv.appendChild(statsElement);
+      responseDiv.appendChild(statsDiv);
     }
-
   } catch (error) {
     if (error.name === "AbortError") {
-        console.log("Fetch aborted");
+      console.log("Fetch aborted");
     } else {
-        console.error("Fetch error:", error);
-        throw error;
+      console.error("Fetch error:", error);
+      throw error;
+    }
+  }
+
+  // Helper function to process chunks
+  async function processChunk(
+    chunkValue,
+    decoder,
+    responseDiv,
+    onContent,
+    onReasoning,
+    onToolCalls,
+  ) {
+    const textChunk = decoder.decode(chunkValue);
+    const lines = textChunk.split("\n");
+
+    for (const line of lines) {
+      if (line.trim() === "") continue;
+      try {
+        const json = JSON.parse(line);
+        if (json.done === false) {
+          // Handle thinking/reasoning
+          if (json.message?.reasoning || json.message?.thinking) {
+            onReasoning(json.message.reasoning || json.message.thinking);
+          }
+
+          // Handle regular content
+          if (json.message?.content) {
+            onContent(json.message.content);
+            responseDiv.scrollTop = responseDiv.scrollHeight;
+          }
+
+          // Handle tool calls
+          if (json.message?.tool_calls && json.message.tool_calls.length > 0) {
+            onToolCalls(json.message.tool_calls);
+          }
+        }
+      } catch (error) {
+        console.error("JSON parse error:", error);
+      }
     }
   }
 }
 
 // Handle tool calls - executes tools and displays results
-async function handleToolCalls(responseDiv, toolCalls) {
-    for (const toolCall of toolCalls) {
-        const toolName = toolCall.function.name;
-        const toolArgs = JSON.parse(toolCall.function.arguments);
+async function handleToolCalls(responseDiv, toolCalls, messages) {
+  // Add assistant message with tool calls to history
+  messages.push({
+    role: "assistant",
+    content: "",
+    tool_calls: toolCalls.map((tc) => ({
+      id: tc.id,
+      type: tc.type,
+      function: tc.function,
+    })),
+  });
 
-        // Display tool call
-        const toolCallDiv = document.createElement("div");
-        toolCallDiv.className = "tool-call";
-        toolCallDiv.innerHTML = `
-            <div class="tool-header">🔧 Tool Call: ${toolName}</div>
-            <div class="tool-args"><JSON.stringify(toolArgs, null, 2)}</div>
-        `;
-        responseDiv.appendChild(toolCallDiv);
+  for (const toolCall of toolCalls) {
+    const toolName = toolCall.function.name;
+    let toolArgs = {};
 
-        // Execute tool
-        if (TOOL_IMPLEMENTATIONS[toolName]) {
-            const result = await TOOL_IMPLEMENTATIONS[toolName](toolArgs);
-
-            // Display result
-            const resultDiv = document.createElement("div");
-            resultDiv.className = "tool-result";
-            resultDiv.innerHTML = `
-                <div class="result-header">✓ Result:</div>
-                <div class="result-content">${result}</div>
-            `;
-            responseDiv.appendChild(resultDiv);
-
-            // TODO: Continue conversation with tool results
-            // This would require sending another message to the LLM with the tool results
-        }
+    try {
+      toolArgs = JSON.parse(toolCall.function.arguments);
+    } catch (e) {
+      console.error("Failed to parse tool arguments:", e);
+      continue;
     }
+
+    // Display tool call
+    const toolCallDiv = document.createElement("div");
+    toolCallDiv.className = "tool-call";
+    toolCallDiv.innerHTML = `
+      <div class="tool-header">🔧 Tool Call: ${toolName}</div>
+      <div class="tool-args"><pre>${JSON.stringify(toolArgs, null, 2)}</pre></div>
+    `;
+    responseDiv.appendChild(toolCallDiv);
+
+    // Execute tool
+    if (TOOL_IMPLEMENTATIONS[toolName]) {
+      try {
+        const result = await TOOL_IMPLEMENTATIONS[toolName](toolArgs);
+
+        // Display result
+        const resultDiv = document.createElement("div");
+        resultDiv.className = "tool-result";
+        resultDiv.innerHTML = `
+          <div class="result-header">✓ Result:</div>
+          <div class="result-content"><pre>${result}</pre></div>
+        `;
+        responseDiv.appendChild(resultDiv);
+
+        // Add tool result to messages
+        messages.push({
+          role: "tool",
+          tool_call_id: toolCall.id,
+          content: result,
+        });
+      } catch (error) {
+        console.error(`Tool execution error: ${error.message}`);
+        const errorDiv = document.createElement("div");
+        errorDiv.className = "tool-result error";
+        errorDiv.innerHTML = `
+          <div class="result-header">❌ Error:</div>
+          <div class="result-content">${error.message}</div>
+        `;
+        responseDiv.appendChild(errorDiv);
+      }
+    } else {
+      console.warn(`Tool ${toolName} not implemented`);
+    }
+  }
 }

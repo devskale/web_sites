@@ -37,7 +37,7 @@ function getCurrentServerConfig() {
 }
 
 // Set default server and fetch models
-const defaultServerUrl = "https://api.arliai.com/v1";
+const defaultServerUrl = servers.length > 0 ? servers[0].url : "";
 const defaultModel = "Gemma-3-27B-it";
 const modelField = document.getElementById("modelField");
 modelField.setAttribute("data-default", defaultModel);
@@ -72,7 +72,16 @@ serverField.addEventListener("change", async function () {
 });
 
 document.addEventListener("DOMContentLoaded", function () {
-  document.getElementById("inputField").focus();
+  const inputField = document.getElementById("inputField");
+  inputField.focus();
+
+  // Handle Enter to submit, Shift+Enter for newline
+  inputField.addEventListener("keydown", function (event) {
+    if (event.key === "Enter" && !event.shiftKey) {
+      event.preventDefault();
+      document.getElementById("chatForm").requestSubmit();
+    }
+  });
 });
 
 document
@@ -87,6 +96,7 @@ document
     const contextField = document.getElementById("contextField");
     const jsonCheckbox = document.getElementById("jsonCheck");
     const jsonField = document.getElementById("jsonField");
+    const toolsCheckbox = document.getElementById("toolsCheck");
     const selectedModel = modelField.value;
     const config = getCurrentServerConfig();
 
@@ -161,6 +171,7 @@ document
           signal,
           startTime,
           config.apiKey,
+          toolsCheckbox ? toolsCheckbox.checked : false,
           jsonCheckbox.checked
         );
       } else if (desc.includes("llama.cpp")) {
