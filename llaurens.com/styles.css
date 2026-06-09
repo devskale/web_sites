@@ -202,11 +202,6 @@ body::before {
     background: var(--c-orange);
 }
 
-.link-item.internal {
-    border-style: dashed;
-    opacity: 0.85;
-}
-
 .link-item.internal:hover {
     background: var(--c-purple);
 }
