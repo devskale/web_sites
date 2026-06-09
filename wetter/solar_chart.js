@@ -1,33 +1,48 @@
 let currentDailyData = [];
 let currentCityName = '';
+let _solarLat, _solarLon, _solarDuration;
 
 const DAYS_IN_MONTH = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
 
 function getConsumptionEstimate(dateStr) {
     const date = new Date(dateStr);
-    const month = date.getMonth(); // 0-11
+    const month = date.getMonth();
 
-    // Use data from consumption_data.js if available
     const monthlyTotal = (window.CONSUMPTION_DATA && window.CONSUMPTION_DATA[month])
         ? window.CONSUMPTION_DATA[month].total
-        : 800; // Default fallback
+        : 800;
 
     const days = DAYS_IN_MONTH[month];
     return monthlyTotal / days;
 }
 
 window.loadSolarData = function (lat, lon, cityName, duration = 4) {
-    const apiUrl = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&hourly=global_tilted_irradiance&past_days=1&forecast_days=${duration}`;
+    // Store for retry
+    _solarLat = lat; _solarLon = lon; _solarDuration = duration;
     currentCityName = cityName;
 
-    const chartContainer = document.querySelector("#solarChart");
-    if (chartContainer) chartContainer.classList.add('loading');
+    const chartEl = document.querySelector("#solarChart");
+    const loadingEl = document.getElementById('solarChartLoading');
+    const errorEl = document.getElementById('solarChartError');
 
+    if (chartEl) chartEl.style.display = 'none';
+    if (loadingEl) loadingEl.classList.add('active');
+    if (errorEl) errorEl.classList.remove('active');
+
+    // Tilted irradiance: 35° tilt, south-facing (azimuth 180°) is optimal for Austria (~47-48°N latitude)
+    const apiUrl = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&hourly=global_tilted_irradiance&past_days=1&forecast_days=${duration}&tilt=35&azimuth=180&timezone=auto`;
 
     fetch(apiUrl)
-        .then(response => response.json())
+        .then(response => {
+            if (!response.ok) throw new Error(`HTTP ${response.status}`);
+            return response.json();
+        })
         .then(data => {
-            if (chartContainer) chartContainer.classList.remove('loading');
+            if (!data.hourly || !data.hourly.time) throw new Error('Invalid data structure');
+
+            if (loadingEl) loadingEl.classList.remove('active');
+            if (chartEl) chartEl.style.display = '';
+
             const hourlyGTI = data.hourly.global_tilted_irradiance;
             const timeData = data.hourly.time;
 
@@ -35,8 +50,10 @@ window.loadSolarData = function (lat, lon, cityName, duration = 4) {
             updateSolarUI();
         })
         .catch(error => {
-            console.error('Error fetching data:', error);
-            if (chartContainer) chartContainer.classList.remove('loading');
+            console.error('Error fetching solar data:', error);
+            if (loadingEl) loadingEl.classList.remove('active');
+            if (errorEl) errorEl.classList.add('active');
+            if (chartEl) chartEl.style.display = '';
         });
 };
 
@@ -83,11 +100,13 @@ function updateSolarSummary(data) {
     const totalVerbrauch = data.reduce((acc, curr) => acc + curr.consumptionKWh, 0);
     const avgVerbrauch = (totalVerbrauch / data.length).toFixed(1);
 
+    const coverage = ((totalErtrag / totalVerbrauch) * 100).toFixed(0);
+
     const summarySpan = document.getElementById('solar-summary');
     if (summarySpan) {
         summarySpan.innerHTML = `
             Ertrag Ø <strong>${avgErtrag}</strong> kWh/Tag • Total <strong>${totalErtrag}</strong> kWh<br>
-            Verbrauch Ø <strong>${avgVerbrauch}</strong> kWh/Tag
+            Verbrauch Ø <strong>${avgVerbrauch}</strong> kWh/Tag • Deckung <strong>${coverage}%</strong>
         `;
     }
 }
@@ -120,8 +139,6 @@ function calculateDailySolarPower(timeData, gtiData) {
     return dailyKWh;
 }
 
-// displayDailyData removed for compactness
-
 function createDailySolarPowerChart(dailyData, cityName) {
     if (window.solarChartInstance) {
         window.solarChartInstance.destroy();
@@ -135,6 +152,9 @@ function createDailySolarPowerChart(dailyData, cityName) {
     const sunColor = style.getPropertyValue('--sun').trim() || '#FDB813';
     const accentColor = style.getPropertyValue('--accent').trim() || '#3b82f6';
     const textMuted = style.getPropertyValue('--text-muted').trim() || '#64748b';
+
+    // Responsive height
+    const chartHeight = window.innerWidth < 600 ? 320 : 400;
 
     const options = {
         series: [
@@ -151,7 +171,7 @@ function createDailySolarPowerChart(dailyData, cityName) {
         ],
         colors: [sunColor, accentColor],
         chart: {
-            height: 450,
+            height: chartHeight,
             type: 'line',
             fontFamily: 'Outfit, sans-serif',
             toolbar: { show: false },
@@ -159,18 +179,18 @@ function createDailySolarPowerChart(dailyData, cityName) {
             animations: {
                 enabled: true,
                 easing: 'easeinout',
-                speed: 1000
+                speed: 900
             },
             dropShadow: {
                 enabled: true,
-                top: 10,
+                top: 8,
                 left: 0,
-                blur: 10,
-                opacity: 0.05
+                blur: 8,
+                opacity: 0.04
             }
         },
         stroke: {
-            width: [0, 4],
+            width: [0, 3],
             curve: 'smooth',
             lineCap: 'round'
         },
@@ -182,7 +202,7 @@ function createDailySolarPowerChart(dailyData, cityName) {
                 shadeIntensity: 0.5,
                 gradientToColors: [sunColor],
                 inverseColors: true,
-                opacityFrom: 0.85,
+                opacityFrom: 0.8,
                 opacityTo: 0.95,
                 stops: [0, 100]
             }
@@ -191,19 +211,15 @@ function createDailySolarPowerChart(dailyData, cityName) {
             bar: {
                 horizontal: false,
                 borderRadius: 4,
-                columnWidth: '60%',
-                dataLabels: {
-                    position: 'top'
-                }
+                columnWidth: '55%',
+                dataLabels: { position: 'top' }
             }
         },
-        dataLabels: {
-            enabled: false
-        },
+        dataLabels: { enabled: false },
         grid: {
             borderColor: 'rgba(0,0,0,0.03)',
             strokeDashArray: 2,
-            padding: { top: 20, bottom: 20, left: 10, right: 10 },
+            padding: { top: 16, bottom: 16, left: 8, right: 8 },
             xaxis: { lines: { show: false } },
             yaxis: { lines: { show: true } }
         },
@@ -212,9 +228,9 @@ function createDailySolarPowerChart(dailyData, cityName) {
             categories: days,
             labels: {
                 style: { colors: textMuted, fontSize: '11px', fontWeight: 600, fontFamily: 'Outfit' },
-                minHeight: 45,
+                minHeight: 42,
                 formatter: (val) => {
-                    const date = new Date(val);
+                    const date = new Date(val + 'T00:00:00');
                     const day = date.toLocaleDateString('de-DE', { weekday: 'short' });
                     const datePart = date.toLocaleDateString('de-DE', { day: 'numeric', month: 'short' });
                     return [day, datePart];
@@ -242,7 +258,7 @@ function createDailySolarPowerChart(dailyData, cityName) {
             show: true,
             position: 'top',
             horizontalAlign: 'right',
-            fontSize: '14px',
+            fontSize: '13px',
             fontWeight: 500,
             markers: { radius: 12 }
         }

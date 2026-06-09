@@ -2,8 +2,6 @@ document.addEventListener("DOMContentLoaded", function () {
     const searchInput = document.getElementById('cityInput');
     const searchButton = document.getElementById('searchButton');
     const cityNameDisplay = document.getElementById('cityName');
-    const suggestionsContainer = document.getElementById('suggestions');
-    const btnText = searchButton.querySelector('.btn-text');
 
     const searchWrapper = document.getElementById('searchWrapper');
     const searchToggle = document.getElementById('searchToggle');
@@ -88,6 +86,8 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     }
 
+    const suggestionsContainer = document.getElementById('suggestions');
+
     searchInput.addEventListener('input', (e) => fetchSuggestions(e.target.value.trim()));
 
     // Close suggestions on click outside
@@ -109,6 +109,7 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     });
 
+    // Duration buttons — all of them (both temp and solar sections)
     document.querySelectorAll('.duration-btn').forEach(btn => {
         btn.addEventListener('click', () => {
             const days = parseInt(btn.dataset.days);
@@ -131,15 +132,12 @@ document.addEventListener("DOMContentLoaded", function () {
         const city = searchInput.value.trim();
         if (!city) return;
 
-        // Enhanced loading state
         searchButton.disabled = true;
-        if (btnText) btnText.textContent = 'Lädt...';
+        searchButton.textContent = '...';
 
-        // Add a subtle animation class to the search bar
         const container = document.querySelector('.search-container');
         if (container) container.style.opacity = '0.7';
 
-        // Geocoding API
         const geocodingUrl = `https://geocoding-api.open-meteo.com/v1/search?name=${encodeURIComponent(city)}&count=1&language=de&format=json`;
 
         fetch(geocodingUrl)
@@ -151,9 +149,9 @@ document.addEventListener("DOMContentLoaded", function () {
                     currentLon = result.longitude;
                     currentName = result.name;
                     loadWeather(currentLat, currentLon, currentName);
-                    searchInput.value = ''; // Clear input
+                    searchInput.value = '';
                     suggestionsContainer.style.display = 'none';
-                    searchWrapper.classList.remove('expanded'); // Collapse after search
+                    searchWrapper.classList.remove('expanded');
                 } else {
                     alert('Stadt nicht gefunden. Bitte versuchen Sie es erneut.');
                 }
@@ -164,22 +162,25 @@ document.addEventListener("DOMContentLoaded", function () {
             })
             .finally(() => {
                 searchButton.disabled = false;
-                if (btnText) btnText.textContent = 'Suchen';
+                searchButton.textContent = 'Go';
                 if (container) container.style.opacity = '1';
             });
     }
 
     function loadWeather(lat, lon, name) {
-        // Update title with animation feel
+        // Update title with animation
         cityNameDisplay.style.opacity = '0';
         setTimeout(() => {
             cityNameDisplay.textContent = `Wetter: ${name}`;
-            cityNameDisplay.style.transition = 'opacity 0.5s ease-in-out';
+            cityNameDisplay.style.transition = 'opacity 0.4s ease-in-out';
             cityNameDisplay.style.opacity = '1';
             document.title = `${name} | Wetter Vorschau`;
-        }, 200);
+        }, 150);
 
-        // Call functions from other scripts
+        // Load current weather overview
+        loadCurrentWeather(lat, lon);
+
+        // Load charts
         if (window.loadTemperatureData) {
             window.loadTemperatureData(lat, lon, name, currentDuration);
         }
@@ -187,4 +188,128 @@ document.addEventListener("DOMContentLoaded", function () {
             window.loadSolarData(lat, lon, name, currentDuration);
         }
     }
+
+    // ========== Current Weather Overview ==========
+    function loadCurrentWeather(lat, lon) {
+        const cardsContainer = document.getElementById('weatherCards');
+        const errorBanner = document.getElementById('weatherError');
+
+        // Show skeleton state
+        cardsContainer.innerHTML = `
+            <div class="weather-card skeleton">
+                <div class="skeleton-line" style="width:60px;height:60px;border-radius:50%;margin:0 auto"></div>
+                <div class="skeleton-line" style="width:70px;height:22px;margin-top:8px"></div>
+                <div class="skeleton-line" style="width:50px;height:14px;margin-top:4px"></div>
+            </div>
+            <div class="weather-card skeleton">
+                <div class="skeleton-line" style="width:36px;height:12px;margin:0 auto"></div>
+                <div class="skeleton-line" style="width:56px;height:26px;margin-top:6px"></div>
+            </div>
+            <div class="weather-card skeleton">
+                <div class="skeleton-line" style="width:36px;height:12px;margin:0 auto"></div>
+                <div class="skeleton-line" style="width:56px;height:26px;margin-top:6px"></div>
+            </div>
+            <div class="weather-card skeleton">
+                <div class="skeleton-line" style="width:36px;height:12px;margin:0 auto"></div>
+                <div class="skeleton-line" style="width:56px;height:26px;margin-top:6px"></div>
+            </div>
+        `;
+        errorBanner.style.display = 'none';
+
+        const url = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current=temperature_2m,relative_humidity_2m,apparent_temperature,weather_code,wind_speed_10m&timezone=auto`;
+
+        fetch(url)
+            .then(res => res.json())
+            .then(data => {
+                if (!data.current) {
+                    throw new Error('No current data');
+                }
+                renderCurrentWeatherCards(data.current);
+            })
+            .catch(err => {
+                console.error('Current weather error:', err);
+                errorBanner.style.display = 'block';
+                cardsContainer.innerHTML = '';
+            });
+    }
+
+    function renderCurrentWeatherCards(current) {
+        const temp = current.temperature_2m;
+        const feelsLike = current.apparent_temperature;
+        const humidity = current.relative_humidity_2m;
+        const windSpeed = current.wind_speed_10m;
+        const weatherCode = current.weather_code;
+
+        const icon = getWeatherIcon(weatherCode);
+        const desc = getWeatherDescription(weatherCode);
+
+        const cardsContainer = document.getElementById('weatherCards');
+        cardsContainer.innerHTML = `
+            <div class="weather-card">
+                <div class="weather-icon">${icon}</div>
+                <div class="card-value">${temp.toFixed(1)}°</div>
+                <div class="card-sub">${desc}</div>
+            </div>
+            <div class="weather-card">
+                <div class="card-label">Gefühlt</div>
+                <div class="card-value">${feelsLike.toFixed(1)}°</div>
+            </div>
+            <div class="weather-card">
+                <div class="card-label">Feuchte</div>
+                <div class="card-value">${humidity}%</div>
+            </div>
+            <div class="weather-card">
+                <div class="card-label">Wind</div>
+                <div class="card-value">${windSpeed} <span style="font-size:0.8rem;font-weight:600">km/h</span></div>
+            </div>
+        `;
+    }
+
+    // WMO Weather interpretation codes
+    function getWeatherIcon(code) {
+        const icons = {
+            0: '☀️', 1: '🌤️', 2: '⛅', 3: '☁️',
+            45: '🌫️', 48: '🌫️',
+            51: '🌦️', 53: '🌦️', 55: '🌧️',
+            56: '🌧️', 57: '🌧️',
+            61: '🌧️', 63: '🌧️', 65: '🌧️',
+            66: '🌧️', 67: '🌧️',
+            71: '🌨️', 73: '🌨️', 75: '❄️',
+            77: '❄️',
+            80: '🌦️', 81: '🌧️', 82: '🌧️',
+            85: '🌨️', 86: '❄️',
+            95: '⛈️', 96: '⛈️', 99: '⛈️'
+        };
+        return icons[code] || '🌡️';
+    }
+
+    function getWeatherDescription(code) {
+        const descriptions = {
+            0: 'Klar', 1: 'Heiter', 2: 'Teilw. bewölkt', 3: 'Bewölkt',
+            45: 'Nebel', 48: 'Reifnebel',
+            51: 'Leichter Niesel', 53: 'Niesel', 55: 'Starker Niesel',
+            56: 'Gefrierender Niesel', 57: 'Starker gefrier. Niesel',
+            61: 'Leichter Regen', 63: 'Regen', 65: 'Starker Regen',
+            66: 'Leichter gefrier. Regen', 67: 'Starker gefrier. Regen',
+            71: 'Leichter Schneefall', 73: 'Schneefall', 75: 'Starker Schneefall',
+            77: 'Schneekörner',
+            80: 'Leichte Schauer', 81: 'Schauer', 82: 'Starke Schauer',
+            85: 'Leichte Schneeschauer', 86: 'Schneeschauer',
+            95: 'Gewitter', 96: 'Gewitter mit Hagel', 99: 'Schweres Gewitter'
+        };
+        return descriptions[code] || 'Unbekannt';
+    }
+
+    // Retry handlers exposed to global scope for onclick
+    window.retryTemp = function () {
+        if (currentLat && currentLon && currentName) {
+            window.loadTemperatureData(currentLat, currentLon, currentName, currentDuration);
+        }
+    };
+
+    window.retrySolar = function () {
+        if (currentLat && currentLon && currentName) {
+            window.loadSolarData(currentLat, currentLon, currentName, currentDuration);
+        }
+    };
 });
