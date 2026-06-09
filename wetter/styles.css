@@ -388,6 +388,18 @@ h2 {
   font-size: 1.1rem;
 }
 
+/* kWp input group */
+.kwp-group .small-input {
+  width: 56px;
+  font-size: 1.2rem;
+}
+
+.kwp-group .unit {
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: var(--accent);
+}
+
 .unit {
   font-size: 0.8rem;
   font-weight: 500;
@@ -508,7 +520,79 @@ h2 {
   opacity: 0.9;
 }
 
-/* Footer */
+/* Solar Metric Cards */
+.solar-metrics {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 8px;
+  margin-top: 16px;
+}
+
+.metric-card {
+  background: rgba(255, 255, 255, 0.6);
+  border: 1px solid hsla(225, 20%, 90%, 0.5);
+  border-radius: 12px;
+  padding: 12px 10px;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.metric-label {
+  font-size: 0.65rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--text-muted);
+}
+
+.metric-value {
+  font-size: 1.15rem;
+  font-weight: 800;
+  color: var(--primary);
+  line-height: 1.2;
+}
+
+.metric-value small {
+  font-size: 0.65rem;
+  font-weight: 600;
+  color: var(--text-muted);
+}
+
+.metric-sub {
+  font-size: 0.7rem;
+  color: var(--text-muted);
+}
+
+/* Custom solar tooltip */
+.solar-tooltip {
+  padding: 8px 14px;
+  text-align: center;
+}
+
+.st-tip-time {
+  font-size: 0.72rem;
+  color: var(--text-muted);
+  margin-bottom: 2px;
+}
+
+.st-tip-power {
+  font-size: 1.1rem;
+  font-weight: 800;
+  color: var(--sun);
+}
+
+.st-tip-power small {
+  font-size: 0.7rem;
+  font-weight: 600;
+}
+
+.st-tip-gti {
+  font-size: 0.72rem;
+  color: var(--text-muted);
+  margin-top: 1px;
+}
 .app-footer {
   text-align: center;
   margin-top: 80px;
@@ -612,5 +696,9 @@ h2 {
 
   .chart-wrapper {
     min-height: 220px;
+  }
+
+  .solar-metrics {
+    grid-template-columns: repeat(2, 1fr);
   }
 }

@@ -114,18 +114,10 @@
             </div>
             <div class="controls-wrapper">
               <div class="controls">
-                <div class="input-group">
-                  <input type="number" id="roofArea" value="57" min="1" step="1" class="small-input" title="m²"
-                    aria-label="Dachfläche in m²">
-                  <span class="unit">m²</span>
-                </div>
-                <div class="input-group">
-                  <input type="number" id="efficiency" value="17.5" min="1" max="100" step="0.5" class="small-input"
-                    title="Effizienz %" aria-label="Modul-Effizienz in Prozent">
-                  <span class="unit">%</span>
-                </div>
-                <div class="input-group">
-                  <span id="kwpDisplay" class="value-display">10.0 kWp</span>
+                <div class="input-group kwp-group">
+                  <input type="number" id="kwpInput" value="10" min="0.5" max="100" step="0.5" class="small-input"
+                    title="kWp Anlagenleistung" aria-label="Anlagenleistung in Kilowatt-Peak">
+                  <span class="unit">kWp</span>
                 </div>
               </div>
             </div>
@@ -142,8 +134,9 @@
             <button class="retry-btn" onclick="window.retrySolar()">Erneut versuchen</button>
           </div>
         </div>
-        <p class="chart-note">Hinweis: Die Schätzung des Gesamt-Stromverbrauchs (ø ~9000 kWh/Jahr inkl. Wärmepumpe)
-          basiert auf monatlichen Lastprofilen eines typischen österreichischen Haushalts.</p>
+        <div id="solarMetrics" class="solar-metrics"></div>
+        <p class="chart-note">PV-Simulation: 35° Neigung, Süd-Ausrichtung, basierend auf Open-Meteo GTI-Daten.
+          Ertragsschätzung ohne Systemverluste (Wechselrichter, Verschmutzung, Temperatur).</p>
       </section>
     </main>
 
@@ -158,7 +151,6 @@
   </div>
 
   <script src="temperature_chart.js"></script>
-  <script src="consumption_data.js"></script>
   <script src="solar_chart.js"></script>
   <script src="app.js"></script>
 </body>
