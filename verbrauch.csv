@@ -1,0 +1,14 @@
+Monat;Haushaltsstrom (kWh);Waermepumpe (kWh);Gesamtverbrauch (kWh)
+Januar;400;800;1200
+Februar;380;700;1080
+Maerz;390;500;890
+April;390;200;590
+Mai;390;100;490
+Juni;400;80;480
+Juli;410;80;490
+August;410;80;490
+September;390;100;490
+Oktober;390;250;640
+November;395;500;895
+Dezember;410;830;1240
+GESAMT;4755;4220;8975

@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="de">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>Wetter Vorschau — Präzise Vorhersage & Sonnenenergie</title>
+  <meta name="description"
+    content="Erhalten Sie präzise Wettervorhersagen und berechnen Sie das Solarenergiepotenzial für Ihr Dach.">
+
+  <!-- Distinctive Editorial Typography -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap"
+    rel="stylesheet">
+
+  <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+  <link rel="icon" type="image/svg+xml" href="favicon.svg">
+  <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+  <div class="container">
+    <header class="header">
+      <h1 id="cityName">Wetter: ...</h1>
+
+      <div class="search-and-presets">
+        <div class="search-wrapper" id="searchWrapper">
+          <button id="searchToggle" class="icon-btn" aria-label="Suche öffnen">
+            <svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="2.5" fill="none"
+              stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="11" cy="11" r="8"></circle>
+              <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+            </svg>
+          </button>
+          <div class="search-container">
+            <input type="text" id="cityInput" placeholder="Stadt suchen..." aria-label="Stadt suchen"
+              autocomplete="off" />
+            <button id="searchButton" class="go-btn">Go</button>
+          </div>
+          <div id="suggestions" class="suggestions-list"></div>
+        </div>
+        <div class="presets">
+          <button class="preset-btn" data-city="Neusiedl am See" data-lat="47.949" data-lon="16.8417">Neusiedl</button>
+          <button class="preset-btn" data-city="Wien" data-lat="48.2082" data-lon="16.3738">Wien</button>
+          <button id="geoBtn" class="preset-btn geo-btn" title="Aktueller Standort" aria-label="Standort verwenden">
+            <svg viewBox="0 0 24 24" width="14" height="14" stroke="currentColor" stroke-width="2.2" fill="none" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3.5"></circle><line x1="12" y1="2" x2="12" y2="5"></line><line x1="12" y1="19" x2="12" y2="22"></line><line x1="2" y1="12" x2="5" y2="12"></line><line x1="19" y1="12" x2="22" y2="12"></line></svg>
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <!-- Current Weather Overview -->
+    <section id="currentWeather" class="current-weather" aria-label="Aktuelles Wetter">
+      <div class="weather-cards" id="weatherCards">
+        <div class="weather-card skeleton">
+          <div class="skeleton-line" style="width:36px;height:36px;border-radius:50%;margin:0 auto"></div>
+          <div class="skeleton-line" style="width:50px;height:16px;margin-top:2px"></div>
+          <div class="skeleton-line" style="width:36px;height:12px;margin-top:1px"></div>
+        </div>
+        <div class="weather-card skeleton">
+          <div class="skeleton-line" style="width:28px;height:10px"></div>
+          <div class="skeleton-line" style="width:44px;height:20px;margin-top:3px"></div>
+        </div>
+        <div class="weather-card skeleton">
+          <div class="skeleton-line" style="width:28px;height:10px"></div>
+          <div class="skeleton-line" style="width:44px;height:20px;margin-top:3px"></div>
+        </div>
+        <div class="weather-card skeleton">
+          <div class="skeleton-line" style="width:28px;height:10px"></div>
+          <div class="skeleton-line" style="width:44px;height:20px;margin-top:3px"></div>
+        </div>
+      </div>
+      <div id="sunStrip" class="sun-strip" style="display:none"></div>
+      <div id="weatherError" class="error-banner" style="display:none">
+        <span>Fehler beim Laden der Wetterdaten</span>
+      </div>
+    </section>
+
+    <main>
+      <section class="chart-section" aria-labelledby="temp-heading">
+        <div class="section-header">
+          <div>
+            <h2 id="temp-heading">Temperatur & Niederschlag</h2>
+            <p id="temp-summary"></p>
+          </div>
+          <div class="duration-selector">
+            <button class="duration-btn" data-days="2">2 Tage</button>
+            <button class="duration-btn active" data-days="4">4 Tage</button>
+            <button class="duration-btn" data-days="7">7 Tage</button>
+            <button class="duration-btn" data-days="10">10 Tage</button>
+          </div>
+        </div>
+        <div class="chart-wrapper">
+          <div id="tempChart" class="chart-container"></div>
+          <div id="tempChartLoading" class="chart-loading">
+            <div class="spinner"></div>
+            <span>Lade Daten...</span>
+          </div>
+          <div id="tempChartError" class="chart-error" style="display:none">
+            <p>Daten konnten nicht geladen werden.</p>
+            <button class="retry-btn" onclick="window.retryTemp()">Erneut versuchen</button>
+          </div>
+        </div>
+      </section>
+
+      <section class="chart-section" aria-labelledby="solar-heading">
+        <div class="section-header">
+          <div style="flex: 1;">
+            <h2 id="solar-heading">Sonnenertrag</h2>
+            <p id="solar-summary"></p>
+          </div>
+          <div class="header-tools">
+            <div class="duration-selector">
+              <button class="duration-btn solar-duration" data-days="2">2 Tage</button>
+              <button class="duration-btn solar-duration active" data-days="4">4 Tage</button>
+              <button class="duration-btn solar-duration" data-days="7">7 Tage</button>
+              <button class="duration-btn solar-duration" data-days="10">10 Tage</button>
+            </div>
+            <div class="controls-wrapper">
+              <div class="controls">
+                <div class="input-group kwp-group">
+                  <input type="number" id="kwpInput" value="10" min="0.5" max="100" step="0.5" class="small-input"
+                    title="kWp Anlagenleistung" aria-label="Anlagenleistung in Kilowatt-Peak">
+                  <span class="unit">kWp</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="chart-wrapper">
+          <div id="solarChart" class="chart-container"></div>
+          <div id="solarChartLoading" class="chart-loading">
+            <div class="spinner"></div>
+            <span>Lade Solardaten...</span>
+          </div>
+          <div id="solarChartError" class="chart-error" style="display:none">
+            <p>Solardaten konnten nicht geladen werden.</p>
+            <button class="retry-btn" onclick="window.retrySolar()">Erneut versuchen</button>
+          </div>
+        </div>
+        <div id="solarMetrics" class="solar-metrics"></div>
+        <p class="chart-note">PV-Simulation: 35° Neigung, Süd-Ausrichtung, basierend auf Open-Meteo GTI-Daten.
+          Ertragsschätzung ohne Systemverluste (Wechselrichter, Verschmutzung, Temperatur).</p>
+      </section>
+    </main>
+
+    <footer class="app-footer">
+      <p>
+        Wetterdaten & Ortssuche via
+        <a href="https://open-meteo.com/" target="_blank" rel="noopener">Open-Meteo</a> •
+        By <a href="https://skale.dev/" target="_blank" rel="noopener">skale.dev</a>
+      </p>
+      <p class="version-tag">v2.2.0</p>
+    </footer>
+  </div>
+
+  <script src="temperature_chart.js"></script>
+  <script src="solar_chart.js"></script>
+  <script src="app.js"></script>
+</body>
+
+</html>
