@@ -141,3 +141,39 @@ sudo oauth2-approve remove mom@gmail.com  # revoke (live, no restart)
 - Statuses: `AuthSuccess` = allowed, `AuthFailure` = denied (not in list),
   `AuthError` = something went wrong during the OAuth exchange.
 - Raw logs anytime: `sudo journalctl -u oauth2-proxy -f`
+
+---
+
+## How lubu.skale.dev actually reaches home (amd reverse proxy)
+
+`lubu.skale.dev` DNS → **amd** (Oracle Cloud, 138.2.179.13). amd's nginx
+**reverse-proxies** HTTPS :443 → your home box (lubu) on alt-port 8001. This is
+how the clean URLs `https://lubu.skale.dev` and `https://lubu.skale.dev/family`
+work without exposing 443 on the home router (443 is the router's admin UI).
+
+```
+Browser → https://lubu.skale.dev (amd :443, TLS)
+       → amd nginx proxy (Host: lubu.skale.dev)
+       → home lubu :8001 nginx vhost lubu.skale.dev
+       → /family/ → auth_request → oauth2-proxy (127.0.0.1:4180) → Google
+```
+
+### Key config points (two machines)
+
+**amd** (`ssh amd`, `/etc/nginx/sites-enabled/lubu.skale.dev`):
+- `location /` proxies to `https://pind.mooo.com:8001` with **`proxy_set_header Host lubu.skale.dev;`** — this MUST be `lubu.skale.dev` (not neusiedl), or the home box routes to the wrong vhost → 404 on `/family/`.
+
+**home lubu** (`/etc/nginx/sites-enabled/lubu.skale.dev`):
+- The `@oauth_redirect` uses **`absolute_redirect off;`** so the login redirect stays
+  relative (`/oauth2/start?...`) and the browser resolves it against the clean
+  `https://lubu.skale.dev` — otherwise it picks up `:8001` and the login breaks.
+
+### Why these matter
+- Wrong `Host` on amd → home box serves neusiedl vhost → `/family/` 404.
+- Missing `absolute_redirect off` → login redirect goes to `:8001` (unreachable) → login breaks.
+
+### Test the full flow
+```bash
+curl -sk -o /dev/null -w "%{http_code} -> %{redirect_url}\n" https://lubu.skale.dev/family/
+curl -sk -o /dev/null -w "%{http_code} -> %{redirect_url}\n" "https://lubu.skale.dev/oauth2/start?rd=https://lubu.skale.dev/family/"
+```
