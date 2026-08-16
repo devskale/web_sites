@@ -78,3 +78,46 @@ Keep them world-readable (see permissions above). Commit them with the rest.
 | Verify serving | `curl -sk https://localhost:8001/ -H "Host: lubu.skale.dev"` |
 | Check perms | `namei -l .../index.html` |
 | nginx config change | edit `/etc/nginx/sites-enabled/lubu.skale.dev`, then `sudo nginx -t && sudo systemctl reload nginx` |
+
+---
+
+## Google login for family pages (/family/)
+
+The `/family/` area on lubu.skale.dev is protected by **Google login** via
+[oauth2-proxy](https://oauth2-proxy.github.io/oauth2-proxy/) (MIT, free, open source).
+
+Only family members whose Google email is in the allow-list can view those pages.
+Everything else on the hub stays public.
+
+### Architecture
+```
+Browser → nginx (lubu:8001) ─ auth_request → oauth2-proxy (127.0.0.1:4180) → Google
+              └─ /family/ served only to allow-listed emails
+```
+
+### Config files (all root-owned, NOT in git)
+| File | Purpose |
+|------|---------|
+| `/etc/oauth2-proxy/oauth2-proxy.cfg` | main oauth2-proxy config (client id/secret, scopes) |
+| `/etc/oauth2-proxy/authenticated_emails.txt` | family email allow-list (one per line) — **live-reloaded, no restart** |
+| `/etc/oauth2-proxy/cookie_secret` | random 32-byte cookie signing key |
+| `/etc/systemd/system/oauth2-proxy.service` | systemd unit |
+| `/etc/nginx/sites-enabled/lubu.skale.dev` | nginx vhost with the `/oauth2/` + `/family/` blocks |
+
+### To add/remove a family member
+Edit `/etc/oauth2-proxy/authenticated_emails.txt` (one email per line). It's watched
+and reloaded automatically — no restart needed.
+
+### To change Google app / scopes
+Edit `/etc/oauth2-proxy/oauth2-proxy.cfg`, then:
+```bash
+sudo systemctl restart oauth2-proxy
+```
+
+### Useful commands
+```bash
+sudo systemctl status oauth2-proxy     # is it running?
+sudo journalctl -u oauth2-proxy -f     # watch auth logs
+sudo systemctl restart oauth2-proxy    # after config change
+sudo nginx -t && sudo systemctl reload nginx
+```
