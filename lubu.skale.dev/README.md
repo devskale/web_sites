@@ -177,3 +177,29 @@ Browser → https://lubu.skale.dev (amd :443, TLS)
 curl -sk -o /dev/null -w "%{http_code} -> %{redirect_url}\n" https://lubu.skale.dev/family/
 curl -sk -o /dev/null -w "%{http_code} -> %{redirect_url}\n" "https://lubu.skale.dev/oauth2/start?rd=https://lubu.skale.dev/family/"
 ```
+
+---
+
+## Security hardening (Google auth best practices)
+
+Applied to `/etc/oauth2-proxy/oauth2-proxy.cfg`:
+
+| Setting | Value | Why |
+|---------|-------|-----|
+| `trusted_proxy_ips` | `["127.0.0.1","::1"]` | Only nginx (localhost) may set `X-Forwarded-*` — blocks header spoofing |
+| `whitelist_domains` | `["lubu.skale.dev"]` | Prevents open-redirect after login |
+| `cookie_secure` | `true` | HTTPS-only cookies |
+| `cookie_samesite` | `"lax"` | CSRF defense |
+| `cookie_csrf_samesite` | `"lax"` | CSRF defense |
+| `insecure_oidc_skip_nonce` | `false` | Verify OIDC nonce |
+| `pass_authorization_header` | `false` | Don't leak OAuth token upstream |
+| `pass_access_token` | `false` | Don't leak access token upstream |
+| `pass_basic_auth` | `false` | Don't leak credentials upstream |
+| `prefer_email_to_user` | `true` | Use email consistently for identity |
+| `cookie_refresh` | `"7h"` | Re-validate session periodically |
+| `scope` | `openid email profile` | Least-privilege scopes |
+
+### Login-state on the hub
+The hub page (`index.html`) calls `/auth-status` (an nginx endpoint that runs
+`auth_request` and returns the logged-in email, or empty). JS shows either
+"Logged in as <email>" + links, or the "Login with Google" button.

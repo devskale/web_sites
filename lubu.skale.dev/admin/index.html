@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Admin — lubu family</title>
+    <style>
+        body { background:#000; color:#fff; font-family:monospace; padding:3rem; line-height:2; }
+        a { color:#fff; }
+        .btn { display:inline-block; background:#fff; color:#000; padding:.5rem 1.2rem; text-decoration:none; border-radius:4px; margin-right:.5rem; font-weight:600; }
+        .btn:hover { background:#ccc; color:#000; text-decoration:none; }
+        .box { border:1px solid #333; padding:1.5rem; margin:1rem 0; max-width:600px; }
+        .pending { color:#ffcc00; }
+        .approved { color:#4caf50; }
+    </style>
+</head>
+<body>
+    <h1>Admin area (mock)</h1>
+    <p>This is a <strong>mock</strong> admin UI — approving/removing below is <em>visual only</em> and does not change real access. Real approvals happen on the server via <code>sudo oauth2-approve add &lt;email&gt;</code>.</p>
+
+    <div class="box">
+        <h2>Pending review</h2>
+        <p class="pending">woodmastr2015@gmail.com — tried to log in, not approved yet</p>
+        <p><a class="btn" href="#">Approve</a><a class="btn" href="#">Deny</a></p>
+    </div>
+
+    <div class="box">
+        <h2>Approved family</h2>
+        <p class="approved">jwamind@gmail.com (admin)</p>
+        <p><a class="btn" href="#">Remove</a></p>
+    </div>
+
+    <p><a class="btn" href="/family/">← back to family</a></p>
+</body>
+</html>
