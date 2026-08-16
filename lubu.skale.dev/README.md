@@ -121,3 +121,23 @@ sudo journalctl -u oauth2-proxy -f     # watch auth logs
 sudo systemctl restart oauth2-proxy    # after config change
 sudo nginx -t && sudo systemctl reload nginx
 ```
+
+### Manual-approval workflow (watch attempts, then allow)
+
+Instead of pre-listing everyone, you can **watch login attempts live** and approve
+people by adding their email when they try to log in.
+
+```bash
+sudo oauth2-approve watch     # follow login attempts live (Ctrl-C to stop)
+sudo oauth2-approve attempts  # show the last 50 attempts (incl. denied)
+sudo oauth2-approve list      # show the allow-list
+sudo oauth2-approve add mom@gmail.com     # approve (live, no restart)
+sudo oauth2-approve remove mom@gmail.com  # revoke (live, no restart)
+```
+
+- A family member **not yet allowed** shows up in the log as `[AuthFailure]` with
+  their email. Copy it, run `sudo oauth2-approve add <email>`, and they're in —
+  no restart. The allow-list is hot-reloaded by oauth2-proxy.
+- Statuses: `AuthSuccess` = allowed, `AuthFailure` = denied (not in list),
+  `AuthError` = something went wrong during the OAuth exchange.
+- Raw logs anytime: `sudo journalctl -u oauth2-proxy -f`
