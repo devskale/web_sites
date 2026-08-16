@@ -203,3 +203,37 @@ Applied to `/etc/oauth2-proxy/oauth2-proxy.cfg`:
 The hub page (`index.html`) calls `/auth-status` (an nginx endpoint that runs
 `auth_request` and returns the logged-in email, or empty). JS shows either
 "Logged in as <email>" + links, or the "Login with Google" button.
+
+---
+
+## Role-based access (admin / normie / ban)
+
+Real role enforcement, not just the mock.
+
+**State files** (root-owned, `/etc/oauth2-proxy/`):
+- `roles.txt` — `email role` lines (`admin` or `normie`). Absent = banned/none.
+- `authenticated_emails.txt` — approved emails (oauth2-proxy allow-list).
+
+**How it's enforced (nginx + small backend):**
+- A tiny Python backend (`/etc/oauth2-proxy/admin_api.py`, systemd `lubu-admin-api`,
+  listens 127.0.0.1:8180) reads the role files and exposes a JSON API.
+- nginx uses **`auth_request` gates** that first authenticate via oauth2-proxy (to get
+  the email), then ask the backend for the role:
+  - `/role-gate` — any role (normie or admin) → gates `/normie/`
+  - `/role-gate-admin` — admin only → gates `/admin/` and `/api/users`
+- `X-Auth-Request-Email` is trusted because nginx sets it from oauth2-proxy and strips
+  any client-supplied value.
+
+**Endpoints** (all require admin, enforced by nginx):
+- `GET /api/users` — list users + roles + login attempts
+- `POST /api/users/<email>` `{"role":"admin"|"normie"}` — approve + set role
+- `DELETE /api/users/<email>` — ban (remove role + allow-list)
+
+**Admin UI** at `/admin/` lets jwamind (admin) approve as normie/admin or ban, and see
+login attempts. Non-admins get the "No access" page.
+
+**Manual CLI fallback** still works:
+```bash
+sudo oauth2-approve add <email>      # approve
+# edit /etc/oauth2-proxy/roles.txt to set admin/normie
+```
